@@ -4,7 +4,9 @@
   "description": "A shop for technology.",
   "type": "module",
   "main": "server.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "nodemon"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iFelani/techno-shop.git"
