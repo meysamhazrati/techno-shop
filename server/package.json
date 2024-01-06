@@ -1,0 +1,25 @@
+{
+  "name": "techno-shop",
+  "version": "1.0.0",
+  "description": "A shop for technology.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iFelani/techno-shop.git"
+  },
+  "keywords": [
+    "shop",
+    "technology",
+    "javascript",
+    "node",
+    "react"
+  ],
+  "author": "MeySaM HaZraTi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iFelani/techno-shop/issues"
+  },
+  "homepage": "https://github.com/iFelani/techno-shop#readme"
+}
