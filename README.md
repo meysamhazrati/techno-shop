@@ -1,6 +1,6 @@
-# ![Techno Shop](https://github.com/iFelani/techno-shop/blob/main/techno-shop.svg)
+# ![Techno Shop](./techno-shop.svg)
 
-Techno Shop is an online shop website designed for digital products. The project includes both server and client sides, and [I am](https://github.com/iFelani) the developer for both 🫡
+Techno Shop is an online shop website designed for digital products. The project includes both server and client sides, and I am the developer for both 🫡
 
 I hope you enjoy using it ♥️
 
