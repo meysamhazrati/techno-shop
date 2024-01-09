@@ -1,6 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
 import { register, login } from "../validators/authentication.js";
+import { update } from "../validators/user.js";
 
 const schema = new Schema(
   {
@@ -98,5 +99,6 @@ schema.virtual("notifications", {
 
 schema.statics.registerValidation = (body) => register.validate(body);
 schema.statics.loginValidation = (body) => login.validate(body);
+schema.statics.updateValidation = (body) => update.validate(body);
 
 export default model("User", schema);
