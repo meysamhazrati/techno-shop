@@ -1,7 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
 import { register, login } from "../validators/authentication.js";
-import { update } from "../validators/user.js";
+import { edit, update } from "../validators/user.js";
 
 const schema = new Schema(
   {
@@ -43,7 +43,12 @@ const schema = new Schema(
     avatar: {
       type: String,
       required: false,
-      default: "user.jpg",
+      default: "user.png",
+    },
+    isBanned: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     cart: [
       {
@@ -99,6 +104,7 @@ schema.virtual("notifications", {
 
 schema.statics.registerValidation = (body) => register.validate(body);
 schema.statics.loginValidation = (body) => login.validate(body);
+schema.statics.editValidation = (body) => edit.validate(body);
 schema.statics.updateValidation = (body) => update.validate(body);
 
 export default model("User", schema);
