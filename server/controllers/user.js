@@ -8,7 +8,7 @@ const getAll = async (request, response, next) => {
   try {
     const users = await userModel.find({}, "-password -favorites -__v").lean();
 
-    response.json(users);
+    response.status(users.length ? 200 : 404).json(users.length ? users : { message: "No user found." });
   } catch (error) {
     next(error);
   }
@@ -45,7 +45,7 @@ const edit = async (request, response, next) => {
       avatar: avatar?.filename,
     });
 
-    response.json({ message: "Information edited successfully." });
+    response.json({ message: "Your information has been successfully edited." });
   } catch (error) {
     error.status = 400;
     error.message = "The entered information is not valid.";
@@ -66,7 +66,7 @@ const update = async (request, response, next) => {
 
     const hashedPassword = password ? await hash(password, 12) : undefined;
 
-    await userModel.findByIdAndUpdate(id, {
+    const result = await userModel.findByIdAndUpdate(id, {
       firstName,
       lastName,
       phone,
@@ -76,7 +76,7 @@ const update = async (request, response, next) => {
       avatar: avatar?.filename,
     });
 
-    response.json({ message: "User information has been successfully updated." });
+    response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully edited." : "The user was not found." });
   } catch (error) {
     error.status = 400;
     error.message = "The entered information is not valid.";
@@ -106,7 +106,7 @@ const ban = async (request, response, next) => {
         response.status(200).json({ message: "The user has been successfully banned." });
       }
     } else {
-      response.status(404).json({ message: "User not found." });
+      response.status(404).json({ message: "The user was not found." });
     }
   } catch (error) {
     next(error);
@@ -132,7 +132,7 @@ const unban = async (request, response, next) => {
         response.status(409).json({ message: "This user has not been banned." });
       }
     } else {
-      response.status(404).json({ message: "User not found." });
+      response.status(404).json({ message: "The user was not found." });
     }
   } catch (error) {
     next(error);
@@ -145,7 +145,7 @@ const remove = async (request, response, next) => {
 
     const result = await userModel.findByIdAndDelete(id).lean();
 
-    response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully removed." : "User not found." });
+    response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully removed." : "The user was not found." });
   } catch (error) {
     next(error);
   }
