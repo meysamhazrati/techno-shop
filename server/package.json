@@ -9,21 +9,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iFelani/techno-shop.git"
+    "url": "https://github.com/meysamhazrati/techno-shop.git"
   },
   "keywords": [
     "shop",
     "technology",
+    "ecmascript",
     "javascript",
     "node",
-    "react"
+    "react",
+    "mongo"
   ],
   "author": "MeySaM HaZraTi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iFelani/techno-shop/issues"
+    "url": "https://github.com/meysamhazrati/techno-shop/issues"
   },
-  "homepage": "https://github.com/iFelani/techno-shop#readme",
+  "homepage": "https://github.com/meysamhazrati/techno-shop#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
