@@ -69,11 +69,11 @@ const schema = new Schema(
       minLength: 5,
       maxLength: 50,
     },
-    GPUMemory: {
+    VRAM: {
       type: Number,
       required: true,
       min: 2,
-      max: 128,
+      max: 30,
     },
     operatingSystem: {
       type: String,
@@ -82,7 +82,7 @@ const schema = new Schema(
     },
     operatingSystemVersion: {
       type: Number,
-      required: true,
+      required: false,
       min: 10,
       max: 15,
     },
