@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 
 import productModel from "./product.js";
+import validator from "../validators/smartWatch.js";
 
 const schema = new Schema(
   {
@@ -89,5 +90,7 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.validation = (body) => validator.validate(body);
 
 export default productModel.discriminator("SmartWatch", schema);
