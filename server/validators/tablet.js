@@ -28,7 +28,7 @@ const validator = object({
   videoFPS: number().required().min(30).max(120),
   headphoneJack: string().required().oneOf(["3.5mm Jack", "USB Type-C", "Lightning"]),
   hasFingerprintSensor: boolean().required(),
-  isWaterproof: string().required(),
+  isWaterproof: boolean().required(),
 });
 
 export default validator;
