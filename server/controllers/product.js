@@ -98,6 +98,8 @@ const remove = async (request, response, next) => {
 
     const result = await productModel.findByIdAndDelete(id);
 
+    result && result.covers.forEach(cover => unlink(`public/products/${cover}`, (error) => error && next(error)));
+
     response.status(result ? 200 : 404).json({ message: result ? "The product has been successfully removed." : "The product was not found." });
   } catch (error) {
     next(error);
