@@ -1,7 +1,6 @@
 import { Router } from "express";
 import multer, { diskStorage } from "multer";
-import { dirname, join, extname } from "path";
-import { fileURLToPath } from "url";
+import { extname } from "path";
 
 import authentication from "../middlewares/authentication.js";
 import isAdmin from "../middlewares/isAdmin.js";
@@ -10,7 +9,7 @@ import { getAll, edit, update, ban, unban, remove } from "../controllers/user.js
 const router = Router();
 const uploader = multer({
   storage: diskStorage({
-    destination: (request, file, callback) => callback(null, join(dirname(fileURLToPath(import.meta.url)), "..", "public", "users")),
+    destination: (request, file, callback) => callback(null, "public/users/"),
     filename: (request, file, callback) => callback(null, Date.now() + extname(file.originalname)),
   }),
   limits: { fileSize: 20 * 1024 * 1024 },
