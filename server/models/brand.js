@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 
+import validator from "../validators/brand.js";
+
 const schema = new Schema(
   {
     name: {
@@ -21,5 +23,7 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.validation = (body) => validator.validate(body);
 
 export default model("Brand", schema);
