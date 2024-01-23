@@ -19,7 +19,8 @@ const edit = async (request, response, next) => {
     const avatar = request.file;
     await userModel.editValidation({ ...request.body, avatar });
 
-    const { _id: id } = request.user;
+    const { user } = request;
+    const { _id: id } = user;
     const { firstName, lastName, currentPassword, newPassword } = request.body;
 
     let hashedPassword;
@@ -44,6 +45,8 @@ const edit = async (request, response, next) => {
       password: hashedPassword,
       avatar: avatar?.filename,
     });
+
+    user.avatar !== "user.png" && unlink(`public/users/${user.avatar}`, (error) => error && next(error));
 
     response.json({ message: "Your information has been successfully edited." });
   } catch (error) {
@@ -75,6 +78,12 @@ const update = async (request, response, next) => {
       role,
       avatar: avatar?.filename,
     });
+
+    if(result) {
+      result.avatar !== "user.png" && unlink(`public/users/${result.avatar}`, (error) => error && next(error));
+    } else {
+      request.file && unlink(request.file.path, (error) => error && next(error));
+    }
 
     response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully edited." : "The user was not found." });
   } catch (error) {
@@ -144,6 +153,10 @@ const remove = async (request, response, next) => {
     const { id } = request.params;
 
     const result = await userModel.findByIdAndDelete(id).lean();
+
+    if(result && result.avatar !== "user.png") {
+      unlink(`public/users/${result.avatar}`, (error) => error && next(error));
+    }
 
     response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully removed." : "The user was not found." });
   } catch (error) {
