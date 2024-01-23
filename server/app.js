@@ -9,6 +9,7 @@ import authenticationRouter from "./routes/authentication.js";
 import userRouter from "./routes/user.js";
 import categoryRouter from "./routes/category.js";
 import productRouter from "./routes/product.js";
+import brandRouter from "./routes/brand.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/authentication", authenticationRouter);
 app.use("/users", userRouter);
 app.use("/categories", categoryRouter);
 app.use("/products", productRouter);
+app.use("/brands", brandRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
