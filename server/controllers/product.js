@@ -29,15 +29,10 @@ const create = async (request, response, next) => {
 
       response.status(201).json({ message: "The product has been successfully added." });
     } else {
-      request.files && request.files.forEach((file) => unlink(file.path, (error) => error && next(error)));
-
-      response.status(400).json({ message: "The type query is required." });
+      throw Object.assign(new Error("The type query is required."), { status: 400 });
     }
   } catch (error) {
-    error.status = 400;
-    error.message = "The entered information is not valid.";
-
-    request.files && request.files.forEach((file) => unlink(file.path, (error) => error && next(error)));
+    request.files && request.files.forEach((file) => unlink(file.path, (error) => error && console.error(error)));
 
     next(error);
   }
@@ -49,7 +44,11 @@ const getAll = async (request, response, next) => {
 
     const products = await productModel.find({}, JSON.parse(all) ? "-__v" : "title price inventory warranty covers colors").lean();
 
-    response.status(products.length ? 200 : 404).json(products.length ? products : { message: "No product found." });
+    if (products.length) {
+      response.json(products);
+    } else {
+      throw Object.assign(new Error("No product found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
@@ -58,9 +57,30 @@ const getAll = async (request, response, next) => {
 const get = async (request, response, next) => {
   try {
     const { id } = request.params;
+
     const product = await productModel.findById(id, "-__v").lean();
 
-    response.status(product ? 200 : 404).json(product || { message: "The product was not found." });
+    if (product) {
+      response.json(product);
+    } else {
+      throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getByCategory = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const products = await productModel.find({ category: id }, "title price inventory warranty covers colors").lean();
+
+    if (products.length) {
+      response.json(products);
+    } else {
+      throw Object.assign(new Error("No product found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
@@ -80,14 +100,15 @@ const update = async (request, response, next) => {
 
       const result = await currentModel.findByIdAndUpdate(id, { ...request.body });
 
-      response.status(result ? 200 : 404).json({ message: result ? "The product has been successfully edited." : "The product was not found." });
+      if (result) {
+        response.json({ message: "The product has been successfully edited." });
+      } else {
+        throw Object.assign(new Error("The product was not found."), { status: 404 });
+      }
     } else {
-      response.status(400).json({ message: "The type query is required." });
+      throw Object.assign(new Error("The type query is required."), { status: 400 });
     }
   } catch (error) {
-    error.status = 400;
-    error.message = "The entered information is not valid.";
-
     next(error);
   }
 };
@@ -98,12 +119,16 @@ const remove = async (request, response, next) => {
 
     const result = await productModel.findByIdAndDelete(id);
 
-    result && result.covers.forEach(cover => unlink(`public/products/${cover}`, (error) => error && next(error)));
+    if (result) {
+      result.covers.forEach((cover) => unlink(`public/products/${cover}`, (error) => error && console.error(error)));
 
-    response.status(result ? 200 : 404).json({ message: result ? "The product has been successfully removed." : "The product was not found." });
+      response.json({ message: "The product has been successfully removed." });
+    } else {
+      throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
 };
 
-export { create, getAll, get, update, remove };
+export { create, getAll, get, getByCategory, update, remove };
