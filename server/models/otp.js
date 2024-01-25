@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 
+import { send, verify } from "../validators/otp.js";
+
 const schema = new Schema(
   {
     email: {
@@ -30,5 +32,8 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.sendValidation = (body) => send.validate(body);
+schema.statics.verifyValidation = (body) => verify.validate(body);
 
 export default model("OTP", schema);
