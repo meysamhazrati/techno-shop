@@ -1,12 +1,14 @@
-import { object, string, number } from "yup";
+import { object, string } from "yup";
 
-const validator = object({
+const create = object({
   name: string().required().min(3).max(50),
   englishName: string().required().min(3).max(50),
-  logo: object({
-    mimetype: string().oneOf(["image/png", "image/jpg", "image/jpeg"]),
-    size: number().max(20 * 1024 * 1024),
-  }),
+  logo: object().required(),
 });
 
-export default validator;
+const update = object({
+  name: string().required().min(3).max(50),
+  englishName: string().required().min(3).max(50),
+});
+
+export { create, update };
