@@ -18,23 +18,11 @@ const schema = new Schema(
     },
     offer: {
       type: Types.ObjectId,
-      ref: "offers",
+      ref: "Offer",
     },
   },
   { timestamps: true }
 );
-
-schema.virtual("products", {
-  ref: "Product",
-  localField: "_id",
-  foreignField: "category",
-});
-
-schema.virtual("articles", {
-  ref: "Article",
-  localField: "_id",
-  foreignField: "category",
-});
 
 schema.statics.validation = (body) => validator.validate(body);
 
