@@ -28,7 +28,7 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const articles = await articleModel.find({}, "-__v").populate([{ path: "author", select: "firstName lastName avatar" }, { path: "category", select: "title englishTitle" }]).lean();
+    const articles = await articleModel.find({}, "-__v").lean();
 
     if (articles.length) {
       response.json(articles);
@@ -44,12 +44,28 @@ const get = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const article = await articleModel.findById(id, "-__v").populate([{ path: "author", select: "firstName lastName avatar" }, { path: "category", select: "title englishTitle" }]).lean();
+    const article = await articleModel.findById(id, "-__v").lean();
 
     if (article) {
       response.json(article);
     } else {
       throw Object.assign(new Error("The article was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getByCategory = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const articles = await articleModel.find({ category: id }, "-category -__v").lean();
+
+    if (articles.length) {
+      response.json(articles);
+    } else {
+      throw Object.assign(new Error("No article found."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -62,13 +78,13 @@ const update = async (request, response, next) => {
 
     const { user } = request;
 
-    const article = await articleModel.findById(id).lean();
+    const article = await articleModel.findById(id);
 
     if (article) {
       if (user.role === "ADMIN" || user._id.equals(article.author)) {
+        await articleModel.updateValidation(request.body);
+        
         const cover = request.file;
-        await articleModel.updateValidation({ ...request.body, cover });
-
         const { title, body, isPublished } = request.body;
 
         await articleModel.findByIdAndUpdate(id, {
@@ -80,7 +96,7 @@ const update = async (request, response, next) => {
 
         cover && unlink(`public/articles/${article.cover}`, (error) => error && console.error(error));
 
-        response.status(200).json({ message: `The article has been successfully edited and ${article.isPublished ? "published" : JSON.parse(isPublished) ? "published" : "drafted"}.` });
+        response.json({ message: `The article has been successfully edited and ${article.isPublished ? "published" : JSON.parse(isPublished) ? "published" : "drafted"}.` });
       } else {
         throw Object.assign(new Error("You don't have access to edit this article."), { status: 403 });
       }
@@ -100,7 +116,7 @@ const publish = async (request, response, next) => {
 
     const { user } = request;
 
-    const article = await articleModel.findById(id).lean();
+    const article = await articleModel.findById(id);
 
     if (article) {
       if (user.role === "ADMIN" || user._id.equals(article.author)) {
@@ -128,7 +144,7 @@ const draft = async (request, response, next) => {
 
     const { user } = request;
 
-    const article = await articleModel.findById(id).lean();
+    const article = await articleModel.findById(id);
 
     if (article) {
       if (user.role === "ADMIN" || user._id.equals(article.author)) {
@@ -156,7 +172,7 @@ const remove = async (request, response, next) => {
 
     const { user } = request;
 
-    const article = await articleModel.findById(id).lean();
+    const article = await articleModel.findById(id);
 
     if (article) {
       if (user.role === "ADMIN" || user._id.equals(article.author)) {
@@ -176,4 +192,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { create, getAll, get, update, publish, draft, remove };
+export { create, getAll, get, getByCategory, update, publish, draft, remove };
