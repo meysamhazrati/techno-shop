@@ -6,9 +6,13 @@ import bannedUserModel from "../models/bannedUser.js";
 
 const getAll = async (request, response, next) => {
   try {
-    const users = await userModel.find({}, "-password -favorites -__v").lean();
+    const users = await userModel.find({}, "-password -cart -favorites -__v").lean();
 
-    response.status(users.length ? 200 : 404).json(users.length ? users : { message: "No user found." });
+    if(users.length) {
+      response.json(users);
+    } else {
+      throw Object.assign(new Error("No user found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
@@ -16,26 +20,25 @@ const getAll = async (request, response, next) => {
 
 const edit = async (request, response, next) => {
   try {
-    const avatar = request.file;
-    await userModel.editValidation({ ...request.body, avatar });
-
+    await userModel.editValidation(request.body);
+    
     const { user } = request;
     const { _id: id } = user;
+
+    const avatar = request.file;
     const { firstName, lastName, currentPassword, newPassword } = request.body;
 
     let hashedPassword;
 
     if (currentPassword && newPassword) {
-      const { password } = await userModel.findById(id).lean();
+      const { password } = await userModel.findById(id);
 
       const isPasswordValid = await compare(currentPassword, password);
 
       if (isPasswordValid) {
         hashedPassword = await hash(newPassword, 12);
       } else {
-        request.file && unlink(request.file.path, (error) => error && next(error));
-
-        return response.status(401).json({ message: "The password is incorrect." });
+        throw Object.assign(new Error("The password is incorrect."), { status: 401 });
       }
     }
 
@@ -46,14 +49,13 @@ const edit = async (request, response, next) => {
       avatar: avatar?.filename,
     });
 
-    user.avatar !== "user.png" && unlink(`public/users/${user.avatar}`, (error) => error && next(error));
+    if(avatar && user.avatar !== "user.png") {
+      unlink(`public/users/${user.avatar}`, (error) => error && console.error(error));
+    }
 
     response.json({ message: "Your information has been successfully edited." });
   } catch (error) {
-    error.status = 400;
-    error.message = "The entered information is not valid.";
-
-    request.file && unlink(request.file.path, (error) => error && next(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -61,10 +63,10 @@ const edit = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    const avatar = request.file;
-    await userModel.updateValidation({ ...request.body, avatar });
-
+    await userModel.updateValidation(request.body);
+    
     const { id } = request.params;
+    const avatar = request.file;
     const { firstName, lastName, phone, email, password, role } = request.body;
 
     const hashedPassword = password ? await hash(password, 12) : undefined;
@@ -80,17 +82,17 @@ const update = async (request, response, next) => {
     });
 
     if(result) {
-      result.avatar !== "user.png" && unlink(`public/users/${result.avatar}`, (error) => error && next(error));
+      if(avatar && result.avatar !== "user.png") {
+        unlink(`public/users/${result.avatar}`, (error) => error && console.error(error));
+      }
+      
+      response.json({ message: "The user has been successfully edited."});
     } else {
-      request.file && unlink(request.file.path, (error) => error && next(error));
+      throw Object.assign(new Error("The user was not found."), { status: 404 });
     }
 
-    response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully edited." : "The user was not found." });
   } catch (error) {
-    error.status = 400;
-    error.message = "The entered information is not valid.";
-
-    request.file && unlink(request.file.path, (error) => error && next(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -100,11 +102,11 @@ const ban = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const user = await userModel.findById(id).lean();
+    const user = await userModel.findById(id);
 
     if (user) {
       if (user.isBanned) {
-        response.status(409).json({ message: "This user has already been banned." });
+        throw Object.assign(new Error("This user has already been banned."), { status: 409 });
       } else {
         const { phone, email } = user;
         
@@ -112,10 +114,10 @@ const ban = async (request, response, next) => {
 
         await userModel.findByIdAndUpdate(id, { isBanned: true });
 
-        response.status(200).json({ message: "The user has been successfully banned." });
+        response.json({ message: "The user has been successfully banned." });
       }
     } else {
-      response.status(404).json({ message: "The user was not found." });
+      throw Object.assign(new Error("The user was not found."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -126,7 +128,7 @@ const unban = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const user = await userModel.findById(id).lean();
+    const user = await userModel.findById(id);
 
     if (user) {
       if (user.isBanned) {
@@ -136,12 +138,12 @@ const unban = async (request, response, next) => {
 
         await userModel.findByIdAndUpdate(id, { isBanned: false });
 
-        response.status(200).json({ message: "The user has been successfully unbanned." });
+        response.json({ message: "The user has been successfully unbanned." });
       } else {
-        response.status(409).json({ message: "This user has not been banned." });
+        throw Object.assign(new Error("This user has not been banned."), { status: 409 });
       }
     } else {
-      response.status(404).json({ message: "The user was not found." });
+      throw Object.assign(new Error("The user was not found."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -152,13 +154,15 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await userModel.findByIdAndDelete(id).lean();
+    const result = await userModel.findByIdAndDelete(id);
 
-    if(result && result.avatar !== "user.png") {
-      unlink(`public/users/${result.avatar}`, (error) => error && next(error));
+    if(result) {
+      result.avatar !== "user.png" && unlink(`public/users/${result.avatar}`, (error) => error && console.error(error));
+      
+      response.json({ message: "The user has been successfully removed." });
+    } else {
+      throw Object.assign(new Error("The user was not found."), { status: 404 });
     }
-
-    response.status(result ? 200 : 404).json({ message: result ? "The user has been successfully removed." : "The user was not found." });
   } catch (error) {
     next(error);
   }
