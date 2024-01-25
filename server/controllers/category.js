@@ -10,9 +10,6 @@ const create = async (request, response, next) => {
 
     response.status(201).json({ message: "The category has been successfully added." });
   } catch (error) {
-    error.status = 400;
-    error.message = "The entered information is not valid.";
-
     next(error);
   }
 };
@@ -21,7 +18,11 @@ const getAll = async (request, response, next) => {
   try {
     const categories = await categoryModel.find({}, "-__v").lean();
 
-    response.status(categories.length ? 200 : 404).json(categories.length ? categories : { message: "No category found." });
+    if (categories.length) {
+      response.json(categories);
+    } else {
+      throw Object.assign(new Error("No category found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
@@ -33,7 +34,11 @@ const get = async (request, response, next) => {
 
     const category = await categoryModel.findById(id, "-__v").lean();
 
-    response.status(category ? 200 : 404).json(category || { message: "The category was not found." });
+    if (category) {
+      response.json(category);
+    } else {
+      throw Object.assign(new Error("The category was not found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
@@ -46,16 +51,14 @@ const update = async (request, response, next) => {
     const { id } = request.params;
     const { title, englishTitle } = request.body;
 
-    const result = await categoryModel.findByIdAndUpdate(id, {
-      title,
-      englishTitle,
-    });
+    const result = await categoryModel.findByIdAndUpdate(id, { title, englishTitle });
 
-    response.status(result ? 200 : 404).json({ message: result ? "The category has been successfully edited." : "The category was not found." });
+    if (result) {
+      response.json({ message: "The category has been successfully edited." });
+    } else {
+      throw Object.assign(new Error("The category was not found."), { status: 404 });
+    }
   } catch (error) {
-    error.status = 400;
-    error.message = "The entered information is not valid.";
-    
     next(error);
   }
 };
@@ -66,7 +69,11 @@ const remove = async (request, response, next) => {
 
     const result = await categoryModel.findByIdAndDelete(id);
 
-    response.status(result ? 200 : 404).json({ message: result ? "The category has been successfully removed." : "The category was not found." });
+    if (result) {
+      response.json({ message: "The category has been successfully removed." });
+    } else {
+      throw Object.assign(new Error("The category was not found."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
