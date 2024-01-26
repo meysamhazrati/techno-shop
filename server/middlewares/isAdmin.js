@@ -1,10 +1,14 @@
 const middleware = (request, response, next) => {
-  const isAdmin = request.user.role === "ADMIN";
+  try {
+    const isAdmin = request.user.role === "ADMIN";
 
-  if (isAdmin) {
-    next();
-  } else {
-    response.status(403).json({ message: "This route is protected and you can't access it." });
+    if (isAdmin) {
+      next();
+    } else {
+      throw Object.assign(new Error("This route is only accessible to admins."), { status: 403 });
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
