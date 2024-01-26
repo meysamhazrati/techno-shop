@@ -2,7 +2,6 @@ import { hash, compare } from "bcrypt";
 import { unlink } from "fs";
 
 import userModel from "../models/user.js";
-import bannedUserModel from "../models/bannedUser.js";
 
 const getAll = async (request, response, next) => {
   try {
@@ -108,10 +107,6 @@ const ban = async (request, response, next) => {
       if (user.isBanned) {
         throw Object.assign(new Error("This user has already been banned."), { status: 409 });
       } else {
-        const { phone, email } = user;
-        
-        await bannedUserModel.create({ phone, email });
-
         await userModel.findByIdAndUpdate(id, { isBanned: true });
 
         response.json({ message: "The user has been successfully banned." });
@@ -132,10 +127,6 @@ const unban = async (request, response, next) => {
 
     if (user) {
       if (user.isBanned) {
-        const { phone, email } = user;
-
-        await bannedUserModel.findOneAndDelete({ phone, email });
-
         await userModel.findByIdAndUpdate(id, { isBanned: false });
 
         response.json({ message: "The user has been successfully unbanned." });
