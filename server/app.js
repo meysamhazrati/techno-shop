@@ -7,6 +7,7 @@ import notFoundHandler from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/error.js";
 import authenticationRouter from "./routes/authentication.js";
 import userRouter from "./routes/user.js";
+import addressRouter from "./routes/address.js";
 import brandRouter from "./routes/brand.js";
 import categoryRouter from "./routes/category.js";
 import productRouter from "./routes/product.js";
@@ -22,6 +23,7 @@ app.use(static_(join(dirname(fileURLToPath(import.meta.url)), "public")));
 
 app.use("/authentication", authenticationRouter);
 app.use("/users", userRouter);
+app.use("/addresses", addressRouter);
 app.use("/brands", brandRouter);
 app.use("/categories", categoryRouter);
 app.use("/products", productRouter);
