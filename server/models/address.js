@@ -1,5 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
+import validator from "../validators/address.js";
+
 const schema = new Schema(
   {
     province: {
@@ -33,5 +35,7 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.validation = (body) => validator.validate(body);
 
 export default model("Address", schema);
