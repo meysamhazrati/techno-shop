@@ -6,8 +6,8 @@ const validator = object({
   height: number().required().min(10).max(50),
   weight: number().required().min(500).max(5000),
   keys: number().required().min(40).max(120),
-  connectionType: string().required().oneOf(["باسیم", "بی‌سیم", "باسیم و بی‌سیم"]),
-  interface: array().required().of(string().oneOf(["USB", "USB Type-C", "USB Dongle", "Bluetooth"])).min(1).max(4),
+  connectionType: string().required().oneOf(["Wired", "Wireless", "Wired and Wireless"]),
+  interfaces: array().required().of(string().oneOf(["USB", "USB Type-C", "USB Dongle", "Bluetooth"])).min(1).max(4),
 });
 
 export default validator;

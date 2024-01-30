@@ -1,4 +1,4 @@
-import { object, string, number, boolean, array } from "yup";
+import { object, string, number, boolean } from "yup";
 
 const validator = object({
   length: number().required().min(300).max(500),
@@ -13,11 +13,11 @@ const validator = object({
   GPU: string().required().oneOf(["Intel", "AMD", "NVIDIA", "Apple"]),
   GPUModel: string().required().min(5).max(50),
   VRAM: number().required().min(2).max(30),
-  operatingSystem: string().required().oneOf(["Windows", "MacOS", "بدون سیستم عامل"]),
+  operatingSystem: string().required().oneOf(["Windows", "MacOS", "No operating system"]),
   operatingSystemVersion: number().min(10).max(15),
-  internalMemory: array().required().of(number().oneOf([128, 256, 512, 1024, 2048])).min(1).max(5),
+  internalMemory: number().required().oneOf([128, 256, 512, 1024, 2048]),
   internalMemoryType: string().required().oneOf(["HDD", "SSD"]),
-  RAM: array().required().of(number().min(2).max(128)).min(1).max(5),
+  RAM: number().required().min(2).max(128),
   RAMType: string().required().oneOf(["DDR3", "DDR4", "DDR5"]),
   screen: string().required().min(3).max(50),
   screenSize: number().required().min(10).max(20),
