@@ -1,5 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
+import validator from "../validators/order.js";
+
 const schema = new Schema(
   {
     shippingCost: {
@@ -52,5 +54,7 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.validation = (body) => validator.validate(body);
 
 export default model("Order", schema);
