@@ -11,6 +11,7 @@ import addressRouter from "./routes/address.js";
 import brandRouter from "./routes/brand.js";
 import categoryRouter from "./routes/category.js";
 import productRouter from "./routes/product.js";
+import orderRouter from "./routes/order.js";
 import articleRouter from "./routes/article.js";
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/addresses", addressRouter);
 app.use("/brands", brandRouter);
 app.use("/categories", categoryRouter);
 app.use("/products", productRouter);
+app.use("/orders", orderRouter);
 app.use("/articles", articleRouter);
 
 app.use(notFoundHandler);
