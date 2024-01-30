@@ -84,31 +84,29 @@ const schema = new Schema(
     operatingSystem: {
       type: String,
       required: true,
-      enum: ["Windows", "بدون سیستم عامل"],
+      enum: ["Windows", "No operating system"],
     },
     operatingSystemVersion: {
       type: Number,
       required: false,
       enum: [10, 11],
     },
-    internalMemory: [
-      {
-        type: Number,
-        enum: [128, 256, 512, 1024, 2048],
-      },
-    ],
+    internalMemory: {
+      type: Number,
+      required: true,
+      enum: [128, 256, 512, 1024, 2048],
+    },
     internalMemoryType: {
       type: String,
       required: true,
       enum: ["HDD", "SSD"],
     },
-    RAM: [
-      {
-        type: Number,
-        min: 2,
-        max: 128,
-      },
-    ],
+    RAM: {
+      type: Number,
+      required: true,
+      min: 2,
+      max: 128,
+    },
     RAMType: {
       type: String,
       required: true,

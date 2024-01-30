@@ -36,7 +36,16 @@ const schema = new Schema(
     ],
     colors: [
       {
-        type: String,
+        price: {
+          type: Number,
+          required: true,
+          min: 0,
+          max: 1000000,
+        },
+        color: {
+          type: String,
+          required: true,
+        },
       },
     ],
     brand: {

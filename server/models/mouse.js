@@ -38,9 +38,9 @@ const schema = new Schema(
     connectionType: {
       type: String,
       required: true,
-      enum: ["باسیم", "بی‌سیم", "باسیم و بی‌سیم"],
+      enum: ["Wired", "Wireless", "Wired and Wireless"],
     },
-    interface: [
+    interfaces: [
       {
         type: String,
         enum: ["USB", "USB Type-C", "USB Dongle", "Bluetooth"],

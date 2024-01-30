@@ -46,23 +46,21 @@ const schema = new Schema(
       min: 12,
       max: 20,
     },
-    internalMemory: [
-      {
-        type: Number,
-        enum: [16, 32, 64, 128, 256, 512, 1024],
-      },
-    ],
-    RAM: [
-      {
-        type: Number,
-        min: 2,
-        max: 50,
-      },
-    ],
+    internalMemory: {
+      type: Number,
+      required: true,
+      enum: [16, 32, 64, 128, 256, 512, 1024],
+    },
+    RAM: {
+      type: Number,
+      required: true,
+      min: 2,
+      max: 50,
+    },
     memoryCard: {
       type: String,
       required: true,
-      enum: ["مجزا", "مشترک با سیم‌کارت", "فاقد پشتیبانی"],
+      enum: ["Separate", "Shared", "No memory card"],
     },
     screen: {
       type: String,

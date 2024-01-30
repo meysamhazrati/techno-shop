@@ -34,19 +34,17 @@ const schema = new Schema(
       min: 3,
       max: 10,
     },
-    internalMemory: [
-      {
-        type: Number,
-        enum: [16, 32, 64, 128, 256],
-      },
-    ],
-    RAM: [
-      {
-        type: Number,
-        min: 1,
-        max: 10,
-      },
-    ],
+    internalMemory: {
+      type: Number,
+      required: true,
+      enum: [16, 32, 64, 128, 256],
+    },
+    RAM: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 10,
+    },
     screen: {
       type: String,
       required: true,

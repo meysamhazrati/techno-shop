@@ -32,7 +32,7 @@ const schema = new Schema(
     drive: {
       type: String,
       required: true,
-      enum: ["CD", "DVD", "Blue-ray", "فاقد درایو"],
+      enum: ["CD", "DVD", "Blue-ray", "No drive"],
     },
     CPU: {
       type: String,
@@ -68,12 +68,11 @@ const schema = new Schema(
       minLength: 5,
       maxLength: 50,
     },
-    storage: [
-      {
-        type: Number,
-        enum: [512, 825, 1000],
-      },
-    ],
+    storage: {
+      type: Number,
+      required: true,
+      enum: [512, 825, 1000],
+    },
     RAM: {
       type: Number,
       min: 8,
