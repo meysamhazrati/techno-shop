@@ -30,8 +30,16 @@ const schema = new Schema(
           max: 100,
         },
         color: {
-          type: String,
-          required: true,
+          name: {
+            type: String,
+            required: true,
+            minLength: 3,
+            maxLength: 15,
+          },
+          code: {
+            type: String,
+            required: true,
+          },
         },
         product: {
           type: Types.ObjectId,
