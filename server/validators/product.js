@@ -7,7 +7,8 @@ const create = object({
   warranty: number().required().min(0).max(100),
   colors: array().of(object({
     price: number().required().min(0).max(1000000),
-    color: string().required(),
+    name: string().required().min(3).max(15),
+    code: string().required(),
   })).required().min(1).max(10),
   covers: object().required(),
   brand: string().required(),
@@ -21,7 +22,8 @@ const update = object({
   warranty: number().required().min(0).max(100),
   colors: array().of(object({
     price: number().required().min(0).max(1000000),
-    color: string().required(),
+    name: string().required().min(3).max(15),
+    code: string().required(),
   })).required().min(1).max(10),
 });
 
