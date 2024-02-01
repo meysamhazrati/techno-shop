@@ -13,6 +13,7 @@ import categoryRouter from "./routes/category.js";
 import productRouter from "./routes/product.js";
 import orderRouter from "./routes/order.js";
 import articleRouter from "./routes/article.js";
+import commentRouter from "./routes/comment.js";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/categories", categoryRouter);
 app.use("/products", productRouter);
 app.use("/orders", orderRouter);
 app.use("/articles", articleRouter);
+app.use("/comments", commentRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
