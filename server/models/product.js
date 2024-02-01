@@ -42,7 +42,13 @@ const schema = new Schema(
           min: 0,
           max: 1000000,
         },
-        color: {
+        name: {
+          type: String,
+          required: true,
+          minLength: 3,
+          maxLength: 15,
+        },
+        code: {
           type: String,
           required: true,
         },
