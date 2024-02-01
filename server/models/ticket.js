@@ -1,5 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
+import validator from "../validators/ticket.js";
+
 const schema = new Schema(
   {
     department: {
@@ -41,5 +43,7 @@ schema.virtual("replies", {
   localField: "_id",
   foreignField: "ticket",
 });
+
+schema.statics.validation = (body) => validator.validate(body);
 
 export default model("Ticket", schema);
