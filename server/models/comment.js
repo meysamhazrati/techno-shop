@@ -1,5 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
+import validator from "../validators/comment.js";
+
 const schema = new Schema(
   {
     body: {
@@ -34,5 +36,7 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.validation = (body) => validator.validate(body);
 
 export default model("Comment", schema);
