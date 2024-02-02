@@ -1,5 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
+import { create, check } from "../validators/discountCode.js";
+
 const schema = new Schema(
   {
     code: {
@@ -50,5 +52,8 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.statics.createValidation = (body) => create.validate(body);
+schema.statics.checkValidation = (body) => check.validate(body);
 
 export default model("DiscountCode", schema);
