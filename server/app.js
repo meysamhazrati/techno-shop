@@ -15,6 +15,7 @@ import orderRouter from "./routes/order.js";
 import articleRouter from "./routes/article.js";
 import commentRouter from "./routes/comment.js";
 import ticketRouter from "./routes/ticket.js";
+import offerRouter from "./routes/offer.js";
 import discountCodeRouter from "./routes/discountCode.js";
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/orders", orderRouter);
 app.use("/articles", articleRouter);
 app.use("/comments", commentRouter);
 app.use("/tickets", ticketRouter);
+app.use("/offers", offerRouter);
 app.use("/discountCodes", discountCodeRouter);
 
 app.use(notFoundHandler);
