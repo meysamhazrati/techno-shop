@@ -1,5 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 
+import { create, update } from "../validators/offer.js";
+
 const schema = new Schema(
   {
     title: {
@@ -37,5 +39,8 @@ schema.virtual("categories", {
   localField: "_id",
   foreignField: "Offer",
 });
+
+schema.statics.createValidation = (body) => create.validate(body);
+schema.statics.updateValidation = (body) => update.validate(body);
 
 export default model("Offer", schema);
