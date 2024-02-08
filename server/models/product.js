@@ -10,19 +10,6 @@ const schema = new Schema(
       minLength: 5,
       maxLength: 100,
     },
-    price: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 10000000000,
-    },
-    inventory: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 1000000,
-      default: 0,
-    },
     warranty: {
       type: Number,
       required: true,
@@ -39,8 +26,14 @@ const schema = new Schema(
         price: {
           type: Number,
           required: true,
-          min: 0,
-          max: 1000000,
+          min: 1000,
+          max: 1000000000,
+        },
+        inventory: {
+          type: Number,
+          required: true,
+          min: 1,
+          max: 100000,
         },
         name: {
           type: String,
