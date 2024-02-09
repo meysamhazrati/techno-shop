@@ -2,7 +2,8 @@ import { Router } from "express";
 
 import multer from "../utilities/multer.js";
 import authentication from "../middlewares/authentication.js";
-import { create, getAll, get, getByCategory, update, publish, draft, remove } from "../controllers/article.js";
+import isAdmin from "../middlewares/isAdmin.js";
+import { create, getAll, get, getByCategory, update, publish, draft, confirm, reject, remove } from "../controllers/article.js";
 
 const router = Router();
 const uploader = multer("articles");
@@ -12,5 +13,7 @@ router.route("/:id").get(get).put(authentication, uploader.single("cover"), upda
 router.get("/categories/:id", getByCategory);
 router.put("/publish/:id", authentication, publish);
 router.put("/draft/:id", authentication, draft);
+router.put("/confirm/:id", authentication, isAdmin, confirm);
+router.put("/reject/:id", authentication, isAdmin, reject);
 
 export default router;
