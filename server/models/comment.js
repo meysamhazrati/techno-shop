@@ -16,6 +16,10 @@ const schema = new Schema(
       min: 1,
       max: 5,
     },
+    isBuyer: {
+      type: Boolean,
+      required: false,
+    },
     isConfirmed: {
       type: Boolean,
       required: false,
