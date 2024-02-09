@@ -1,19 +1,19 @@
 import { unlink } from "fs";
 
-import brandModel from "../models/brand.js";
+import model from "../models/brand.js";
 
 const create = async (request, response, next) => {
   try {
     const logo = request.file;
-    await brandModel.createValidation({ ...request.body, logo });
+    await model.createValidation({ ...request.body, logo });
 
     const { name, englishName } = request.body;
 
-    await brandModel.create({ name, englishName, logo: logo.filename });
+    await model.create({ name, englishName, logo: logo.filename });
 
     response.status(201).json({ message: "The brand has been successfully added." });
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => error && console.error(error));
+    request.file && unlink(request.file.path, (error) => console.error(error));
 
     next(error);
   }
@@ -21,13 +21,26 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const brands = await brandModel.find({}, "-__v").lean();
+    const { page = 1, length = 6 } = request.query;
+
+    const brands = await model.find({}, "-__v").sort({ createdAt: -1 }).lean();
 
     if (brands.length) {
-      response.json(brands);
-    } else {
-      throw Object.assign(new Error("No brand found."), { status: 404 });
+      const currentPage = parseInt(page);
+      const lengthPerPage = parseInt(length);
+
+      const startIndex = (currentPage - 1) * lengthPerPage;
+      const endIndex = startIndex + lengthPerPage;
+
+      const currentPageBrands = brands.slice(startIndex, endIndex);
+      const hasNextPage = endIndex < brands.length;
+
+      if (currentPageBrands.length) {
+        return response.json({ brands: currentPageBrands, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+      }
     }
+
+    throw Object.assign(new Error("No brand found."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -35,23 +48,24 @@ const getAll = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await brandModel.updateValidation(request.body);
+    await model.updateValidation(request.body);
 
     const { id } = request.params;
+
     const logo = request.file;
     const { name, englishName } = request.body;
 
-    const result = await brandModel.findByIdAndUpdate(id, { name, englishName, logo: logo?.filename });
+    const result = await model.findByIdAndUpdate(id, { name, englishName, logo: logo?.filename });
 
     if (result) {
-      logo && unlink(`public/brands/${result.logo}`, (error) => error && console.error(error));
+      logo && unlink(`public/brands/${result.logo}`, (error) => console.error(error));
 
       response.json({ message: "The brand has been successfully edited." });
     } else {
       throw Object.assign(new Error("The brand was not found."), { status: 404 });
     }
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => error && console.error(error));
+    request.file && unlink(request.file.path, (error) => console.error(error));
 
     next(error);
   }
@@ -61,10 +75,10 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await brandModel.findByIdAndDelete(id);
+    const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      unlink(`public/brands/${result.logo}`, (error) => error && console.error(error));
+      unlink(`public/brands/${result.logo}`, (error) => console.error(error));
 
       response.json({ message: "The brand has been successfully removed." });
     } else {
