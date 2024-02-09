@@ -34,12 +34,6 @@ const schema = new Schema(
   { timestamps: true }
 );
 
-schema.virtual("categories", {
-  ref: "Category",
-  localField: "_id",
-  foreignField: "Offer",
-});
-
 schema.statics.createValidation = (body) => create.validate(body);
 schema.statics.updateValidation = (body) => update.validate(body);
 
