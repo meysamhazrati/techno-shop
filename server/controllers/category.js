@@ -1,12 +1,12 @@
-import categoryModel from "../models/category.js";
+import model from "../models/category.js";
 
 const create = async (request, response, next) => {
   try {
-    await categoryModel.validation(request.body);
+    await model.validation(request.body);
 
     const { title, englishTitle } = request.body;
 
-    await categoryModel.create({ title, englishTitle });
+    await model.create({ title, englishTitle });
 
     response.status(201).json({ message: "The category has been successfully added." });
   } catch (error) {
@@ -16,13 +16,26 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const categories = await categoryModel.find({}, "-__v").lean();
+    const { page = 1, length = 6 } = request.query;
+
+    const categories = await model.find({}, "-__v").populate({ path: "offer", select: "-organizer -__v" }).sort({ createdAt: -1 }).lean();
 
     if (categories.length) {
-      response.json(categories);
-    } else {
-      throw Object.assign(new Error("No category found."), { status: 404 });
+      const currentPage = parseInt(page);
+      const lengthPerPage = parseInt(length);
+
+      const startIndex = (currentPage - 1) * lengthPerPage;
+      const endIndex = startIndex + lengthPerPage;
+
+      const currentPageCategories = categories.slice(startIndex, endIndex);
+      const hasNextPage = endIndex < categories.length;
+
+      if (currentPageCategories.length) {
+        return response.json({ categories: currentPageCategories, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+      }
     }
+
+    throw Object.assign(new Error("No category found."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -30,9 +43,9 @@ const getAll = async (request, response, next) => {
 
 const get = async (request, response, next) => {
   try {
-    const { id } = request.params;
+    const { title } = request.params;
 
-    const category = await categoryModel.findById(id, "-__v").lean();
+    const category = await model.findOne({ englishTitle: title }, "-__v").populate({ path: "offer", select: "-organizer -__v" }).lean();
 
     if (category) {
       response.json(category);
@@ -46,12 +59,13 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await categoryModel.validation(request.body);
+    await model.validation(request.body);
 
     const { id } = request.params;
+
     const { title, englishTitle } = request.body;
 
-    const result = await categoryModel.findByIdAndUpdate(id, { title, englishTitle });
+    const result = await model.findByIdAndUpdate(id, { title, englishTitle });
 
     if (result) {
       response.json({ message: "The category has been successfully edited." });
@@ -67,7 +81,7 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await categoryModel.findByIdAndDelete(id);
+    const result = await model.findByIdAndDelete(id);
 
     if (result) {
       response.json({ message: "The category has been successfully removed." });
