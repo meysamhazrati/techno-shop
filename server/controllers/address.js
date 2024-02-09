@@ -1,12 +1,12 @@
-import addressModel from "../models/address.js";
+import model from "../models/address.js";
 
 const create = async (request, response, next) => {
   try {
-    await addressModel.validation(request.body);
+    await model.validation(request.body);
 
     const { province, city, postalCode, body } = request.body;
 
-    await addressModel.create({
+    await model.create({
       province,
       city,
       postalCode,
@@ -24,15 +24,15 @@ const update = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const address = await addressModel.findById(id);
+    const address = await model.findById(id);
 
     if (address) {
       if (request.user._id.equals(address.recipient)) {
-        await addressModel.validation(request.body);
+        await model.validation(request.body);
 
         const { province, city, postalCode, body } = request.body;
 
-        await addressModel.findByIdAndUpdate(id, {
+        await model.findByIdAndUpdate(id, {
           province,
           city,
           postalCode,
@@ -55,11 +55,11 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const address = await addressModel.findById(id);
+    const address = await model.findById(id);
 
     if (address) {
       if (request.user._id.equals(address.recipient)) {
-        await addressModel.findByIdAndDelete(id);
+        await model.findByIdAndDelete(id);
 
         response.json({ message: "The address has been successfully removed." });
       } else {
