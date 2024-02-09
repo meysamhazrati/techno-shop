@@ -1,13 +1,13 @@
-import discountCodeModel from "../models/discountCode.js";
+import model from "../models/discountCode.js";
 import orderModel from "../models/order.js";
 
 const create = async (request, response, next) => {
   try {
-    await discountCodeModel.createValidation(request.body);
+    await model.createValidation(request.body);
 
     const { code, percent, minimumAmount, maximumUsage, expiresAt, categories } = request.body;
 
-    await discountCodeModel.create({
+    await model.create({
       code,
       percent,
       minimumAmount,
@@ -25,13 +25,26 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const discountCodes = await discountCodeModel.find({}, "-__v").lean();
+    const { page = 1, length = 6 } = request.query;
+
+    const discountCodes = await model.find({}, "-categories -__v").populate({ path: "creator", select: "firstName lastName" }).sort({ createdAt: -1 }).lean();
 
     if (discountCodes.length) {
-      response.json(discountCodes);
-    } else {
-      throw Object.assign(new Error("No discount code found."), { status: 404 });
+      const currentPage = parseInt(page);
+      const lengthPerPage = parseInt(length);
+
+      const startIndex = (currentPage - 1) * lengthPerPage;
+      const endIndex = startIndex + lengthPerPage;
+
+      const currentPageDiscountCodes = discountCodes.slice(startIndex, endIndex);
+      const hasNextPage = endIndex < discountCodes.length;
+
+      if (currentPageDiscountCodes.length) {
+        return response.json({ discountCodes: currentPageDiscountCodes, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+      }
     }
+
+    throw Object.assign(new Error("No discount code found."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -39,11 +52,11 @@ const getAll = async (request, response, next) => {
 
 const check = async (request, response, next) => {
   try {
-    await discountCodeModel.checkValidation(request.body);
+    await model.checkValidation(request.body);
 
     const { code, amount, categories } = request.body;
 
-    const discountCode = await discountCodeModel.findOne({ code });
+    const discountCode = await model.findOne({ code });
 
     if (discountCode) {
       const isIncludes = categories.every((category) => discountCode.categories.includes(category));
@@ -52,7 +65,7 @@ const check = async (request, response, next) => {
         if (amount >= discountCode.minimumAmount) {
           const userOrders = await orderModel.find({ buyer: request.user._id });
 
-          const isUsed = userOrders.some((order) => discountCode._id.equals(order.discountCode));
+          const isUsed = userOrders.some(({ discountCode }) => discountCode._id.equals(discountCode));
 
           if (isUsed) {
             throw Object.assign(new Error("You have already used this discount code."), { status: 403 });
@@ -61,7 +74,7 @@ const check = async (request, response, next) => {
               if (discountCode.expiresAt > new Date()) {
                 const { _id, percent } = discountCode;
 
-                response.json({ message: "You can use this discount code.",  discountCode: { _id, percent } });
+                response.json({ message: "You can use this discount code.", discountCode: { _id, percent } });
               } else {
                 throw Object.assign(new Error("The entered discount code has expired."), { status: 410 });
               }
@@ -87,7 +100,7 @@ const use = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await discountCodeModel.findByIdAndUpdate(id, { $inc: { usages: 1 } });
+    const result = await model.findByIdAndUpdate(id, { $inc: { usages: 1 } });
 
     if (result) {
       response.json({ message: "The discount code has been successfully used." });
@@ -103,7 +116,7 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await discountCodeModel.findByIdAndDelete(id);
+    const result = await model.findByIdAndDelete(id);
 
     if (result) {
       response.json({ message: "The discount code has been successfully removed." });
