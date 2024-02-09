@@ -1,15 +1,16 @@
-import ticketModel from "../models/ticket.js";
+import model from "../models/ticket.js";
 
 const create = async (request, response, next) => {
   try {
-    await ticketModel.validation(request.body);
+    await model.createValidation(request.body);
 
     const { department, title, body } = request.body;
 
-    await ticketModel.create({
+    await model.create({
       department,
       title,
       body,
+      isOpen: true,
       sender: request.user._id,
     });
 
@@ -23,23 +24,17 @@ const reply = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const { user } = request;
+    const { _id, role } = request.user;
 
-    const ticket = await ticketModel.findById(id);
+    const ticket = await model.findById(id);
 
     if (ticket) {
-      if (user.role === "ADMIN" || user._id.equals(ticket.sender)) {
-        await ticketModel.validation(request.body);
+      if (role === "ADMIN" || _id.equals(ticket.sender)) {
+        await model.replyValidation(request.body);
 
-        const { department, title, body } = request.body;
+        const { body } = request.body;
 
-        await ticketModel.create({
-          department,
-          title,
-          body,
-          sender: request.user._id,
-          ticket: id,
-        });
+        await model.create({ body, sender: _id, ticket: id });
 
         response.status(201).json({ message: "Your reply has been successfully sent." });
       } else {
@@ -55,13 +50,26 @@ const reply = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const tickets = await ticketModel.find({}, "-__v").lean();
+    const { page = 1, length = 6 } = request.query;
+
+    const tickets = await model.find({ ticket: { $exists: false } }, "-body -__v").populate({ path: "sender", select: "firstName lastName" }).sort({ createdAt: -1 }).lean();
 
     if (tickets.length) {
-      response.json(tickets);
-    } else {
-      throw Object.assign(new Error("No ticket found."), { status: 404 });
+      const currentPage = parseInt(page);
+      const lengthPerPage = parseInt(length);
+
+      const startIndex = (currentPage - 1) * lengthPerPage;
+      const endIndex = startIndex + lengthPerPage;
+
+      const currentPageTickets = tickets.slice(startIndex, endIndex);
+      const hasNextPage = endIndex < tickets.length;
+
+      if (currentPageTickets.length) {
+        return response.json({ tickets: currentPageTickets, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+      }
     }
+
+    throw Object.assign(new Error("No ticket found."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -71,12 +79,15 @@ const get = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const { user } = request;
+    const { _id, role } = request.user;
 
-    const ticket = await ticketModel.findById(id, "-__v").lean();
+    const ticket = await model.findById(id, "-__v").populate([
+      { path: "sender", select: "firstName lastName" },
+      { path: "replies", select: "-__v", populate: { path: "sender", select: "firstName lastName" } },
+    ]).lean();
 
     if (ticket) {
-      if (user.role === "ADMIN" || user._id.equals(ticket.sender)) {
+      if (role === "ADMIN" || _id.equals(ticket.sender)) {
         response.json(ticket);
       } else {
         throw Object.assign(new Error("You don't have access to this ticket."), { status: 403 });
@@ -93,13 +104,13 @@ const open = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const ticket = await ticketModel.findById(id);
+    const ticket = await model.findById(id);
 
     if (ticket) {
       if (ticket.isOpen) {
         throw Object.assign(new Error("This ticket is already open."), { status: 409 });
       } else {
-        await ticketModel.findByIdAndUpdate(id, { isOpen: true });
+        await model.findByIdAndUpdate(id, { isOpen: true });
 
         response.json({ message: "The ticket has been successfully opened." });
       }
@@ -115,11 +126,11 @@ const close = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const ticket = await ticketModel.findById(id);
+    const ticket = await model.findById(id);
 
     if (ticket) {
       if (ticket.isOpen) {
-        await ticketModel.findByIdAndUpdate(id, { isOpen: false });
+        await model.findByIdAndUpdate(id, { isOpen: false });
 
         response.json({ message: "The ticket has been successfully closed." });
       } else {
@@ -133,4 +144,22 @@ const close = async (request, response, next) => {
   }
 };
 
-export { create, reply, getAll, get, open, close };
+const remove = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const result = await model.findByIdAndDelete(id);
+
+    if (result) {
+      await model.deleteMany({ ticket: id });
+
+      response.json({ message: "The ticket has been successfully removed." });
+    } else {
+      throw Object.assign(new Error("The ticket was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { create, reply, getAll, get, open, close, remove };
