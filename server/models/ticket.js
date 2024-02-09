@@ -24,7 +24,6 @@ const schema = new Schema(
     isOpen: {
       type: Boolean,
       required: false,
-      default: true,
     },
     sender: {
       type: Types.ObjectId,
