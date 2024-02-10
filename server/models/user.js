@@ -52,14 +52,39 @@ const schema = new Schema(
     },
     cart: [
       {
-        type: Types.ObjectId,
-        ref: "products",
+        quantity: {
+          type: Number,
+          required: false,
+          default: 1,
+        },
+        color: {
+          price: {
+            type: Number,
+            required: true,
+          },
+          inventory: {
+            type: Number,
+            required: true,
+          },
+          name: {
+            type: String,
+            required: true,
+          },
+          code: {
+            type: String,
+            required: true,
+          },
+        },
+        product: {
+          type: Types.ObjectId,
+          ref: "Product",
+        },
       },
     ],
     favorites: [
       {
         type: Types.ObjectId,
-        ref: "products",
+        ref: "Product",
       },
     ],
   },
@@ -75,7 +100,7 @@ schema.virtual("addresses", {
 schema.virtual("orders", {
   ref: "Order",
   localField: "_id",
-  foreignField: "customer",
+  foreignField: "buyer",
 });
 
 schema.virtual("comments", {
@@ -96,15 +121,10 @@ schema.virtual("tickets", {
   foreignField: "sender",
 });
 
-schema.virtual("notifications", {
-  ref: "Notification",
-  localField: "_id",
-  foreignField: "user",
-});
-
 schema.statics.registerValidation = (body) => register.validate(body);
 schema.statics.loginValidation = (body) => login.validate(body);
 schema.statics.editValidation = (body) => edit.validate(body);
 schema.statics.updateValidation = (body) => update.validate(body);
 
+export { schema };
 export default model("User", schema);
