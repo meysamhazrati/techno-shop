@@ -31,9 +31,9 @@ const getAll = async (request, response, next) => {
   try {
     const { page = 1, length = 6 } = request.query;
 
-    const articles = await model.find({}, "-__v").populate([
+    const articles = await model.find({}, "-body -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
-      { path: "category", select: "-offer -__v" },
+      { path: "category", select: "-__v" },
       { path: "comments", select: "score" },
     ]).sort({ createdAt: -1 }).lean();
 
@@ -64,8 +64,8 @@ const get = async (request, response, next) => {
 
     const article = await model.findById(id, "-__v").populate([
       { path: "author", select: "firstName lastName avatar" },
-      { path: "category", select: "-offer -__v" },
-      { path: "comments", select: "-__v", populate: { path: "sender", select: "firstName lastName avatar" } },
+      { path: "category", select: "-__v" },
+      { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
     ]).lean();
 
     if (article) {
@@ -83,9 +83,9 @@ const getByCategory = async (request, response, next) => {
     const { id } = request.params;
     const { page = 1, length = 6 } = request.query;
 
-    const articles = await model.find({ category: id }, "-category -__v").populate([
+    const articles = await model.find({ category: id }, "-body -category -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
-      { path: "category", select: "-offer -__v" },
+      { path: "category", select: "-__v" },
       { path: "comments", select: "score" },
     ]).sort({ createdAt: -1 }).lean();
 
