@@ -1,16 +1,56 @@
 import { hash, compare } from "bcrypt";
 import { unlink } from "fs";
 
-import userModel from "../models/user.js";
+import model from "../models/user.js";
+import productModel from "../models/product.js";
+import addressModel from "../models/address.js";
+import commentModel from "../models/comment.js";
+import articleModel from "../models/article.js";
+import ticketModel from "../models/ticket.js";
 
 const getAll = async (request, response, next) => {
   try {
-    const users = await userModel.find({}, "-password -cart -favorites -__v").lean();
+    const { page = 1, length = 6 } = request.query;
 
-    if(users.length) {
-      response.json(users);
+    const users = await model.find({}, "-password -cart -favorites -__v").sort({ createdAt: -1 }).lean();
+
+    if (users.length) {
+      const currentPage = parseInt(page);
+      const lengthPerPage = parseInt(length);
+
+      const startIndex = (currentPage - 1) * lengthPerPage;
+      const endIndex = startIndex + lengthPerPage;
+
+      const currentPageUsers = users.slice(startIndex, endIndex);
+      const hasNextPage = endIndex < users.length;
+
+      if (currentPageUsers.length) {
+        return response.json({ users: currentPageUsers, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+      }
+    }
+
+    throw Object.assign(new Error("No user found."), { status: 404 });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const get = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const user = await model.findById(id, "-password -__v").populate([
+      { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
+      { path: "orders", select: "-products -destination -discountCode -__v", options: { sort: { createdAt: -1 } } },
+      { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "product article", select: "title" } },
+      { path: "articles", select: "-body -__v", options: { sort: { createdAt: -1 } }, populate: { path: "category", select: "-__v" } },
+      { path: "tickets", select: "-body -__v", match: { ticket: { $exists: false } }, options: { sort: { createdAt: -1 } } },
+    ]).lean();
+
+    if (user) {
+      response.json(user);
     } else {
-      throw Object.assign(new Error("No user found."), { status: 404 });
+      throw Object.assign(new Error("The user was not found."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -19,8 +59,8 @@ const getAll = async (request, response, next) => {
 
 const edit = async (request, response, next) => {
   try {
-    await userModel.editValidation(request.body);
-    
+    await model.editValidation(request.body);
+
     const { user } = request;
     const { _id: id } = user;
 
@@ -30,7 +70,7 @@ const edit = async (request, response, next) => {
     let hashedPassword;
 
     if (currentPassword && newPassword) {
-      const { password } = await userModel.findById(id);
+      const { password } = await model.findById(id);
 
       const isPasswordValid = await compare(currentPassword, password);
 
@@ -41,20 +81,20 @@ const edit = async (request, response, next) => {
       }
     }
 
-    await userModel.findByIdAndUpdate(id, {
+    await model.findByIdAndUpdate(id, {
       firstName,
       lastName,
       password: hashedPassword,
       avatar: avatar?.filename,
     });
 
-    if(avatar && user.avatar !== "user.png") {
-      unlink(`public/users/${user.avatar}`, (error) => error && console.error(error));
+    if (avatar && user.avatar !== "user.png") {
+      unlink(`public/users/${user.avatar}`, (error) => console.error(error));
     }
 
     response.json({ message: "Your information has been successfully edited." });
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => error && console.error(error));
+    request.file && unlink(request.file.path, (error) => console.error(error));
 
     next(error);
   }
@@ -62,37 +102,167 @@ const edit = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await userModel.updateValidation(request.body);
-    
+    await model.updateValidation(request.body);
+
     const { id } = request.params;
+
     const avatar = request.file;
     const { firstName, lastName, phone, email, password, role } = request.body;
 
-    const hashedPassword = password ? await hash(password, 12) : undefined;
+    const isExists = await model.findOne({ $or: [{ phone }, { email }], _id: { $ne: id } });
 
-    const result = await userModel.findByIdAndUpdate(id, {
-      firstName,
-      lastName,
-      phone,
-      email,
-      password: hashedPassword,
-      role,
-      avatar: avatar?.filename,
-    });
-
-    if(result) {
-      if(avatar && result.avatar !== "user.png") {
-        unlink(`public/users/${result.avatar}`, (error) => error && console.error(error));
-      }
-      
-      response.json({ message: "The user has been successfully edited."});
+    if (isExists) {
+      throw Object.assign(new Error("This phone or email already exists."), { status: 409 });
     } else {
-      throw Object.assign(new Error("The user was not found."), { status: 404 });
+      const hashedPassword = password ? await hash(password, 12) : undefined;
+
+      const result = await model.findByIdAndUpdate(id, {
+        firstName,
+        lastName,
+        phone,
+        email,
+        password: hashedPassword,
+        role,
+        avatar: avatar?.filename,
+      });
+
+      if (result) {
+        if (avatar && result.avatar !== "user.png") {
+          unlink(`public/users/${result.avatar}`, (error) => console.error(error));
+        }
+
+        response.json({ message: "The user has been successfully edited." });
+      } else {
+        throw Object.assign(new Error("The user was not found."), { status: 404 });
+      }
     }
-
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => error && console.error(error));
+    request.file && unlink(request.file.path, (error) => console.error(error));
 
+    next(error);
+  }
+};
+
+const addToCart = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const { _id, cart } = request.user;
+
+    const { color } = request.body;
+
+    const product = await productModel.findOne({ _id: id, "colors._id": color }, "colors.$");
+
+    if (product) {
+      const color = product.colors[0];
+
+      const isExists = cart.find((product) => product.product.equals(id) && product.color.code === color.code);
+
+      if (isExists) {
+        if (color.inventory > isExists.quantity) {
+          await model.findOneAndUpdate({ _id, "cart._id": isExists._id }, { $inc: { "cart.$.quantity": 1 } });
+
+          return response.json({ message: "The quantity of this product in your cart has been successfully increased." });
+        }
+      } else {
+        if (color.inventory >= 1) {
+          await model.findByIdAndUpdate(_id, { $push: { cart: { color, product: id } } });
+
+          return response.json({ message: "The product has been successfully added to your cart." });
+        }
+      }
+
+      throw Object.assign(new Error("The product inventory is insufficient."), { status: 409 });
+    } else {
+      throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeFromCart = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const { _id, cart } = request.user;
+
+    const { color } = request.body;
+
+    const product = await productModel.findOne({ _id: id, "colors._id": color }, "colors.$").lean();
+
+    if (product) {
+      const isExists = cart.find(({ product: _id, color }) => _id.equals(id) && color.code === product.colors[0].code);
+
+      if (isExists) {
+        if (isExists.quantity > 1) {
+          await model.findOneAndUpdate({ _id, "cart._id": isExists._id }, { $inc: { "cart.$.quantity": -1 } });
+
+          return response.json({ message: "The quantity of this product in your cart has been successfully decreased." });
+        } else {
+          await model.findByIdAndUpdate(_id, { $pull: { cart: { _id: isExists._id } } });
+
+          return response.json({ message: "The product has been successfully removed from your cart." });
+        }
+      } else {
+        throw Object.assign(new Error("This product doesn't exist in your cart."), { status: 409 });
+      }
+    } else {
+      throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addToFavorites = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const { _id, favorites } = request.user;
+
+    const product = await productModel.findById(id);
+
+    if (product) {
+      const isExists = favorites.some((product) => product.equals(id));
+
+      if (isExists) {
+        throw Object.assign(new Error("This product has already been added to your favorites."), { status: 409 });
+      } else {
+        await model.findByIdAndUpdate(_id, { $push: { favorites: id } });
+
+        response.json({ message: "The product has been successfully added to your favorites." });
+      }
+    } else {
+      throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeFromFavorites = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+
+    const { _id, favorites } = request.user;
+
+    const product = await productModel.findById(id);
+
+    if (product) {
+      const isExists = favorites.some((product) => product.equals(id));
+
+      if (isExists) {
+        await model.findByIdAndUpdate(_id, { $pull: { favorites: id } });
+
+        return response.json({ message: "The product has been successfully removed from your favorites." });
+      } else {
+        throw Object.assign(new Error("This product doesn't exist in your favorites."), { status: 409 });
+      }
+    } else {
+      throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
+  } catch (error) {
     next(error);
   }
 };
@@ -101,13 +271,13 @@ const ban = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const user = await userModel.findById(id);
+    const user = await model.findById(id);
 
     if (user) {
       if (user.isBanned) {
         throw Object.assign(new Error("This user has already been banned."), { status: 409 });
       } else {
-        await userModel.findByIdAndUpdate(id, { isBanned: true });
+        await model.findByIdAndUpdate(id, { isBanned: true });
 
         response.json({ message: "The user has been successfully banned." });
       }
@@ -119,15 +289,15 @@ const ban = async (request, response, next) => {
   }
 };
 
-const unban = async (request, response, next) => {
+const unBan = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const user = await userModel.findById(id);
+    const user = await model.findById(id);
 
     if (user) {
       if (user.isBanned) {
-        await userModel.findByIdAndUpdate(id, { isBanned: false });
+        await model.findByIdAndUpdate(id, { isBanned: false });
 
         response.json({ message: "The user has been successfully unbanned." });
       } else {
@@ -145,11 +315,16 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await userModel.findByIdAndDelete(id);
+    const result = await model.findByIdAndDelete(id);
 
-    if(result) {
-      result.avatar !== "user.png" && unlink(`public/users/${result.avatar}`, (error) => error && console.error(error));
-      
+    if (result) {
+      result.avatar !== "user.png" && unlink(`public/users/${result.avatar}`, (error) => console.error(error));
+
+      await addressModel.deleteMany({ recipient: id });
+      await commentModel.deleteMany({ sender: id });
+      await articleModel.deleteMany({ author: id });
+      await ticketModel.deleteMany({ sender: id });
+
       response.json({ message: "The user has been successfully removed." });
     } else {
       throw Object.assign(new Error("The user was not found."), { status: 404 });
@@ -159,4 +334,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { getAll, edit, update, ban, unban, remove };
+export { getAll, get, edit, update, addToCart, removeFromCart, addToFavorites, removeFromFavorites, ban, unBan, remove };
