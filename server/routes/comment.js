@@ -7,8 +7,8 @@ import { create, getAll, confirm, reject, remove } from "../controllers/comment.
 const router = Router();
 
 router.route("/").post(authentication, create).get(authentication, isAdmin, getAll);
-router.put("/confirm/:id").put(authentication, isAdmin, confirm);
-router.put("/reject/:id").put(authentication, isAdmin, reject);
-router.delete("/:id").put(authentication, remove);
+router.put("/confirm/:id", authentication, isAdmin, confirm);
+router.put("/reject/:id", authentication, isAdmin, reject);
+router.delete("/:id", authentication, remove);
 
 export default router;
