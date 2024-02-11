@@ -9,7 +9,7 @@ const create = object({
     name: string().required().min(3).max(15),
     code: string().required(),
   })).required().min(1).max(10),
-  covers: object().required(),
+  covers: array().of(object()).required().length(4),
   brand: string().required(),
   category: string().required(),
 });
