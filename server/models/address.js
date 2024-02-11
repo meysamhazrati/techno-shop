@@ -38,4 +38,5 @@ const schema = new Schema(
 
 schema.statics.validation = (body) => validator.validate(body);
 
+export { schema };
 export default model("Address", schema);

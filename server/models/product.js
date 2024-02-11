@@ -72,4 +72,5 @@ schema.virtual("comments", {
 schema.statics.createValidation = (body) => create.validate(body);
 schema.statics.updateValidation = (body) => update.validate(body);
 
+export { schema };
 export default model("Product", schema);

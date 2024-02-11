@@ -56,4 +56,5 @@ const schema = new Schema(
 schema.statics.createValidation = (body) => create.validate(body);
 schema.statics.checkValidation = (body) => check.validate(body);
 
+export { schema };
 export default model("DiscountCode", schema);
