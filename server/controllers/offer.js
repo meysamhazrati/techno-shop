@@ -1,5 +1,4 @@
 import model from "../models/offer.js";
-import categoryModel from "../models/category.js";
 import productModel from "../models/product.js";
 
 const create = async (request, response, next) => {
@@ -15,8 +14,6 @@ const create = async (request, response, next) => {
       expiresAt: Date.now() + 1000 * 60 * 60 * expiresAt,
       organizer: request.user._id,
     });
-
-    await categoryModel.updateMany({ _id: categories }, { offer: _id });
 
     await productModel.updateMany({ category: categories }, { offer: _id });
 

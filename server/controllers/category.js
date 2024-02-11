@@ -18,7 +18,7 @@ const getAll = async (request, response, next) => {
   try {
     const { page = 1, length = 6 } = request.query;
 
-    const categories = await model.find({}, "-__v").populate({ path: "offer", select: "-organizer -__v" }).sort({ createdAt: -1 }).lean();
+    const categories = await model.find({}, "-__v").sort({ createdAt: -1 }).lean();
 
     if (categories.length) {
       const currentPage = parseInt(page);
@@ -45,7 +45,7 @@ const get = async (request, response, next) => {
   try {
     const { title } = request.params;
 
-    const category = await model.findOne({ englishTitle: title }, "-__v").populate({ path: "offer", select: "-organizer -__v" }).lean();
+    const category = await model.findOne({ englishTitle: title }, "-__v").lean();
 
     if (category) {
       response.json(category);

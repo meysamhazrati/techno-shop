@@ -16,10 +16,6 @@ const schema = new Schema(
       minLength: 3,
       maxLength: 50,
     },
-    offer: {
-      type: Types.ObjectId,
-      ref: "Offer",
-    },
   },
   { timestamps: true }
 );
