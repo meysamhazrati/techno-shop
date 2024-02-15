@@ -57,27 +57,13 @@ const schema = new Schema(
           required: false,
           default: 1,
         },
-        color: {
-          price: {
-            type: Number,
-            required: true,
-          },
-          inventory: {
-            type: Number,
-            required: true,
-          },
-          name: {
-            type: String,
-            required: true,
-          },
-          code: {
-            type: String,
-            required: true,
-          },
-        },
         product: {
           type: Types.ObjectId,
           ref: "Product",
+        },
+        color: {
+          type: Types.ObjectId,
+          ref: "Color",
         },
       },
     ],
