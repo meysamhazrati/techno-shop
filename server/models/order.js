@@ -1,6 +1,11 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 import validator from "../validators/order.js";
+import { schema as productSchema } from "../models/product.js";
+import { schema as colorSchema } from "../models/color.js";
+import { schema as userSchema } from "../models/user.js";
+import { schema as addressSchema } from "../models/address.js";
+import { schema as discountCodeSchema } from "../models/discountCode.js";
 
 const schema = new Schema(
   {
@@ -29,35 +34,22 @@ const schema = new Schema(
           min: 1,
           max: 100,
         },
-        color: {
-          name: {
-            type: String,
-            required: true,
-            minLength: 3,
-            maxLength: 15,
-          },
-          code: {
-            type: String,
-            required: true,
-          },
-        },
         product: {
-          type: Types.ObjectId,
-          ref: "Product",
+          type: productSchema,
+        },
+        color: {
+          type: colorSchema,
         },
       },
     ],
     buyer: {
-      type: Types.ObjectId,
-      ref: "User",
+      type: userSchema,
     },
     destination: {
-      type: Types.ObjectId,
-      ref: "Address",
+      type: addressSchema,
     },
     discountCode: {
-      type: Types.ObjectId,
-      ref: "DiscountCode",
+      type: discountCodeSchema,
     },
   },
   { timestamps: true }
