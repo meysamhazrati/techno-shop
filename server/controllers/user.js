@@ -3,6 +3,7 @@ import { unlink } from "fs";
 
 import model from "../models/user.js";
 import productModel from "../models/product.js";
+import colorModel from "../models/color.js";
 import addressModel from "../models/address.js";
 import commentModel from "../models/comment.js";
 import articleModel from "../models/article.js";
@@ -39,7 +40,7 @@ const get = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const user = await model.findById(id, "-password -__v").populate([
+    const user = await model.findById(id, "-password -cart -favorites -__v").populate([
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
       { path: "orders", select: "-products -destination -discountCode -__v", options: { sort: { createdAt: -1 } } },
       { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "product article", select: "title" } },
@@ -151,22 +152,21 @@ const addToCart = async (request, response, next) => {
 
     const { color } = request.body;
 
-    const product = await productModel.findOne({ _id: id, "colors._id": color }, "colors.$");
+    const product = await productModel.findById(id);
+    const productColor = await colorModel.findOne({ _id: color, product: id });
 
-    if (product) {
-      const color = product.colors[0];
-
-      const isExists = cart.find((product) => product.product.equals(id) && product.color.code === color.code);
+    if (product && productColor) {
+      const isExists = cart.find(({ product, color }) => product.equals(id) && color.equals(productColor._id));
 
       if (isExists) {
-        if (color.inventory > isExists.quantity) {
+        if (productColor.inventory > isExists.quantity) {
           await model.findOneAndUpdate({ _id, "cart._id": isExists._id }, { $inc: { "cart.$.quantity": 1 } });
 
           return response.json({ message: "The quantity of this product in your cart has been successfully increased." });
         }
       } else {
-        if (color.inventory >= 1) {
-          await model.findByIdAndUpdate(_id, { $push: { cart: { color, product: id } } });
+        if (productColor.inventory >= 1) {
+          await model.findByIdAndUpdate(_id, { $push: { cart: { color: productColor, product: id } } });
 
           return response.json({ message: "The product has been successfully added to your cart." });
         }
@@ -189,10 +189,11 @@ const removeFromCart = async (request, response, next) => {
 
     const { color } = request.body;
 
-    const product = await productModel.findOne({ _id: id, "colors._id": color }, "colors.$").lean();
+    const product = await productModel.findById(id);
+    const productColor = await colorModel.findOne({ _id: color, product: id });
 
-    if (product) {
-      const isExists = cart.find(({ product: _id, color }) => _id.equals(id) && color.code === product.colors[0].code);
+    if (product && productColor) {
+      const isExists = cart.find(({ product, color }) => product.equals(id) && color.equals(productColor._id));
 
       if (isExists) {
         if (isExists.quantity > 1) {
