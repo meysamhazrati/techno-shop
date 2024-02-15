@@ -21,32 +21,6 @@ const schema = new Schema(
         type: String,
       },
     ],
-    colors: [
-      {
-        price: {
-          type: Number,
-          required: true,
-          min: 1000,
-          max: 1000000000,
-        },
-        inventory: {
-          type: Number,
-          required: true,
-          min: 1,
-          max: 100000,
-        },
-        name: {
-          type: String,
-          required: true,
-          minLength: 3,
-          maxLength: 15,
-        },
-        code: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
     brand: {
       type: Types.ObjectId,
       ref: "Brand",
@@ -62,6 +36,12 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.virtual("colors", {
+  ref: "Color",
+  localField: "_id",
+  foreignField: "product",
+});
 
 schema.virtual("comments", {
   ref: "Comment",
