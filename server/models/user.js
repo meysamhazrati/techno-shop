@@ -86,7 +86,7 @@ schema.virtual("addresses", {
 schema.virtual("orders", {
   ref: "Order",
   localField: "_id",
-  foreignField: "buyer",
+  foreignField: "buyer._id",
 });
 
 schema.virtual("comments", {
