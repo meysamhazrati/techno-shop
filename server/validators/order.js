@@ -5,11 +5,8 @@ const validator = object({
   totalAmount: number().required().min(0).max(10000000000),
   products: array().of(object({
     quantity: number().required().min(1).max(100),
-    color: object({
-      name: string().required().min(3).max(15),
-      code: string().required(),
-    }).required(),
     product: string().required(),
+    color: string().required(),
   })).required().min(1).max(100),
   destination: string().required(),
 });
