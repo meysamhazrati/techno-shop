@@ -12,7 +12,7 @@ const create = async (request, response, next) => {
     await model.create({
       body,
       score,
-      isBuyer: product ? Boolean(await orderModel.findOne({ buyer: _id, "products.product": product })) : undefined,
+      isBuyer: product ? Boolean(await orderModel.findOne({ buyer: _id, "products.product._id": product })) : undefined,
       sender: request.user._id,
       product,
       article,
