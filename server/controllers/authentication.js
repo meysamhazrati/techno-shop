@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { hash, compare } from "bcrypt";
 
-import userModel from "../models/user.js";
+import model from "../models/user.js";
 import otpModel from "../models/otp.js";
 import mailer from "../utilities/mailer.js";
 
@@ -9,74 +9,85 @@ const send = async (request, response, next) => {
   try {
     await otpModel.sendValidation(request.body);
 
-    const { email } = request.body;
+    const { type } = request.query;
 
-    const isExists = await userModel.findOne({ email });
+    if (type) {
+      if (type === "register" || type === "resetPassword") {
+        const { email } = request.body;
 
-    if (isExists) {
-      throw Object.assign(new Error("This email already exists."), { status: 409 });
-    } else {
-      const isBlocked = await otpModel.findOne({ email, tries: 3 });
+        const isExists = await model.findOne({ email });
 
-      if (isBlocked) {
-        throw Object.assign(new Error("This email is blocked for a few hours."), { status: 403 });
-      } else {
-        const activeOTP = await otpModel.findOne({ email, expiresAt: { $gt: new Date() } });
-
-        let code, expiresAt = null;
-
-        if (activeOTP) {
-          ({ code, expiresAt } = activeOTP);
+        if (isExists && type === "register") {
+          throw Object.assign(new Error("This email already exists."), { status: 409 });
+        } else if (!isExists && type === "resetPassword") {
+          throw Object.assign(new Error("The entered email is incorrect."), { status: 409 });
         } else {
-          await otpModel.deleteOne({ email });
+          const isBlocked = await otpModel.findOne({ email, tries: 3 });
 
-          ({ code, expiresAt } = await otpModel.create({ email }));
-        }
+          if (isBlocked) {
+            throw Object.assign(new Error("This email is blocked for a few hours."), { status: 403 });
+          } else {
+            const activeOTP = await otpModel.findOne({ email, expiresAt: { $gt: new Date() } });
 
-        const transporter = mailer();
+            let code, expiresAt = null;
 
-        transporter.sendMail({
-            to: email,
-            subject: "کد تایید شما برای ثبت نام در تکنوشاپ",
-            html: `
-              <table style="max-width: 40rem; color: #3c3f44; font-size: 1rem; font-family: Vazir, Segoe UI; padding: 0 1rem; margin: 0 auto; direction: rtl;">
-                <tbody>
-                  <tr>
-                    <td>
-                      <p>کد تایید شما:</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <h1 style="text-align: center; margin: 1rem 0">
-                        <code style="background-color: #d6d8db; padding: 0.3rem 1rem; border-radius: 0.7rem;">${code}</code>
-                      </h1>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p>این کد تا تاریخ <strong>${expiresAt.toLocaleDateString("fa-IR")}</strong> ساعت <strong>${expiresAt.toLocaleTimeString("fa-IR")}</strong> اعتبار دارد.</p>
-                    </td>
-                  </tr>
-                  <tfoot>
-                    <tr>
-                      <td>
-                        <span style="text-align: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid #d6d8db; display: block;">&copy; فروشگاه اینترنتی <a href="https://github.com/meysamhazrati/techno-shop" target="_blank" style="color: #0279d8;">تکنوشاپ</a></span>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </tbody>
-              </table>
-          `},
-          (error, info) => {
-            if (error) {
-              throw error;
+            if (activeOTP) {
+              ({ code, expiresAt } = activeOTP);
             } else {
-              response.json({ message: "The code was sent successfully." });
+              await otpModel.deleteOne({ email });
+
+              ({ code, expiresAt } = await otpModel.create({ email }));
             }
+
+            const transporter = mailer();
+
+            transporter.sendMail({
+                to: email,
+                subject: "تکنوشاپ",
+                html: `<table style="max-width: 40rem; color: #3c3f44; font-size: 1rem; font-family: Vazir, Segoe UI; padding: 0 1rem; margin: 0 auto; direction: rtl;">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p>کد تایید شما:</p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <h1 style="text-align: center; margin: 1rem 0">
+                                <code style="background-color: #d6d8db; padding: 0.3rem 1rem; border-radius: 0.7rem;">${code}</code>
+                              </h1>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <p>این کد تا تاریخ <strong>${expiresAt.toLocaleDateString("fa-IR")}</strong> ساعت <strong>${expiresAt.toLocaleTimeString("fa-IR")}</strong> اعتبار دارد.</p>
+                            </td>
+                          </tr>
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <span style="text-align: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid #d6d8db; display: block;">&copy; فروشگاه اینترنتی <a href="https://github.com/meysamhazrati/techno-shop" target="_blank" style="color: #0279d8;">تکنوشاپ</a></span>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </tbody>
+                      </table>`,
+              },
+              (error, info) => {
+                if (error) {
+                  throw error;
+                } else {
+                  response.json({ message: "The verification code was sent successfully." });
+                }
+              }
+            );
           }
-        );
+        }
+      } else {
+        throw Object.assign(new Error("The entered type query is invalid."), { status: 400 });
       }
+    } else {
+      throw Object.assign(new Error("The type query is required."), { status: 400 });
     }
   } catch (error) {
     next(error);
@@ -101,16 +112,16 @@ const verify = async (request, response, next) => {
           } else {
             await otpModel.findByIdAndUpdate(otp._id, { $inc: { tries: 1 } });
 
-            throw Object.assign(new Error("The entered code is incorrect."), { status: 401 });
+            throw Object.assign(new Error("The entered verification code is incorrect."), { status: 401 });
           }
         } else {
-          throw Object.assign(new Error("The entered code has expired."), { status: 410 });
+          throw Object.assign(new Error("The entered verification code has expired."), { status: 410 });
         }
       } else {
         throw Object.assign(new Error("Too many incorrect attempts have been made to verify this email."), { status: 429 });
       }
     } else {
-      throw Object.assign(new Error("No code has been sent for this email."), { status: 409 });
+      throw Object.assign(new Error("No verification code has been sent for this email."), { status: 409 });
     }
   } catch (error) {
     next(error);
@@ -119,20 +130,20 @@ const verify = async (request, response, next) => {
 
 const register = async (request, response, next) => {
   try {
-    await userModel.registerValidation(request.body);
+    await model.registerValidation(request.body);
 
     const { firstName, lastName, phone, email, password } = request.body;
 
-    const isExists = await userModel.findOne({ $or: [{ phone }, { email }] });
+    const isExists = await model.findOne({ $or: [{ phone }, { email }] });
 
     if (isExists) {
       throw Object.assign(new Error("This phone or email already exists."), { status: 409 });
     } else {
-      const usersCount = await userModel.countDocuments();
+      const usersCount = await model.countDocuments();
 
       const hashedPassword = await hash(password, 12);
 
-      const { _id: id } = await userModel.create({
+      const { _id: id } = await model.create({
         firstName,
         lastName,
         phone,
@@ -156,11 +167,11 @@ const register = async (request, response, next) => {
 
 const login = async (request, response, next) => {
   try {
-    await userModel.loginValidation(request.body);
+    await model.loginValidation(request.body);
 
     const { identifier, password } = request.body;
 
-    const user = await userModel.findOne({ $or: [{ phone: identifier }, { email: identifier }] });
+    const user = await model.findOne({ $or: [{ phone: identifier }, { email: identifier }] });
 
     if (user) {
       const { _id: id, password: userPassword, isBanned } = user;
