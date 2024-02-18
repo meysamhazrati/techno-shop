@@ -1,0 +1,44 @@
+{
+  "name": "techno-shop",
+  "version": "1.0.0",
+  "description": "A shop for technology.",
+  "type": "module",
+  "main": "index.jsx",
+  "scripts": {
+    "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meysamhazrati/techno-shop.git"
+  },
+  "keywords": [
+    "shop",
+    "technology",
+    "ecmascript",
+    "javascript",
+    "node",
+    "react",
+    "mongo"
+  ],
+  "author": "MeySaM HaZraTi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meysamhazrati/techno-shop/issues"
+  },
+  "homepage": "https://github.com/meysamhazrati/techno-shop#readme",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "vite": "^5.1.0"
+  }
+}
