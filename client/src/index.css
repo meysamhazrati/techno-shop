@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @media screen and (min-width: 1024px) {
+    html {
+      scroll-behavior: smooth;
+    }
+
+    ::selection {
+      color: #ffffff;
+      background-color: #0279d9;
+    }
+
+    ::-webkit-scrollbar {
+      width: 0.5rem;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: #cae3f7;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #7fbbec;
+    }
+  }
+
+  @font-face {
+    font-family: "vazirmatn-regular";
+    src: url("/fonts/vazirmatn/vazirmatn-regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "vazirmatn-medium";
+    src: url("/fonts/vazirmatn/vazirmatn-medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "vazirmatn-bold";
+    src: url("/fonts/vazirmatn/vazirmatn-bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "vazirmatn-black";
+    src: url("/fonts/vazirmatn/vazirmatn-black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+}
