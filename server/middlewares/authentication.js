@@ -12,9 +12,8 @@ const middleware = async (request, response, next) => {
 
       const user = await model.findById(id, "-password -__v").populate([
         { path: "cart", populate: [
-          { path: "product", select: "title warranty covers" },
+          { path: "product", select: "title warranty covers offer", populate: { path: "offer", select: "percent expiresAt" } },
           { path: "color", select: "price inventory name code" },
-          { path: "offer", select: "percent expiresAt" },
         ] },
         { path: "favorites", select: "title covers", populate: [
           { path: "colors", select: "price inventory name code" },
