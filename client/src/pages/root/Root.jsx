@@ -1,5 +1,9 @@
+import Header from "../../components/root/Header";
+
 const Root = () => {
-  return <></>;
+  return (
+    <Header />
+  );
 };
 
 export default Root;
