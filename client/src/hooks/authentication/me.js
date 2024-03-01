@@ -1,19 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { me } from "../../axios/controllers/authentication";
 
-const isClientError = ({ state }) => !/401|403|404/.test(state.error?.response?.status);
+const shouldRetry = (error) => !/401|403|404/.test(error.response.status);
+const shouldRefetch = ({ state }) => !/401|403|404/.test(state.error?.response?.status);
 
 export default () => {
-  const { isFetching, isError, data } = useQuery({
+  const { isPending, isFetching, isError, data } = useQuery({
     queryKey: ["me"],
     queryFn: me,
     staleTime: 1000 * 60,
-    retry: (failureCount, error) => isClientError({ state: { error } }) && failureCount < 2,
-    refetchOnMount: isClientError,
-    refetchOnReconnect: isClientError,
-    refetchOnWindowFocus: isClientError,
+    retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
+    refetchOnMount: shouldRefetch,
+    refetchOnReconnect: shouldRefetch,
+    refetchOnWindowFocus: shouldRefetch,
     select: (data) => data.data,
   });
 
-  return { isFetching, isError, data };
+  return { isPending, isFetching, isError, data };
 };
