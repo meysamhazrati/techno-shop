@@ -42,22 +42,21 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const orders = await model.find({}, "shippingCost totalAmount status createdAt updatedAt buyer.firstName buyer.lastName").sort({ createdAt: -1 }).lean();
 
     if (orders.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || orders.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageOrders = orders.slice(startIndex, endIndex);
-      const hasNextPage = endIndex < orders.length;
 
       if (currentPageOrders.length) {
-        return response.json({ orders: currentPageOrders, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ orders: currentPageOrders, total: orders.length, nextPage: endIndex < orders.length ? currentPage + 1 : null });
       }
     }
 

@@ -11,22 +11,21 @@ import ticketModel from "../models/ticket.js";
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const users = await model.find({}, "-password -cart -favorites -__v").sort({ createdAt: -1 }).lean();
 
     if (users.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || users.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageUsers = users.slice(startIndex, endIndex);
-      const hasNextPage = endIndex < users.length;
 
       if (currentPageUsers.length) {
-        return response.json({ users: currentPageUsers, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ users: currentPageUsers, total: users.length, nextPage: endIndex < users.length ? currentPage + 1 : null });
       }
     }
 

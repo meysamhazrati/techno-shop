@@ -26,7 +26,7 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const comments = await model.find({}, "-__v").populate([
       { path: "sender", select: "firstName lastName" },
@@ -35,16 +35,15 @@ const getAll = async (request, response, next) => {
 
     if (comments.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || comments.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageComments = comments.slice(startIndex, endIndex);
-      const hasNextPage = endIndex < comments.length;
 
       if (currentPageComments.length) {
-        return response.json({ comments: currentPageComments, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ comments: currentPageComments, total: comments.length, nextPage: endIndex < comments.length ? currentPage + 1 : null });
       }
     }
 

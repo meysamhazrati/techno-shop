@@ -50,22 +50,21 @@ const reply = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const tickets = await model.find({ ticket: { $exists: false } }, "-body -__v").populate({ path: "sender", select: "firstName lastName" }).sort({ createdAt: -1 }).lean();
 
     if (tickets.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || tickets.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageTickets = tickets.slice(startIndex, endIndex);
-      const hasNextPage = endIndex < tickets.length;
 
       if (currentPageTickets.length) {
-        return response.json({ tickets: currentPageTickets, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ tickets: currentPageTickets, total: tickets.length, nextPage: endIndex < tickets.length ? currentPage + 1 : null });
       }
     }
 

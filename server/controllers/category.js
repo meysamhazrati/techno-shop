@@ -16,22 +16,21 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const categories = await model.find({}, "-__v").sort({ createdAt: -1 }).lean();
 
     if (categories.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || categories.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageCategories = categories.slice(startIndex, endIndex);
-      const hasNextPage = endIndex < categories.length;
 
       if (currentPageCategories.length) {
-        return response.json({ categories: currentPageCategories, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ categories: currentPageCategories, total: categories.length, nextPage: endIndex < categories.length ? currentPage + 1 : null });
       }
     }
 

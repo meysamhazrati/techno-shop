@@ -45,7 +45,7 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const products = await model.find({}, "title covers").populate([
       { path: "colors", select: "price inventory name code" },
@@ -57,16 +57,15 @@ const getAll = async (request, response, next) => {
 
     if (products.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || products.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-      const hasNextPage = endIndex < products.length;
 
       if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
       }
     }
 
@@ -101,7 +100,7 @@ const get = async (request, response, next) => {
 const getByCategory = async (request, response, next) => {
   try {
     const { id } = request.params;
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const products = await model.find({ category: id }, "title covers").populate([
       { path: "colors", select: "price inventory name code" },
@@ -112,16 +111,15 @@ const getByCategory = async (request, response, next) => {
 
     if (products.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || products.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-      const hasNextPage = endIndex < products.length;
 
       if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
       }
     }
 
@@ -134,7 +132,7 @@ const getByCategory = async (request, response, next) => {
 const getByOffer = async (request, response, next) => {
   try {
     const { id } = request.params;
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const products = await model.find({ offer: id }, "title covers").populate([
       { path: "colors", select: "price inventory name code" },
@@ -145,16 +143,15 @@ const getByOffer = async (request, response, next) => {
 
     if (products.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || products.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-      const hasNextPage = endIndex < products.length;
 
       if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
       }
     }
 
@@ -167,7 +164,7 @@ const getByOffer = async (request, response, next) => {
 const search = async (request, response, next) => {
   try {
     const { title } = request.params;
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const products = await model.find({ title: { $regex: new RegExp(title, "i") } }, "title covers").populate([
       { path: "colors", select: "price inventory name code" },
@@ -179,16 +176,15 @@ const search = async (request, response, next) => {
 
     if (products.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || products.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-      const hasNextPage = endIndex < products.length;
 
       if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
       }
     }
 

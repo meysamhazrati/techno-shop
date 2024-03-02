@@ -29,7 +29,7 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const articles = await model.find({}, "-body -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
@@ -39,16 +39,15 @@ const getAll = async (request, response, next) => {
 
     if (articles.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || articles.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageArticles = articles.slice(startIndex, endIndex).map(({ comments, ...article }) => ({ ...article, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-      const hasNextPage = endIndex < articles.length;
 
       if (currentPageArticles.length) {
-        return response.json({ articles: currentPageArticles, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ articles: currentPageArticles, total: articles.length, nextPage: endIndex < articles.length ? currentPage + 1 : null });
       }
     }
 
@@ -81,7 +80,7 @@ const get = async (request, response, next) => {
 const getByCategory = async (request, response, next) => {
   try {
     const { id } = request.params;
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const articles = await model.find({ category: id }, "-body -category -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
@@ -91,16 +90,15 @@ const getByCategory = async (request, response, next) => {
 
     if (articles.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || articles.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageArticles = articles.slice(startIndex, endIndex).map(({ comments, ...article }) => ({ ...article, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-      const hasNextPage = endIndex < articles.length;
 
       if (currentPageArticles.length) {
-        return response.json({ articles: currentPageArticles, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ articles: currentPageArticles, total: articles.length, nextPage: endIndex < articles.length ? currentPage + 1 : null });
       }
     }
 

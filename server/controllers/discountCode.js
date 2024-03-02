@@ -25,22 +25,21 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length = 6 } = request.query;
+    const { page = 1, length } = request.query;
 
     const discountCodes = await model.find({}, "-categories -__v").populate({ path: "creator", select: "firstName lastName" }).sort({ createdAt: -1 }).lean();
 
     if (discountCodes.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length);
+      const lengthPerPage = parseInt(length) || discountCodes.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
       const currentPageDiscountCodes = discountCodes.slice(startIndex, endIndex);
-      const hasNextPage = endIndex < discountCodes.length;
 
       if (currentPageDiscountCodes.length) {
-        return response.json({ discountCodes: currentPageDiscountCodes, hasNextPage, nextPage: hasNextPage ? currentPage + 1 : null });
+        return response.json({ discountCodes: currentPageDiscountCodes, total: discountCodes.length, nextPage: endIndex < discountCodes.length ? currentPage + 1 : null });
       }
     }
 
