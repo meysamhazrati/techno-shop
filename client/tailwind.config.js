@@ -21,22 +21,28 @@ export default {
         "vazirmatn-black": "vazirmatn-black",
       },
       keyframes: {
+        shimmer: {
+          "0%": {
+            transform: "translateX(-210%) skewX(-20deg)",
+          },
+          "100%": {
+            transform: "translateX(250%) skewX(-20deg)",
+          },
+        },
         loader: {
           "33%": {
-            "background-size":
-              "calc(100% / 3) 0%, calc(100% / 3) 100%, calc(100% / 3) 100%",
+            "background-size": "calc(100% / 3) 0%, calc(100% / 3) 100%, calc(100% / 3) 100%",
           },
           "50%": {
-            "background-size":
-              "calc(100% / 3) 100%, calc(100% / 3) 0%, calc(100% / 3) 100%",
+            "background-size": "calc(100% / 3) 100%, calc(100% / 3) 0%, calc(100% / 3) 100%",
           },
           "66%": {
-            "background-size":
-              "calc(100% / 3) 100%, calc(100% / 3) 100%, calc(100% / 3) 0%",
+            "background-size": "calc(100% / 3) 100%, calc(100% / 3) 100%, calc(100% / 3) 0%",
           },
         },
       },
       animation: {
+        shimmer: "shimmer 2.5s ease infinite",
         loader: "loader 0.7s linear infinite",
       },
       container: {
