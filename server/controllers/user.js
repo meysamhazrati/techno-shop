@@ -107,19 +107,18 @@ const update = async (request, response, next) => {
     const { id } = request.params;
 
     const avatar = request.file;
-    const { firstName, lastName, phone, email, password, role } = request.body;
+    const { firstName, lastName, email, password, role } = request.body;
 
-    const isExists = await model.findOne({ $or: [{ phone }, { email }], _id: { $ne: id } });
+    const isExists = await model.findOne({ email, _id: { $ne: id } });
 
     if (isExists) {
-      throw Object.assign(new Error("This phone or email already exists."), { status: 409 });
+      throw Object.assign(new Error("This email already exists."), { status: 409 });
     } else {
       const hashedPassword = password ? await hash(password, 12) : undefined;
 
       const result = await model.findByIdAndUpdate(id, {
         firstName,
         lastName,
-        phone,
         email,
         password: hashedPassword,
         role,
@@ -215,6 +214,22 @@ const removeFromCart = async (request, response, next) => {
   }
 };
 
+const emptyCart = async (request, response, next) => {
+  try {
+    const { _id, cart } = request.user;
+
+    if (cart.length) {
+      await model.findByIdAndUpdate(_id, { $set: { cart: [] } });
+
+      response.json({ message: "Your cart has been successfully emptied." });
+    } else {
+      throw Object.assign(new Error("Your cart is already empty."), { status: 409, });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const addToFavorites = async (request, response, next) => {
   try {
     const { id } = request.params;
@@ -261,6 +276,22 @@ const removeFromFavorites = async (request, response, next) => {
       }
     } else {
       throw Object.assign(new Error("The product was not found."), { status: 404 });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const emptyFavorites = async (request, response, next) => {
+  try {
+    const { _id, favorites } = request.user;
+
+    if (favorites.length) {
+      await model.findByIdAndUpdate(_id, { $set: { favorites: [] } });
+
+      response.json({ message: "Your favorites has been successfully emptied." });
+    } else {
+      throw Object.assign(new Error("Your favorites is already empty."), { status: 409 });
     }
   } catch (error) {
     next(error);
@@ -334,4 +365,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { getAll, get, edit, update, addToCart, removeFromCart, addToFavorites, removeFromFavorites, ban, unBan, remove };
+export { getAll, get, edit, update, addToCart, removeFromCart, emptyCart, addToFavorites, removeFromFavorites, emptyFavorites, ban, unBan, remove };
