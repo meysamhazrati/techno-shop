@@ -1,6 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 
-import { register, login } from "../validators/authentication.js";
+import { register, login, resetPassword } from "../validators/authentication.js";
 import { edit, update } from "../validators/user.js";
 
 const schema = new Schema(
@@ -16,13 +16,6 @@ const schema = new Schema(
       required: true,
       minLength: 4,
       maxLength: 70,
-    },
-    phone: {
-      type: String,
-      required: true,
-      minLength: 11,
-      maxLength: 11,
-      match: /^09\d{9}$/,
     },
     email: {
       type: String,
@@ -109,6 +102,7 @@ schema.virtual("tickets", {
 
 schema.statics.registerValidation = (body) => register.validate(body);
 schema.statics.loginValidation = (body) => login.validate(body);
+schema.statics.resetPasswordValidation = (body) => resetPassword.validate(body);
 schema.statics.editValidation = (body) => edit.validate(body);
 schema.statics.updateValidation = (body) => update.validate(body);
 
