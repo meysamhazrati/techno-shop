@@ -11,7 +11,6 @@ export default (id) => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationKey: ["users", id],
     mutationFn: (data) => removeFromCart(id, data),
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
     onSuccess: () => client.invalidateQueries(["me"]),
