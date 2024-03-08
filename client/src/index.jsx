@@ -10,9 +10,13 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={new QueryClient({
       defaultOptions: {
         queries: {
-          staleTime: 1000 * 60 * 10,
-          gcTime: 1000 * 60 * 2,
+          staleTime: 1000 * 60 * 5,
+          gcTime: 1000 * 60,
           retry: 2,
+        },
+        mutations: {
+          gcTime: 1000 * 60,
+          retry: 2
         },
       },
     })}>
