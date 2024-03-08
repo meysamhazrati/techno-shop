@@ -44,7 +44,7 @@ const get = async (request, response, next) => {
   try {
     const { title } = request.params;
 
-    const category = await model.findOne({ englishTitle: title }, "-__v").lean();
+    const category = await model.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }, "-__v").lean();
 
     if (category) {
       response.json(category);
