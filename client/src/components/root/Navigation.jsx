@@ -33,7 +33,7 @@ const Navigation = (props, ref) => {
       ) : (
         <div className="flex cursor-pointer items-center gap-x-2 transition-colors hover:text-primary-900">
           <PinIcon className="size-6" />
-          <Link to="/me/addresses">{me.addresses.length ? `${me?.addresses[0].province}، ${me?.addresses[0].city}` : "لطفا مقصد خود را انتخاب کنید"}</Link>
+          <Link to="/me/addresses">{me?.addresses.length ? `${me.addresses[0].province}، ${me.addresses[0].city}` : "لطفا مقصد خود را انتخاب کنید"}</Link>
         </div>
       )}
     </nav>
