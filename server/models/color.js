@@ -8,6 +8,10 @@ const schema = new Schema(
       min: 1000,
       max: 1000000000,
     },
+    sales: {
+      type: Number,
+      default: 0,
+    },
     inventory: {
       type: Number,
       required: true,
