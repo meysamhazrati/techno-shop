@@ -19,7 +19,7 @@ const create = async (request, response, next) => {
       const buyer = await userModel.findById( request.user._id, "-cart -favorites");
       const destination = await addressModel.findById(request.body.destination);
       const discountCode = await discountCodeModel.findById(request.body.discountCode);
-
+      
       await model.create({
         shippingCost,
         totalAmount,
@@ -28,8 +28,8 @@ const create = async (request, response, next) => {
         destination,
         discountCode: discountCode ?? undefined,
       });
-
-      await Promise.all(request.body.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { inventory: -quantity } })));
+      
+      await Promise.all(request.body.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: quantity, inventory: -quantity } })));
 
       response.status(201).json({ message: "The order has been successfully added." });
     } else {
