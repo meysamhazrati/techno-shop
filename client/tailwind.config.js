@@ -13,6 +13,8 @@ export default {
         "primary-700": "#3F99E2",
         "primary-800": "#248BDE",
         "primary-900": "#0279D9",
+        skeleton: "#e4e4e7",
+        shimmer: "rgb(255 255 255 / 0.5)",
       },
       fontFamily: {
         "vazirmatn-regular": "vazirmatn-regular",
@@ -23,7 +25,7 @@ export default {
       keyframes: {
         shimmer: {
           "0%": {
-            transform: "translateX(-210%) skewX(-20deg)",
+            transform: "translateX(-250%) skewX(-20deg)",
           },
           "100%": {
             transform: "translateX(250%) skewX(-20deg)",
@@ -31,13 +33,16 @@ export default {
         },
         loader: {
           "33%": {
-            "background-size": "calc(100% / 3) 0%, calc(100% / 3) 100%, calc(100% / 3) 100%",
+            "background-size":
+              "calc(100% / 3) 0%, calc(100% / 3) 100%, calc(100% / 3) 100%",
           },
           "50%": {
-            "background-size": "calc(100% / 3) 100%, calc(100% / 3) 0%, calc(100% / 3) 100%",
+            "background-size":
+              "calc(100% / 3) 100%, calc(100% / 3) 0%, calc(100% / 3) 100%",
           },
           "66%": {
-            "background-size": "calc(100% / 3) 100%, calc(100% / 3) 100%, calc(100% / 3) 0%",
+            "background-size":
+              "calc(100% / 3) 100%, calc(100% / 3) 100%, calc(100% / 3) 0%",
           },
         },
       },
