@@ -6,8 +6,8 @@ import HomeIcon from "../../icons/Home";
 import PinIcon from "../../icons/Pin";
 
 const Navigation = (props, ref) => {
-  const { isPending, data: me } = useMe();
-  const { data: categories } = useCategories(7);
+  const { isPendingMe, me } = useMe();
+  const { categories } = useCategories(7);
 
   return (
     <nav ref={ref} className="relative -z-10 hidden h-12 items-center justify-between px-7 py-3 transition-[top] duration-300 lg:flex">
@@ -25,7 +25,7 @@ const Navigation = (props, ref) => {
           </>
         )}
       </div>
-      {isPending ? (
+      {isPendingMe ? (
         <div className="flex items-center gap-x-2">
           <PinIcon className="size-6" />
           <span>در حال بارگذاری</span>
