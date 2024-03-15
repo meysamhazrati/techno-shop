@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useMe from "../../hooks/authentication/me";
 import CartButton from "./CartButton";
-import Shimmer from "../Shimmer";
 import ProfileButton from "./ProfileButton";
 import Navigation from "./Navigation";
+import Shimmer from "../Shimmer";
 import SearchIcon from "../../icons/Search";
 import technoShop from "/techno-shop.svg";
 
@@ -14,7 +14,7 @@ const Header = () => {
   const header = useRef();
   const navigation = useRef();
 
-  const { isPending, isError } = useMe();
+  const { isPendingMe, isMeError } = useMe();
 
   const navigate = useNavigate();
 
@@ -55,7 +55,7 @@ const Header = () => {
                 placeholder={window.innerWidth < 1024 ? "جستجو در" : "جستجو"}
                 className="w-full bg-transparent text-lg outline-none placeholder:text-zinc-700"
                 onInput={({ target }) => {
-                  setTitle(target.value);
+                  setTitle(target.value.trim());
 
                   if (window.innerWidth < 1024) {
                     target.nextElementSibling.style.display = target.value ? "none" : "block";
@@ -69,11 +69,11 @@ const Header = () => {
         </div>
         <div className="hidden items-center gap-x-6 lg:flex">
           <CartButton />
-          {isPending ? (
+          {isPendingMe ? (
             <div className="relative h-12 w-48 overflow-hidden rounded-3xl bg-zinc-200">
               <Shimmer />
             </div>
-          ) : isError ? (
+          ) : isMeError ? (
             <div className="relative flex h-12 w-48 flex-1 items-center text-lg text-white">
               <Link to="/authentication/login" className="flex h-full w-28 items-center justify-center rounded-3xl bg-primary-500 transition-colors hover:bg-primary-600">ورود</Link>
               <Link to="/authentication/register" className="absolute right-20 flex h-full w-28 items-center justify-center rounded-3xl bg-primary-900 transition-colors hover:bg-primary-800">ثبت نام</Link>
