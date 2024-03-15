@@ -16,5 +16,5 @@ export default () => {
     select: (data) => data.data,
   });
 
-  return { isPending, isFetching, isError, data };
+  return { isPendingMe: isPending, isFetchingMe: isFetching, isMeError: isError, me: data };
 };

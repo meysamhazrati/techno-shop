@@ -17,5 +17,5 @@ export default (length) => {
     select: (data) => data.pages.flatMap((page) => page.data.categories),
   });
 
-  return { isFetching, isError, data, hasNextPage, fetchNextPage };
+  return { isFetchingCategories: isFetching, isCategoriesError: isError, categories: data, hasCategoriesNextPage: hasNextPage, fetchCategoriesNextPage: fetchNextPage };
 };

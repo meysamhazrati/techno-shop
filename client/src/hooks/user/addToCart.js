@@ -17,5 +17,5 @@ export default (id) => {
     onError: () => openToast("error", "خطا!", "مشکلی پیش آمد! لطفا بعدا دوباره تلاش کنید."),
   });
 
-  return { isPending, mutate };
+  return { isPendingAddToCart: isPending, addToCart: mutate };
 };

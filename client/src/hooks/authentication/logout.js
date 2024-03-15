@@ -17,5 +17,5 @@ export default () => {
     onError: () => openToast("error", "خطا!", "مشکلی پیش آمد! لطفا بعدا دوباره تلاش کنید."),
   });
 
-  return { mutate };
+  return { logout: mutate };
 };
