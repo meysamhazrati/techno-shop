@@ -1,8 +1,12 @@
 import Landing from "../../components/root/Landing";
+import BestSellers from "../../components/root/BestSellers";
 
 const Home = () => {
   return (
-    <Landing />
+    <>
+      <Landing />
+      <BestSellers />
+    </>
   );
 };
 
