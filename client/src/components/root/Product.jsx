@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useMe from "../../hooks/authentication/me";
+import ProductCover from "../ProductCover";
 import ProductButton from "../ProductButton";
+import ProductPrice from "../ProductPrice";
 import SquaresIcon from "../../icons/Squares";
 import StarIcon from "../../icons/Star";
-import TomanIcon from "../../icons/Toman";
 
-const Product = ({ _id, title, covers, score, colors, category, offer }) => {
+const Product = ({ _id, covers, title, colors, score, category, offer }) => {
   const [quantity, setQuantity] = useState(0);
 
   const { me } = useMe();
@@ -18,12 +19,11 @@ const Product = ({ _id, title, covers, score, colors, category, offer }) => {
   }, [_id, colors, me?.cart]);
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-zinc-200">
-      {Date.parse(offer?.expiresAt) > Date.now() && <div className="absolute right-4 top-4 z-10 flex h-7 w-12 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-white">{offer.percent}%</div>}
-      <Link to={`/products/${_id}`} className="relative block h-48 w-full [&>img]:absolute [&>img]:size-full [&>img]:object-cover">
-        <img src={`http://localhost:3000/products/${covers[1]}`} alt="Product Cover" loading="lazy" />
-        <img src={`http://localhost:3000/products/${covers[0]}`} alt="Product Cover" loading="lazy" className="transition-opacity duration-300 hover:opacity-0" />
-      </Link>
+    <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white">
+      <div className="h-48 w-full">
+        <ProductCover id={_id} covers={covers} />
+        {Date.parse(offer?.expiresAt) > Date.now() && <div className="absolute right-4 top-4 z-10 flex h-7 w-12 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-white">{offer.percent}%</div>}
+      </div>
       <div className="p-4">
         <h3 className="h-16 font-vazirmatn-medium text-xl/relaxed">
           <Link to={`/products/${_id}`} className="line-clamp-2 transition-colors hover:text-primary-900">{title}</Link>
@@ -40,13 +40,7 @@ const Product = ({ _id, title, covers, score, colors, category, offer }) => {
         </div>
         <div className="flex items-center justify-between gap-x-5 border-t border-zinc-200 pt-4">
           <ProductButton id={_id} quantity={quantity} color={colors[0]} />
-          <div className="flex flex-col">
-            {Date.parse(offer?.expiresAt) > Date.now() && <span className="text-sm text-zinc-400 line-through">{colors[0].price.toLocaleString()}</span>}
-            <span className="flex items-center gap-x-[2px] font-vazirmatn-bold text-lg">
-              {Date.parse(offer?.expiresAt) > Date.now() ? (colors[0].price - colors[0].price * (offer.percent / 100)).toLocaleString() : colors[0].price.toLocaleString()}
-              <TomanIcon className="size-[18px]" />
-            </span>
-          </div>
+          <ProductPrice price={colors[0].price} offer={offer} priceFontSize="lg" discountedPriceFontSize="sm" gapX="[2px]" iconSize="[18px]" />
         </div>
       </div>
     </div>
