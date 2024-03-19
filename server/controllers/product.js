@@ -68,6 +68,11 @@ const getAll = async (request, response, next) => {
           products.sort((firstProduct, secondProduct) => secondProduct.colors.reduce((previous, { sales }) => previous + sales, 0) - firstProduct.colors.reduce((previous, { sales }) => previous + sales, 0));
           break;
         }
+        case "amazing-offer": {
+          products.map((product, index) => (product.offer?.expiresAt || 0) < new Date() && index).reverse().forEach(index => index !== false && products.splice(index, 1));
+          products.sort((firstProduct, secondProduct) => secondProduct.offer.percent - firstProduct.offer.percent);
+          break;
+        }
         case "popular": {
           products.sort((firstProduct, secondProduct) => parseFloat((secondProduct.comments.reduce((previous, { score }) => previous + score, 5) / (secondProduct.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstProduct.comments.reduce((previous, { score }) => previous + score, 5) / (firstProduct.comments.length + 1) || 5).toFixed(1)));
           break;
