@@ -17,9 +17,13 @@ const BestSellers = () => {
           <ChevronLeftIcon className="size-5" />
         </Link>
       </div>
-      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {isFetchingProducts ? Array(8).fill(0).map((product, index) => <ProductSkeleton key={index} />) : isProductsError ? <NoProductFound /> : products?.map((product) => <Product key={product._id} {...product} />)}
-      </div>
+      {isProductsError ? (
+        <NoProductFound />
+      ) : (
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {isFetchingProducts ? Array(8).fill(0).map((product, index) => <ProductSkeleton key={index} />) : products?.map((product) => <Product key={product._id} {...product} />)}
+        </div>
+      )}
     </section>
   );
 };
