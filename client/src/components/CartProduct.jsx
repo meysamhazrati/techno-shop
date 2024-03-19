@@ -1,18 +1,17 @@
 import { Link } from "react-router-dom";
-import Timer from "./Timer";
+import ProductCover from "./ProductCover";
 import ProductButton from "./ProductButton";
+import ProductPrice from "./ProductPrice";
+import AmazingOfferTimer from "./AmazingOfferTimer";
 import VerifiedIcon from "../icons/Verified";
-import TomanIcon from "../icons/Toman";
-import offer from "/images/offer.svg";
 
 const CartProduct = ({ quantity, product, color }) => {
   return (
     <div className="grid grid-cols-[128px_1fr] items-center gap-x-4 gap-y-2 py-3">
-      <Link to={`/products/${product._id}`} className="relative size-32 [&>img]:absolute [&>img]:size-full [&>img]:object-cover">
+      <div className="relative size-32">
+        <ProductCover id={product._id} covers={product.covers} />
         {Date.parse(product.offer?.expiresAt) > Date.now() && <div className="absolute right-0 top-4 z-10 flex h-5 w-9 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-xs text-white">{product.offer.percent}%</div>}
-        <img src={`http://localhost:3000/products/${product.covers[1]}`} alt="Product Cover" loading="lazy" />
-        <img src={`http://localhost:3000/products/${product.covers[0]}`} alt="Product Cover" loading="lazy" className="transition-opacity duration-300 hover:opacity-0" />
-      </Link>
+      </div>
       <div>
         <h3 className="h-14 font-vazirmatn-medium text-lg">
           <Link to={`/products/${product._id}`} className="line-clamp-2 transition-colors hover:text-primary-900">{product.title}</Link>
@@ -28,22 +27,9 @@ const CartProduct = ({ quantity, product, color }) => {
           </div>
         </div>
       </div>
-      {Date.parse(product.offer?.expiresAt) > Date.now() && (
-        <>
-          <img src={offer} alt="Offer" />
-          <div className="font-vazirmatn-black text-sm text-primary-900">
-            <Timer expiresAt={product.offer.expiresAt} />
-          </div>
-        </>
-      )}
+      {Date.parse(product.offer?.expiresAt) > Date.now() && <AmazingOfferTimer width="full" fontSize="xs" expiresAt={product.offer.expiresAt} />}
       <ProductButton id={product._id} quantity={quantity} color={color} />
-      <div className="flex flex-col">
-        {Date.parse(product.offer?.expiresAt) > Date.now() && <span className="text-sm text-zinc-400 line-through">{color.price.toLocaleString()}</span>}
-        <span className="flex items-center gap-x-[2px] font-vazirmatn-bold text-lg">
-          {Date.parse(product.offer?.expiresAt) > Date.now() ? (color.price - color.price * (product.offer.percent / 100)).toLocaleString() : color.price.toLocaleString()}
-          <TomanIcon className="size-[18px]" />
-        </span>
-      </div>
+      <ProductPrice price={color.price} offer={product.offer} priceFontSize="base" discountedPriceFontSize="xs" gapX="px" iconSize="4" />
     </div>
   );
 };
