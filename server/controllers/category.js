@@ -2,14 +2,17 @@ import model from "../models/category.js";
 
 const create = async (request, response, next) => {
   try {
-    await model.validation(request.body);
+    const logo = request.file;
+    await model.createValidation({ ...request.body, logo });
 
     const { title, englishTitle } = request.body;
 
-    await model.create({ title, englishTitle });
+    await model.create({ title, englishTitle, logo: logo.filename });
 
     response.status(201).json({ message: "The category has been successfully added." });
   } catch (error) {
+    request.file && unlink(request.file.path, (error) => console.error(error));
+
     next(error);
   }
 };
@@ -58,20 +61,25 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await model.validation(request.body);
+    await model.updateValidation(request.body);
 
     const { id } = request.params;
 
+    const logo = request.file;
     const { title, englishTitle } = request.body;
 
-    const result = await model.findByIdAndUpdate(id, { title, englishTitle });
+    const result = await model.findByIdAndUpdate(id, { title, englishTitle, logo: logo?.filename });
 
     if (result) {
+      logo && unlink(`public/categories/${result.logo}`, (error) => console.error(error));
+
       response.json({ message: "The category has been successfully edited." });
     } else {
       throw Object.assign(new Error("The category was not found."), { status: 404 });
     }
   } catch (error) {
+    request.file && unlink(request.file.path, (error) => console.error(error));
+
     next(error);
   }
 };
@@ -83,6 +91,8 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
+      unlink(`public/categories/${result.logo}`, (error) => console.error(error));
+
       response.json({ message: "The category has been successfully removed." });
     } else {
       throw Object.assign(new Error("The category was not found."), { status: 404 });
