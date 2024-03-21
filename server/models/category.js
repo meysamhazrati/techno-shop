@@ -1,4 +1,4 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 import validator from "../validators/category.js";
 
@@ -15,6 +15,10 @@ const schema = new Schema(
       required: true,
       minLength: 3,
       maxLength: 50,
+    },
+    logo: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
