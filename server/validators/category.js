@@ -1,8 +1,14 @@
 import { object, string } from "yup";
 
-const validator = object({
+const create = object({
+  title: string().required().min(3).max(50),
+  englishTitle: string().required().min(3).max(50),
+  logo: object().required(),
+});
+
+const update = object({
   title: string().required().min(3).max(50),
   englishTitle: string().required().min(3).max(50),
 });
 
-export default validator;
+export { create, update };
