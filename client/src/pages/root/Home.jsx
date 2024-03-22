@@ -1,4 +1,5 @@
 import Landing from "../../components/root/Landing";
+import Latests from "../../components/root/Latests";
 import BestSellers from "../../components/root/BestSellers";
 import AmazingOffer from "../../components/root/AmazingOffer";
 import Categories from "../../components/root/Categories";
@@ -8,10 +9,11 @@ const Home = () => {
   return (
     <>
       <Landing />
-      <BestSellers />
+      <Latests />
       <AmazingOffer />
       <Categories />
       <Banners />
+      <BestSellers />
     </>
   );
 };
