@@ -2,7 +2,7 @@ import Shimmer from "../Shimmer";
 
 const AmazingOfferProductSkeleton = () => {
   return (
-    <div className="relative overflow-hidden border border-skeleton bg-white">
+    <div className="relative min-w-60 overflow-hidden border border-skeleton bg-white">
       <div className="relative h-48 w-full bg-skeleton">
         <div className="absolute right-4 top-4 h-7 w-12 rounded-full bg-white"></div>
       </div>
