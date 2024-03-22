@@ -13,7 +13,7 @@ const AmazingOffer = () => {
   const { isFetchingProducts, isProductsError, products } = useProducts("amazing-offer", 10);
 
   return (
-    <section className="mt-24 w-full rounded-3xl border-4 border-primary-900 bg-primary-900 py-5">
+    <section className="mt-12 w-full rounded-3xl border-4 border-primary-900 bg-primary-900 py-5">
       {isProductsError ? (
         <NoAmazingOfferFound />
       ) : (
@@ -124,7 +124,7 @@ const AmazingOffer = () => {
                 <path d="M555.14359,3055.7372H721.87648a17.15427,17.15427,0,0,0,17.1544-17.1543h0a17.15435,17.15435,0,0,0-17.1544-17.1544H555.14359a17.15435,17.15435,0,0,0-17.1544,17.1544h0A17.1544,17.1544,0,0,0,555.14359,3055.7372Z" fill="#2c597d" />
                 <path d="M4778.4339 2345.1555v-67.9682a9.3564 9.3564 0 1118.7128 0v67.9682a9.3564 9.3564 0 01-18.7128 0zM4864.6997 2431.4214a9.35612 9.35612 0 019.3564-9.3563h67.9686a9.35635 9.35635 0 110 18.7127h-67.9686A9.35614 9.35614 0 014864.6997 2431.4214zM4840.8034 2369.052a9.32651 9.32651 0 012.7405-6.6159l46.6906-46.6909a9.35637 9.35637 0 1113.232 13.2318l-46.6908 46.691a9.3564 9.3564 0 01-15.9723-6.616z" fill="#74a9d3" />
               </svg>
-              <Link to="/products/amazing-offer" className="flex items-center justify-center gap-x-2 text-white transition-colors">
+              <Link to="/products?sort=amazing-offer" className="flex items-center justify-center gap-x-2 text-white transition-colors">
                 <span className="text-lg">مشاهده همه</span>
                 <ChevronLeftIcon className="size-5" />
               </Link>
