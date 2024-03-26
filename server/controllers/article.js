@@ -29,9 +29,9 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { page = 1, length } = request.query;
+    const { categories, sort, page = 1, length } = request.query;
 
-    const articles = await model.find({}, "-body -__v").populate([
+    const articles = await model.find(categories ? { category: categories.split(",") } : {}, "-body -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
       { path: "category", select: "-__v" },
       { path: "comments", select: "score" },
@@ -43,6 +43,20 @@ const getAll = async (request, response, next) => {
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
+
+      switch (sort) {
+        case "oldest": {
+          articles.reverse();
+          break;
+        }
+        case "popular": {
+          articles.sort((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
+          break;
+        }
+        default: {
+          break;
+        }
+      }
 
       const currentPageArticles = articles.slice(startIndex, endIndex).map(({ comments, ...article }) => ({ ...article, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
 
@@ -72,37 +86,6 @@ const get = async (request, response, next) => {
     } else {
       throw Object.assign(new Error("The article was not found."), { status: 404 });
     }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getByCategory = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-    const { page = 1, length } = request.query;
-
-    const articles = await model.find({ category: id }, "-body -category -__v").populate([
-      { path: "author", select: "firstName lastName avatar" },
-      { path: "category", select: "-__v" },
-      { path: "comments", select: "score" },
-    ]).sort({ createdAt: -1 }).lean();
-
-    if (articles.length) {
-      const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || articles.length;
-
-      const startIndex = (currentPage - 1) * lengthPerPage;
-      const endIndex = startIndex + lengthPerPage;
-
-      const currentPageArticles = articles.slice(startIndex, endIndex).map(({ comments, ...article }) => ({ ...article, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-
-      if (currentPageArticles.length) {
-        return response.json({ articles: currentPageArticles, total: articles.length, nextPage: endIndex < articles.length ? currentPage + 1 : null });
-      }
-    }
-
-    throw Object.assign(new Error("No article found."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -282,4 +265,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { create, getAll, get, getByCategory, update, publish, draft, confirm, reject, remove };
+export { create, getAll, get, update, publish, draft, confirm, reject, remove };
