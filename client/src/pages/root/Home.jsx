@@ -5,6 +5,7 @@ import AmazingOffer from "../../components/root/AmazingOffer";
 import Categories from "../../components/root/Categories";
 import Banners from "../../components/root/Banners";
 import Brands from "../../components/root/Brands";
+import Articles from "../../components/root/Articles";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       <Banners />
       <BestSellers />
       <Brands />
+      <Articles />
     </>
   );
 };
