@@ -4,7 +4,6 @@ import useMe from "../../hooks/authentication/me";
 import CartButton from "./CartButton";
 import ProfileButton from "./ProfileButton";
 import Navigation from "./Navigation";
-import Shimmer from "../Shimmer";
 import SearchIcon from "../../icons/Search";
 import technoShop from "/techno-shop.svg";
 
@@ -70,9 +69,7 @@ const Header = () => {
         <div className="hidden items-center gap-x-6 lg:flex">
           <CartButton />
           {isPendingMe ? (
-            <div className="relative h-12 w-48 overflow-hidden rounded-3xl bg-zinc-200">
-              <Shimmer />
-            </div>
+            <div className="h-12 w-48 animate-pulse rounded-3xl bg-zinc-200"></div>
           ) : isMeError ? (
             <div className="relative flex h-12 w-48 flex-1 items-center text-lg text-white">
               <Link to="/authentication/login" className="flex h-full w-28 items-center justify-center rounded-3xl bg-primary-500 transition-colors hover:bg-primary-600">ورود</Link>
