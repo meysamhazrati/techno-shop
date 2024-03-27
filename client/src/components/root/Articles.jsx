@@ -12,10 +12,12 @@ const Articles = () => {
     <section className="mt-12">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-3xl">خواندنی ها</h2>
-        <Link to="/articles" className="mr-auto flex h-12 w-40 items-center justify-center gap-x-2 rounded-full font-vazirmatn-medium text-primary-900 transition-colors hover:bg-primary-50">
-          <span className="text-lg">مشاهده همه</span>
-          <ChevronLeftIcon className="size-5" />
-        </Link>
+        {articles?.length > 4 && (
+          <Link to="/articles" className="mr-auto flex h-12 w-40 items-center justify-center gap-x-2 rounded-full font-vazirmatn-medium text-primary-900 transition-colors hover:bg-primary-50">
+            <span className="text-lg">مشاهده همه</span>
+            <ChevronLeftIcon className="size-5" />
+          </Link>
+        )}
       </div>
       {isArticlesError ? (
         <NoArticleFound />
