@@ -44,8 +44,8 @@ const BestSellers = () => {
           className="mt-10"
         >
           {isFetchingProducts ? Array(5).fill(0).map((product, index) => (
-            <SwiperSlide key={product._id}>
-              <ProductSkeleton key={index} />
+            <SwiperSlide key={index}>
+              <ProductSkeleton />
             </SwiperSlide>
           )) : products?.map((product) => (
             <SwiperSlide key={product._id}>
