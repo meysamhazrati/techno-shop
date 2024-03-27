@@ -14,7 +14,6 @@ export default {
         "primary-800": "#248BDE",
         "primary-900": "#0279D9",
         skeleton: "#e4e4e7",
-        shimmer: "rgb(255 255 255 / 0.5)",
       },
       fontFamily: {
         "vazirmatn-regular": "vazirmatn-regular",
@@ -23,14 +22,6 @@ export default {
         "vazirmatn-black": "vazirmatn-black",
       },
       keyframes: {
-        shimmer: {
-          "0%": {
-            transform: "translateX(-250%) skewX(-20deg)",
-          },
-          "100%": {
-            transform: "translateX(250%) skewX(-20deg)",
-          },
-        },
         loader: {
           "33%": {
             "background-size":
@@ -47,7 +38,6 @@ export default {
         },
       },
       animation: {
-        shimmer: "shimmer 2.5s ease infinite",
         loader: "loader 0.7s linear infinite",
       },
       container: {
