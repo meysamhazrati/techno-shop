@@ -5,7 +5,7 @@ import ChevronLeftIcon from "../../icons/ChevronLeft";
 
 const Article = ({ _id, cover, title, author, score }) => {
   return (
-    <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white">
+    <div className="overflow-hidden rounded-3xl bg-white">
       <Link to={`/articles/${_id}`} className="block h-48 w-full">
         <img src={`http://localhost:3000/articles/${cover}`} alt="Product Cover" loading="lazy" className="size-full object-cover" />
       </Link>

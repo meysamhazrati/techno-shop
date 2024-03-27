@@ -19,7 +19,7 @@ const Product = ({ _id, covers, title, colors, score, category, offer }) => {
   }, [_id, colors, me?.cart]);
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white">
+    <div className="relative overflow-hidden rounded-3xl bg-white">
       <div className="h-48 w-full">
         <ProductCover id={_id} covers={covers} />
         {colors[0].inventory > 0 && Date.parse(offer?.expiresAt) > Date.now() && <div className="absolute right-4 top-4 z-10 flex h-7 w-12 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-white">{offer.percent}%</div>}
