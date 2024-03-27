@@ -6,16 +6,18 @@ import NoProductFound from "../NoProductFound";
 import ChevronLeftIcon from "../../icons/ChevronLeft";
 
 const Latests = () => {
-  const { isFetchingProducts, isProductsError, products } = useProducts(8);
+  const { isFetchingProducts, isProductsError, products } = useProducts(null, 8);
 
   return (
     <section className="mt-24">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-3xl">جدیدترین ها</h2>
-        <Link to="/products" className="mr-auto flex h-12 w-40 items-center justify-center gap-x-2 rounded-full font-vazirmatn-medium text-primary-900 transition-colors hover:bg-primary-50">
-          <span className="text-lg">مشاهده همه</span>
-          <ChevronLeftIcon className="size-5" />
-        </Link>
+        {products?.length > 8 && (
+          <Link to="/products" className="mr-auto flex h-12 w-40 items-center justify-center gap-x-2 rounded-full font-vazirmatn-medium text-primary-900 transition-colors hover:bg-primary-50">
+            <span className="text-lg">مشاهده همه</span>
+            <ChevronLeftIcon className="size-5" />
+          </Link>
+        )}
       </div>
       {isProductsError ? (
         <NoProductFound />
