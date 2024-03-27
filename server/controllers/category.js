@@ -43,22 +43,6 @@ const getAll = async (request, response, next) => {
   }
 };
 
-const get = async (request, response, next) => {
-  try {
-    const { title } = request.params;
-
-    const category = await model.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }, "-__v").lean();
-
-    if (category) {
-      response.json(category);
-    } else {
-      throw Object.assign(new Error("The category was not found."), { status: 404 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
 const update = async (request, response, next) => {
   try {
     await model.updateValidation(request.body);
@@ -102,4 +86,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { create, getAll, get, update, remove };
+export { create, getAll, update, remove };
