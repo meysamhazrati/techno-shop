@@ -1,6 +1,6 @@
 import withToast from "../hocs/Toast";
 
-const Error = ({ title, description, width }) => {
+const Error = withToast(({ title, description, width }) => {
   return (
     <>
       <div className="flex size-full items-center gap-x-3 lg:gap-x-5">
@@ -10,13 +10,13 @@ const Error = ({ title, description, width }) => {
           </svg>
         </div>
         <div>
-          <h4 className="font-vazirmatn-bold text-base lg:text-lg">{title}</h4>
-          <p className="text-sm text-zinc-400 lg:text-base">{description}</p>
+          <h4 className="font-vazirmatn-bold text-base lg:text-lg">{title || "خطا!"}</h4>
+          <p className="text-sm text-zinc-400 lg:text-base">{description || "مشکلی پیش آمد! لطفا بعدا دوباره تلاش کنید."}</p>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 mx-auto h-[3px] w-full rounded lg:h-1" style={{ width: `${width}%`, backgroundColor: "#dc2626" }}></div>
     </>
   );
-};
+});
 
-export default withToast(Error);
+export default Error;
