@@ -9,7 +9,7 @@ const Latests = () => {
   const { isFetchingProducts, isProductsError, products } = useProducts(null, 8);
 
   return (
-    <section className="mt-24">
+    <section className="mt-12">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-3xl">جدیدترین ها</h2>
         {products?.length > 8 && (
