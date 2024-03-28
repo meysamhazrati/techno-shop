@@ -1,6 +1,6 @@
 import withToast from "../hocs/Toast";
 
-const Success = ({ title, description, width }) => {
+const Success = withToast(({ title, description, width }) => {
   return (
     <>
       <div className="flex size-full items-center gap-x-3 lg:gap-x-5">
@@ -10,13 +10,13 @@ const Success = ({ title, description, width }) => {
           </svg>
         </div>
         <div>
-          <h4 className="font-vazirmatn-bold text-base lg:text-lg">{title}</h4>
-          <p className="text-sm text-zinc-400 lg:text-base">{description}</p>
+          <h4 className="font-vazirmatn-bold text-base lg:text-lg">{title || "موفق!"}</h4>
+          <p className="text-sm text-zinc-400 lg:text-base">{description || "درخواست شما با موفقیت انجام شد."}</p>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 mx-auto h-[3px] w-full rounded lg:h-1" style={{ width: `${width}%`, backgroundColor: "#16a34a" }}></div>
     </>
   );
-};
+});
 
-export default withToast(Success);
+export default Success;
