@@ -7,7 +7,7 @@ const Footer = () => {
   const { categories } = useCategories(7);
 
   return (
-    <footer className="mt-12 hidden w-full bg-white px-7 py-5 lg:block">
+    <footer className="hidden w-full bg-white px-7 py-5 lg:block">
       <div className="flex items-center justify-between">
         <div>
           <img src={technoShop} alt="Techno Shop" />
@@ -65,7 +65,7 @@ const Footer = () => {
           توسط
           <Link to="https://github.com/meysamhazrati" className="transition-colors hover:text-primary-900">میثم حضرتی</Link>
         </h2>
-        <h2>&copy; این قالب صرفا جهت نمونه کار است و مخاطب حق استفاده شخصی یا تجاری از آن را ندارد.</h2>
+        <h2>&copy; این پروژه صرفا جهت نمونه کار است و مخاطب حق استفاده شخصی یا تجاری از آن را ندارد.</h2>
       </div>
     </footer>
   );
