@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 
 (async () => {
   try {
-    await connect(process.env.MONGO_URI);
+    await connect(process.env.MONGO_URI, { ignoreUndefined: true });
     console.log("Database connected.");
   } catch (error) {
     console.error(error);
