@@ -3,6 +3,7 @@ import { unlink } from "fs";
 
 import model from "../models/product.js";
 import colorModel from "../models/color.js";
+import brandModel from "../models/brand.js";
 import categoryModel from "../models/category.js";
 import userModel from "../models/user.js";
 import commentModel from "../models/comment.js";
@@ -46,207 +47,57 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { sort = "latest", page = 1, length } = request.query;
+    const { search, brands, categories, "only-available": onlyAvailable = false, "only-amazing": onlyAmazing = false, range = "0-Infinity", sort, page = 1, length } = request.query;
 
-    const products = await model.find({}, "title covers").populate([
+    const filteredBrands = brands?.trim() ? await Promise.all(brands.trim().split(",").map(async (name) => (await brandModel.findOne({ englishName: { $regex: new RegExp(`^${name.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
+    const filteredCategories = categories?.trim() ? await Promise.all(categories.trim().split(",").map(async (title) => (await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
+
+    const products = await model.find({ title: search?.trim() ? { $regex: new RegExp(`${search.trim().split("-").join(" ")}`, "i") } : undefined, brand: filteredBrands, category: filteredCategories }, "title covers").populate([
       { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
       { path: "brand", select: "-__v" },
       { path: "category", select: "-__v" },
       { path: "offer", select: "title percent expiresAt" },
       { path: "comments", select: "score" },
-    ]).sort({ createdAt: -1 }).lean();
+    ]).lean();
 
-    if (products.length) {
+    const filteredProducts = products.filter(({ colors, offer }) => (JSON.parse(onlyAvailable) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazing) ? offer?.expiresAt > new Date() : true) && colors[0].price >= range.split("-")[0] && colors[0].price <= range.split("-")[1]);
+    
+    if (filteredProducts.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || products.length;
+      const lengthPerPage = parseInt(length) || filteredProducts.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
-      switch (sort) {
-        case "best-seller": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors.reduce((previous, { sales }) => previous + sales, 0) - firstProduct.colors.reduce((previous, { sales }) => previous + sales, 0));
-          break;
-        }
-        case "amazing-offer": {
-          products.map((product, index) => (product.offer?.expiresAt || 0) < new Date() && index).reverse().forEach(index => index !== false && products.splice(index, 1));
-          products.sort((firstProduct, secondProduct) => secondProduct.offer.percent - firstProduct.offer.percent);
-          break;
-        }
-        case "popular": {
-          products.sort((firstProduct, secondProduct) => parseFloat((secondProduct.comments.reduce((previous, { score }) => previous + score, 5) / (secondProduct.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstProduct.comments.reduce((previous, { score }) => previous + score, 5) / (firstProduct.comments.length + 1) || 5).toFixed(1)));
-          break;
-        }
-        case "cheap": {
-          products.sort((firstProduct, secondProduct) => firstProduct.colors[0].price - secondProduct.colors[0].price);
-          break;
-        }
-        case "expensive": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors[0].price - firstProduct.colors[0].price);
-          break;
-        }
-      }
-
-      const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-
-      if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
-      }
-    }
-
-    throw Object.assign(new Error("No product found."), { status: 404 });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getByCategory = async (request, response, next) => {
-  try {
-    const { title } = request.params;
-    const { sort = "latest", page = 1, length } = request.query;
-
-    const category = await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } });
-
-    const products = await model.find({ category: category?._id }, "title covers").populate([
-      { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
-      { path: "brand", select: "-__v" },
-      { path: "offer", select: "percent expiresAt" },
-      { path: "comments", select: "score" },
-    ]).sort({ createdAt: -1 }).lean();
-
-    if (products.length) {
-      const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || products.length;
-
-      const startIndex = (currentPage - 1) * lengthPerPage;
-      const endIndex = startIndex + lengthPerPage;
+      let sortedProducts = [];
 
       switch (sort) {
         case "best-seller": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors.reduce((previous, { sales }) => previous + sales, 0) - firstProduct.colors.reduce((previous, { sales }) => previous + sales, 0));
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => secondProduct.colors.reduce((previous, { sales }) => previous + sales, 0) - firstProduct.colors.reduce((previous, { sales }) => previous + sales, 0));
           break;
         }
         case "popular": {
-          products.sort((firstProduct, secondProduct) => parseFloat((secondProduct.comments.reduce((previous, { score }) => previous + score, 5) / (secondProduct.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstProduct.comments.reduce((previous, { score }) => previous + score, 5) / (firstProduct.comments.length + 1) || 5).toFixed(1)));
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => parseFloat((secondProduct.comments.reduce((previous, { score }) => previous + score, 5) / (secondProduct.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstProduct.comments.reduce((previous, { score }) => previous + score, 5) / (firstProduct.comments.length + 1) || 5).toFixed(1)));
           break;
         }
         case "cheap": {
-          products.sort((firstProduct, secondProduct) => firstProduct.colors[0].price - secondProduct.colors[0].price);
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => firstProduct.colors[0].price - secondProduct.colors[0].price);
           break;
         }
         case "expensive": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors[0].price - firstProduct.colors[0].price);
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => secondProduct.colors[0].price - firstProduct.colors[0].price);
+          break;
+        }
+        default: {
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => secondProduct.createdAt - firstProduct.createdAt);
           break;
         }
       }
 
-      const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
+      const currentPageProducts = sortedProducts.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
 
       if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
-      }
-    }
-
-    throw Object.assign(new Error("No product found."), { status: 404 });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getByOffer = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-    const { sort = "latest", page = 1, length } = request.query;
-
-    const products = await model.find({ offer: id }, "title covers").populate([
-      { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
-      { path: "brand", select: "-__v" },
-      { path: "category", select: "-__v" },
-      { path: "comments", select: "score" },
-    ]).sort({ createdAt: -1 }).lean();
-
-    if (products.length) {
-      const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || products.length;
-
-      const startIndex = (currentPage - 1) * lengthPerPage;
-      const endIndex = startIndex + lengthPerPage;
-
-      switch (sort) {
-        case "best-seller": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors.reduce((previous, { sales }) => previous + sales, 0) - firstProduct.colors.reduce((previous, { sales }) => previous + sales, 0));
-          break;
-        }
-        case "popular": {
-          products.sort((firstProduct, secondProduct) => parseFloat((secondProduct.comments.reduce((previous, { score }) => previous + score, 5) / (secondProduct.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstProduct.comments.reduce((previous, { score }) => previous + score, 5) / (firstProduct.comments.length + 1) || 5).toFixed(1)));
-          break;
-        }
-        case "cheap": {
-          products.sort((firstProduct, secondProduct) => firstProduct.colors[0].price - secondProduct.colors[0].price);
-          break;
-        }
-        case "expensive": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors[0].price - firstProduct.colors[0].price);
-          break;
-        }
-      }
-
-      const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-
-      if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
-      }
-    }
-
-    throw Object.assign(new Error("No product found."), { status: 404 });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getBySearch = async (request, response, next) => {
-  try {
-    const { title } = request.params;
-    const { sort = "latest", page = 1, length } = request.query;
-
-    const products = await model.find({ title: { $regex: new RegExp(title, "i") } }, "title covers").populate([
-      { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
-      { path: "brand", select: "-__v" },
-      { path: "category", select: "-__v" },
-      { path: "offer", select: "percent expiresAt" },
-      { path: "comments", select: "score" },
-    ]).sort({ createdAt: -1 }).lean();
-
-    if (products.length) {
-      const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || products.length;
-
-      const startIndex = (currentPage - 1) * lengthPerPage;
-      const endIndex = startIndex + lengthPerPage;
-
-      switch (sort) {
-        case "best-seller": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors.reduce((previous, { sales }) => previous + sales, 0) - firstProduct.colors.reduce((previous, { sales }) => previous + sales, 0));
-          break;
-        }
-        case "popular": {
-          products.sort((firstProduct, secondProduct) => parseFloat((secondProduct.comments.reduce((previous, { score }) => previous + score, 5) / (secondProduct.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstProduct.comments.reduce((previous, { score }) => previous + score, 5) / (firstProduct.comments.length + 1) || 5).toFixed(1)));
-          break;
-        }
-        case "cheap": {
-          products.sort((firstProduct, secondProduct) => firstProduct.colors[0].price - secondProduct.colors[0].price);
-          break;
-        }
-        case "expensive": {
-          products.sort((firstProduct, secondProduct) => secondProduct.colors[0].price - firstProduct.colors[0].price);
-          break;
-        }
-      }
-
-      const currentPageProducts = products.slice(startIndex, endIndex).map(({ comments, ...product }) => ({ ...product, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
-
-      if (currentPageProducts.length) {
-        return response.json({ products: currentPageProducts, total: products.length, nextPage: endIndex < products.length ? currentPage + 1 : null });
+        return response.json({ products: currentPageProducts, total: sortedProducts.length, nextPage: endIndex < sortedProducts.length ? currentPage + 1 : null });
       }
     }
 
@@ -259,6 +110,7 @@ const getBySearch = async (request, response, next) => {
 const get = async (request, response, next) => {
   try {
     const { id } = request.params;
+    const { "comments-page": commentsPage = 1, "comments-length": commentsLength } = request.query;
 
     const product = await model.findById(id, "-__v").populate([
       { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
@@ -269,7 +121,13 @@ const get = async (request, response, next) => {
     ]).lean();
 
     if (product) {
-      response.json({ ...product, score: parseFloat((product.comments.reduce((previous, { score }) => previous + score, 5) / (product.comments.length + 1) || 5).toFixed(1)) });
+      const currentCommentsPage = parseInt(commentsPage);
+      const commentsLengthPerPage = parseInt(commentsLength) || product.comments.length;
+
+      const commentsStartIndex = (currentCommentsPage - 1) * commentsLengthPerPage;
+      const commentsEndIndex = commentsStartIndex + commentsLengthPerPage;
+
+      response.json({ ...product, score: parseFloat((product.comments.reduce((previous, { score }) => previous + score, 5) / (product.comments.length + 1) || 5).toFixed(1)), comments: product.comments.slice(commentsStartIndex, commentsEndIndex), totalComments: product.comments.length, nextCommentsPage: commentsEndIndex < product.comments.length ? currentCommentsPage + 1 : null });
     } else {
       throw Object.assign(new Error("The product was not found."), { status: 404 });
     }
@@ -331,4 +189,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { create, getAll, getByCategory, getByOffer, getBySearch, get, update, remove };
+export { create, getAll, get, update, remove };
