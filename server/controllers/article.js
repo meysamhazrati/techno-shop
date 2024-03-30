@@ -1,6 +1,7 @@
 import { unlink } from "fs";
 
 import model from "../models/article.js";
+import categoryModel from "../models/category.js";
 import commentModel from "../models/comment.js";
 
 const create = async (request, response, next) => {
@@ -31,11 +32,13 @@ const getAll = async (request, response, next) => {
   try {
     const { categories, sort, page = 1, length } = request.query;
 
-    const articles = await model.find(categories ? { category: categories.split(",") } : {}, "-body -__v").populate([
+    const filteredCategories = categories?.trim() ? await Promise.all(categories.trim().split(",").map(async (title) => (await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
+
+    const articles = await model.find({ category: filteredCategories }, "-body -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
       { path: "category", select: "-__v" },
       { path: "comments", select: "score" },
-    ]).sort({ createdAt: -1 }).lean();
+    ]).lean();
 
     if (articles.length) {
       const currentPage = parseInt(page);
@@ -44,24 +47,27 @@ const getAll = async (request, response, next) => {
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
 
+      let sortedArticles = [];
+
       switch (sort) {
         case "oldest": {
-          articles.reverse();
+          sortedArticles = articles.toSorted((firstArticle, secondArticle) => firstArticle.createdAt - secondArticle.createdAt);
           break;
         }
         case "popular": {
-          articles.sort((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
+          sortedArticles = articles.toSorted((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
           break;
         }
         default: {
+          sortedArticles = articles.toSorted((firstArticle, secondArticle) => secondArticle.createdAt - firstArticle.createdAt);
           break;
         }
       }
 
-      const currentPageArticles = articles.slice(startIndex, endIndex).map(({ comments, ...article }) => ({ ...article, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
+      const currentPageArticles = sortedArticles.slice(startIndex, endIndex).map(({ comments, ...article }) => ({ ...article, score: parseFloat((comments.reduce((previous, { score }) => previous + score, 5) / (comments.length + 1) || 5).toFixed(1)) }));
 
       if (currentPageArticles.length) {
-        return response.json({ articles: currentPageArticles, total: articles.length, nextPage: endIndex < articles.length ? currentPage + 1 : null });
+        return response.json({ articles: currentPageArticles, total: sortedArticles.length, nextPage: endIndex < sortedArticles.length ? currentPage + 1 : null });
       }
     }
 
@@ -74,6 +80,7 @@ const getAll = async (request, response, next) => {
 const get = async (request, response, next) => {
   try {
     const { id } = request.params;
+    const { "comments-page": commentsPage = 1, "comments-length": commentsLength } = request.query;
 
     const article = await model.findById(id, "-__v").populate([
       { path: "author", select: "firstName lastName avatar" },
@@ -82,7 +89,13 @@ const get = async (request, response, next) => {
     ]).lean();
 
     if (article) {
-      response.json({ ...article, score: parseFloat((article.comments.reduce((previous, { score }) => previous + score, 5) / (article.comments.length + 1) || 5).toFixed(1)) });
+      const currentCommentsPage = parseInt(commentsPage);
+      const commentsLengthPerPage = parseInt(commentsLength) || article.comments.length;
+
+      const commentsStartIndex = (currentCommentsPage - 1) * commentsLengthPerPage;
+      const commentsEndIndex = commentsStartIndex + commentsLengthPerPage;
+
+      response.json({ ...article, score: parseFloat((article.comments.reduce((previous, { score }) => previous + score, 5) / (article.comments.length + 1) || 5).toFixed(1)), comments: article.comments.slice(commentsStartIndex, commentsEndIndex), totalComments: article.comments.length, nextCommentsPage: commentsEndIndex < article.comments.length ? currentCommentsPage + 1 : null });
     } else {
       throw Object.assign(new Error("The article was not found."), { status: 404 });
     }
