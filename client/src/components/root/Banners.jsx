@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Section from "./Section";
 import Banner from "./Banner";
 
 const Banners = () => {
@@ -12,9 +13,9 @@ const Banners = () => {
   }, []);
 
   return (
-    <section className="mt-12 grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-6">
+    <Section className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-6">
       {banners.map((banner, index) => <Banner key={index} {...banner} />)}
-    </section>
+    </Section>
   );
 };
 
