@@ -1,21 +1,21 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAll } from "../../axios/controllers/product";
 
-const shouldRetry = (error) => error.response.status !== 404;
+const shouldRetry = ({ response }) => response.status !== 404;
 const shouldRefetch = ({ state }) => state.error?.response?.status !== 404;
 
-export default (sort, length) => {
+export default (search, brands, categories, onlyAvailable, onlyAmazing, range, sort, length) => {
   const { isFetching, isError, data, hasNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["products", sort],
-    queryFn: ({ pageParam }) => getAll(sort, pageParam, length),
+    queryKey: ["products", { search, brands, categories, "only-available": onlyAvailable, "only-amazing": onlyAmazing, range, sort }],
+    queryFn: ({ pageParam }) => getAll(search, brands, categories, onlyAvailable, onlyAmazing, range, sort, pageParam, length),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.data.nextPage,
+    getNextPageParam: ({ data }) => data.nextPage,
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
     refetchOnMount: shouldRefetch,
     refetchOnReconnect: shouldRefetch,
     refetchOnWindowFocus: shouldRefetch,
-    select: (data) => data.pages.flatMap((page) => page.data.products),
+    select: ({ pages }) => ({ products: pages.flatMap(({ data }) => data.products), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingProducts: isFetching, isProductsError: isError, products: data, hasProductsNextPage: hasNextPage, fetchProductsNextPage: fetchNextPage };
+  return { isFetchingProducts: isFetching, isProductsError: isError, products: data?.products, total: data?.total, hasProductsNextPage: hasNextPage, fetchProductsNextPage: fetchNextPage };
 };
