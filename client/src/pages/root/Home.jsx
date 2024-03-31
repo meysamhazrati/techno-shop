@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Header from "../../components/root/Header";
 import Landing from "../../components/root/Landing";
 import Latests from "../../components/root/Latests";
@@ -11,10 +12,14 @@ import MobileNavigation from "../../components/MobileNavigation";
 import Footer from "../../components/root/Footer";
 
 const Home = () => {
+  useEffect(() => {
+    document.title = "تکنوشاپ";
+  }, []);
+
   return (
     <>
       <Header />
-      <div className="container pb-20 pt-28 xs:pb-24 lg:pb-12 lg:pt-44">
+      <main className="container pb-20 pt-28 xs:pb-24 lg:pb-12 lg:pt-44">
         <Landing />
         <Latests />
         <AmazingOffer />
@@ -23,7 +28,7 @@ const Home = () => {
         <BestSellers />
         <Brands />
         <Articles />
-      </div>
+      </main>
       <MobileNavigation />
       <Footer />
     </>
