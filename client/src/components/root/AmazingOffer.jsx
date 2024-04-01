@@ -5,7 +5,7 @@ import useProducts from "../../hooks/product/products";
 import Section from "./Section";
 import AmazingOfferProduct from "./AmazingOfferProduct";
 import AmazingOfferProductSkeleton from "./AmazingOfferProductSkeleton";
-import ChevronLeftIcon from "../../icons/ChevronLeft";
+import ChevronIcon from "../../icons/Chevron";
 import "swiper/css";
 import "swiper/css/free-mode";
 
@@ -123,7 +123,7 @@ const AmazingOffer = () => {
             </svg>
             <Link to="/products/?only-amazing=true" className="flex items-center justify-center gap-x-2 text-white transition-colors">
               <span className="text-lg">مشاهده همه</span>
-              <ChevronLeftIcon className="size-5" />
+              <ChevronIcon className="size-5 rotate-180" />
             </Link>
           </div>
         </SwiperSlide>

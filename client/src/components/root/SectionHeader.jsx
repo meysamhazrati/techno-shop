@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import ChevronRightIcon from "../../icons/ChevronRight";
-import ChevronLeftIcon from "../../icons/ChevronLeft";
+import ChevronIcon from "../../icons/Chevron";
 
 const SectionHeader = ({ title, condition, button, navigation, route, quantity }) => {
   return (
@@ -9,15 +8,15 @@ const SectionHeader = ({ title, condition, button, navigation, route, quantity }
       {condition && (button ? (
         <Link to={route} className="mr-auto flex h-12 w-40 items-center justify-center gap-x-2 rounded-full font-vazirmatn-medium text-primary-900 transition-colors hover:bg-primary-50">
           <span className="text-lg">مشاهده همه</span>
-          <ChevronLeftIcon className="size-5" />
+          <ChevronIcon className="size-5 rotate-180" />
         </Link>
       ) : navigation ? (
         <div className="mr-auto flex items-center gap-x-3 text-primary-900">
           <button className="swiper-button-prev flex size-12 items-center justify-center rounded-full border border-primary-900 transition-colors hover:bg-primary-50">
-            <ChevronRightIcon className="size-6" />
+            <ChevronIcon className="size-6" />
           </button>
           <button className="swiper-button-next flex size-12 items-center justify-center rounded-full border border-primary-900 transition-colors hover:bg-primary-50">
-            <ChevronLeftIcon className="size-6" />
+            <ChevronIcon className="size-6 rotate-180" />
           </button>
         </div>
       ) : (

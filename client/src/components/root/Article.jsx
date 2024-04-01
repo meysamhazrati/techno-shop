@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import UserIcon from "../../icons/User";
 import StarIcon from "../../icons/Star";
-import ChevronLeftIcon from "../../icons/ChevronLeft";
+import ChevronIcon from "../../icons/Chevron";
 
 const Article = ({ _id, cover, title, author, score }) => {
   return (
@@ -26,7 +26,7 @@ const Article = ({ _id, cover, title, author, score }) => {
         <div className="flex justify-center border-t border-zinc-200 pt-4">
           <Link to={`/articles/${_id}`} className="inline-flex items-center gap-x-1 transition-colors hover:text-primary-900">
             <span className="text-lg">مطالعه</span>
-            <ChevronLeftIcon className="size-5" />
+            <ChevronIcon className="size-5 rotate-180" />
           </Link>
         </div>
       </div>

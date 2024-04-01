@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import useCategories from "../../hooks/category/categories";
-import DoubleChevronUpIcon from "../../icons/DoubleChevronUp";
+import ChevronIcon from "../../icons/Chevron";
 import technoShop from "/techno-shop.svg";
 
 const Footer = () => {
@@ -19,7 +19,7 @@ const Footer = () => {
         </div>
         <div>
           <button className="flex size-12 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => window.scrollTo(0, 0)}>
-            <DoubleChevronUpIcon className="size-7 transition-colors" />
+            <ChevronIcon double={true} className="size-7 -rotate-90 transition-colors" />
           </button>
         </div>
       </div>
