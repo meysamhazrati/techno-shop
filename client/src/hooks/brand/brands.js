@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAll } from "../../axios/controllers/brand";
 
-const shouldRetry = (error) => error.response.status !== 404;
+const shouldRetry = ({ response }) => response.status !== 404;
 const shouldRefetch = ({ state }) => state.error?.response?.status !== 404;
 
 export default (length) => {
@@ -9,13 +9,13 @@ export default (length) => {
     queryKey: ["brands"],
     queryFn: ({ pageParam }) => getAll(pageParam, length),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.data.nextPage,
+    getNextPageParam: ({ data }) => data.nextPage,
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
     refetchOnMount: shouldRefetch,
     refetchOnReconnect: shouldRefetch,
     refetchOnWindowFocus: shouldRefetch,
-    select: (data) => data.pages.flatMap((page) => page.data.brands),
+    select: ({ pages }) => ({ brands: pages.flatMap(({ data }) => data.brands), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingBrands: isFetching, isBrandsError: isError, brands: data, hasBrandsNextPage: hasNextPage, fetchBrandsNextPage: fetchNextPage };
+  return { isFetchingBrands: isFetching, isBrandsError: isError, brands: data?.brands, total: data?.total, hasBrandsNextPage: hasNextPage, fetchBrandsNextPage: fetchNextPage };
 };
