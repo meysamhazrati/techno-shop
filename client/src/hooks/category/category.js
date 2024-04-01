@@ -14,7 +14,7 @@ export default (title, productsBrands, onlyAvailableProducts, onlyAmazingProduct
     refetchOnMount: shouldRefetch,
     refetchOnReconnect: shouldRefetch,
     refetchOnWindowFocus: shouldRefetch,
-    select: ({ pages }) => ({ ...pages[pages.length - 1].data.category, products: pages.flatMap(({ data }) => data.products), totalProducts: pages[pages.length - 1].data.totalProducts }),
+    select: ({ pages }) => ({ ...pages[pages.length - 1].data, products: pages.flatMap(({ data }) => data.products), totalProducts: pages[pages.length - 1].data.totalProducts }),
   });
 
   return { isFetchingCategory: isFetching, isCategoryError: isError, category: data, hasCategoryNextPage: hasNextPage, fetchCategoryNextPage: fetchNextPage };
