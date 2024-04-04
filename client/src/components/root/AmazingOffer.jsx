@@ -10,7 +10,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 
 const AmazingOffer = () => {
-  const { isFetchingProducts, isProductsError, products } = useProducts(null, null, null, true, true, null, null, 10);
+  const { isFetchingProducts, isProductsError, products } = useProducts(null, null, null, null, true, true, null, 10);
 
   return !isProductsError && (
     <Section className="w-full rounded-3xl border-4 border-primary-900 bg-primary-900 py-5">

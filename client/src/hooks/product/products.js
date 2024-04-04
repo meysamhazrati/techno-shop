@@ -4,10 +4,10 @@ import { getAll } from "../../axios/controllers/product";
 const shouldRetry = ({ response }) => response.status !== 404;
 const shouldRefetch = ({ state }) => state.error?.response?.status !== 404;
 
-export default (search, brands, categories, onlyAvailable, onlyAmazing, range, sort, length) => {
+export default (search, brands, categories, price, onlyAvailable, onlyAmazing, sort, length) => {
   const { isFetching, isError, data, hasNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["products", { search, brands, categories, "only-available": onlyAvailable, "only-amazing": onlyAmazing, range, sort }],
-    queryFn: ({ pageParam }) => getAll(search, brands, categories, onlyAvailable, onlyAmazing, range, sort, pageParam, length),
+    queryKey: ["products", { search, brands, categories, price, "only-available": onlyAvailable, "only-amazing": onlyAmazing, sort }],
+    queryFn: ({ pageParam }) => getAll(search, brands, categories, price, onlyAvailable, onlyAmazing, sort, pageParam, length),
     initialPageParam: 1,
     getNextPageParam: ({ data }) => data.nextPage,
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,

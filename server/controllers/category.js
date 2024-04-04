@@ -47,7 +47,7 @@ const getAll = async (request, response, next) => {
 const get = async (request, response, next) => {
   try {
     const { title } = request.params;
-    const { "products-brands": productsBrands, "only-available-products": onlyAvailableProducts = false, "only-amazing-products": onlyAmazingProducts = false, "products-range": productsRange = "0-Infinity", "products-sort": productsSort, "products-page": productsPage = 1, "products-length": productsLength } = request.query;
+    const { "products-brands": productsBrands, "products-price": productsPrice = "0-1000000000", "only-available-products": onlyAvailableProducts = false, "only-amazing-products": onlyAmazingProducts = false, "products-sort": productsSort, "products-page": productsPage = 1, "products-length": productsLength } = request.query;
 
     const productsFilteredBrands = productsBrands?.trim() ? await Promise.all(productsBrands.trim().split(",").map(async (name) => (await brandModel.findOne({ englishName: { $regex: new RegExp(`^${name.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
 
@@ -59,7 +59,7 @@ const get = async (request, response, next) => {
     ] }).lean();
 
     if (category) {
-      const filteredProducts = category.products.filter(({ colors, offer }) => (JSON.parse(onlyAvailableProducts) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazingProducts) ? offer?.expiresAt > new Date() : true) && colors[0].price >= productsRange.split("-")[0] && colors[0].price <= productsRange.split("-")[1]);
+      const filteredProducts = category.products.filter(({ colors, offer }) => colors[0].price >= (productsPrice.split("-")[0] || 0) && colors[0].price <= (productsPrice.split("-")[1] || 1000000000) && (JSON.parse(onlyAvailableProducts) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazingProducts) ? offer?.expiresAt > new Date() : true));
       let products = [];
       let totalProducts = 0;
       let nextProductsPage = null;

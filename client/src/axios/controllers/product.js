@@ -2,7 +2,7 @@ import axios from "../config";
 
 const create = async (type, body) => await axios.postForm("/products", body, { params: { type } });
 
-const getAll = async (search, brands, categories, onlyAvailable, onlyAmazing, range, sort, page, length) => await axios.get("/products", { params: { search, brands, categories, "only-available": onlyAvailable, "only-amazing": onlyAmazing, range, sort, page, length } });
+const getAll = async (search, brands, categories, price, onlyAvailable, onlyAmazing, sort, page, length) => await axios.get("/products", { params: { search, brands, categories, price, "only-available": onlyAvailable, "only-amazing": onlyAmazing, sort, page, length } });
 
 const get = async (id, commentsPage, commentsLength) => await axios.get(`/products/${id}`, { params: { "comments-page": commentsPage, "comments-length": commentsLength } });
 

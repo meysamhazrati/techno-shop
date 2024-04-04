@@ -47,7 +47,7 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { search, brands, categories, "only-available": onlyAvailable = false, "only-amazing": onlyAmazing = false, range = "0-Infinity", sort, page = 1, length } = request.query;
+    const { search, brands, categories, price = "0-1000000000", "only-available": onlyAvailable = false, "only-amazing": onlyAmazing = false, sort, page = 1, length } = request.query;
 
     const filteredBrands = brands?.trim() ? await Promise.all(brands.trim().split(",").map(async (name) => (await brandModel.findOne({ englishName: { $regex: new RegExp(`^${name.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
     const filteredCategories = categories?.trim() ? await Promise.all(categories.trim().split(",").map(async (title) => (await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
@@ -60,7 +60,7 @@ const getAll = async (request, response, next) => {
       { path: "comments", select: "score" },
     ]).lean();
 
-    const filteredProducts = products.filter(({ colors, offer }) => (JSON.parse(onlyAvailable) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazing) ? offer?.expiresAt > new Date() : true) && colors[0].price >= range.split("-")[0] && colors[0].price <= range.split("-")[1]);
+    const filteredProducts = products.filter(({ colors, offer }) => colors[0].price >= (price.split("-")[0] || 0) && colors[0].price <= (price.split("-")[1] || 1000000000) && (JSON.parse(onlyAvailable) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazing) ? offer?.expiresAt > new Date() : true));
     
     if (filteredProducts.length) {
       const currentPage = parseInt(page);
