@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import BarsArrowDownIcon from "../../icons/BarsArrowDown";
 
-const Sorts = ({ sortFor }) => {
+const Sort = ({ sortFor }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sort, setSort] = useState(searchParams.get("sort") || null);
   const [sorts, setSorts] = useState([]);
@@ -50,4 +50,4 @@ const Sorts = ({ sortFor }) => {
   );
 };
 
-export default Sorts;
+export default Sort;
