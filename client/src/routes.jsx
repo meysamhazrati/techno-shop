@@ -3,6 +3,7 @@ import NotFound from "./components/NotFound";
 import Root from "./pages/root/Root";
 import Home from "./pages/root/Home";
 import Categories from "./pages/root/Categories";
+import Category from "./pages/root/Category";
 
 export default [
   {
@@ -15,6 +16,7 @@ export default [
         children: [
           { index: true, element: <Home /> },
           { path: "categories", element: <Categories /> },
+          { path: "categories/:title", element: <Category /> },
         ],
       },
       {
