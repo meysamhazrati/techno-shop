@@ -3,12 +3,14 @@ import Root from "./pages/root/Root";
 import Home from "./pages/root/Home";
 import Categories from "./pages/root/Categories";
 import Category from "./pages/root/Category";
+import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
 export default [
   {
     path: "/",
     element: <App />,
+    errorElement: <Error />,
     children: [
       {
         path: "",
