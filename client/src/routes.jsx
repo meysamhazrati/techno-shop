@@ -1,9 +1,9 @@
 import App from "./App";
-import NotFound from "./components/NotFound";
 import Root from "./pages/root/Root";
 import Home from "./pages/root/Home";
 import Categories from "./pages/root/Categories";
 import Category from "./pages/root/Category";
+import NotFound from "./pages/NotFound";
 
 export default [
   {
