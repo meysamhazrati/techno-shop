@@ -4,6 +4,7 @@ import Home from "./pages/root/Home";
 import Categories from "./pages/root/Categories";
 import Category from "./pages/root/Category";
 import Brands from "./pages/root/Brands";
+import Brand from "./pages/root/Brand";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -21,6 +22,7 @@ export default [
           { path: "categories", element: <Categories /> },
           { path: "categories/:title", element: <Category /> },
           { path: "brands", element: <Brands /> },
+          { path: "brands/:name", element: <Brand /> },
         ],
       },
       {
