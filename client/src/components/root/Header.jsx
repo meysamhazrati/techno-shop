@@ -18,15 +18,32 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let currentScrollY = window.scrollY;
+    let lastScrollY = window.scrollY;
+    let lastScrollDown = 0;
+    let lastScrollUp = 0;
+
     const onScroll = () => {
       if (window.innerWidth > 1024) {
-        if (document.documentElement.scrollTop < 200) {
-          header.current.style.height = "128px";
-          navigation.current.style.top = "0px";
+        currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY) {
+          lastScrollDown = currentScrollY;
+
+          if (lastScrollDown - lastScrollUp > 200) {
+            header.current.style.height = "80px";
+            navigation.current.style.top = "-40px";
+          }
         } else {
-          header.current.style.height = "80px";
-          navigation.current.style.top = "-40px";
+          lastScrollUp = currentScrollY;
+
+          if (lastScrollDown - lastScrollUp > 200 || currentScrollY < 50) {
+            header.current.style.height = "128px";
+            navigation.current.style.top = "0px";
+          }
         }
+
+        lastScrollY = currentScrollY;
       }
     };
 
@@ -36,7 +53,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header ref={header} className="fixed z-50 w-full bg-white shadow transition-[height] duration-300">
+    <header ref={header} className="fixed z-50 h-20 w-full bg-white shadow transition-all duration-300 lg:h-32">
       <div className="flex h-20 w-full items-center bg-white p-3 lg:justify-between lg:px-7">
         <div className="flex w-full items-center gap-x-7">
           <Link to="/" className="hidden w-40 lg:block">
@@ -44,7 +61,7 @@ const Header = () => {
           </Link>
           <div className="h-12 w-full rounded-3xl bg-zinc-200 px-6 text-zinc-700 lg:w-[450px] xl:w-[550px]">
             <div className="relative flex size-full items-center gap-x-4 overflow-hidden">
-              <div className="shrink-0 cursor-pointer" onClick={() => title && navigate(`/products/?title=${title}`)}>
+              <div className="shrink-0 cursor-pointer" onClick={() => title.trim() && navigate(`/search/${title.trim().split(" ").join("-")}`)}>
                 <SearchIcon className="size-7" />
               </div>
               <input
@@ -54,13 +71,13 @@ const Header = () => {
                 placeholder={window.innerWidth < 1024 ? "جستجو در" : "جستجو"}
                 className="w-full bg-transparent text-lg outline-none placeholder:text-zinc-700"
                 onInput={({ target }) => {
-                  setTitle(target.value.trim());
+                  setTitle(target.value);
 
                   if (window.innerWidth < 1024) {
                     target.nextElementSibling.style.display = target.value ? "none" : "block";
                   }
                 }}
-                onKeyUp={({ key }) => title && key === "Enter" && navigate(`/products/?title=${title}`)}
+                onKeyUp={({ key }) => title.trim() && key === "Enter" && navigate(`/search/${title.trim().split(" ").join("-")}`)}
               />
               <img src={technoShop} alt="Techno Shop" className="pointer-events-none absolute right-[122px] w-24 object-cover lg:hidden" />
             </div>
