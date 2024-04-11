@@ -5,12 +5,12 @@ import useMe from "../../hooks/authentication/me";
 import HomeIcon from "../../icons/Home";
 import PinIcon from "../../icons/Pin";
 
-const Navigation = (props, ref) => {
+const Navigation = forwardRef((props, ref) => {
   const { isPendingMe, me } = useMe();
   const { categories } = useCategories(7);
 
   return (
-    <nav ref={ref} className="relative -z-10 hidden h-12 items-center justify-between px-7 py-3 transition-[top] duration-300 lg:flex">
+    <nav ref={ref} className="relative -top-10 -z-10 hidden h-12 items-center justify-between px-7 py-3 transition-all duration-300 lg:top-0 lg:flex">
       <div className="flex items-center gap-x-3">
         <div className="flex cursor-pointer items-center gap-x-2 transition-colors hover:text-primary-900">
           <HomeIcon className="size-6" />
@@ -38,6 +38,8 @@ const Navigation = (props, ref) => {
       )}
     </nav>
   );
-};
+});
 
-export default forwardRef(Navigation);
+Navigation.displayName = "Navigation";
+
+export default Navigation;
