@@ -13,7 +13,7 @@ import NoResultFound from "../../components/NoResultFound";
 const Category = () => {
   const { title } = useParams();
   const [searchParams] = useSearchParams();
-  const { isFetchingCategory, isCategoryError, category, hasCategoryNextPage, fetchCategoryNextPage } = useCategory(title.toLowerCase().split(" ").join("-"), searchParams.get("brands"), searchParams.get("price"), searchParams.get("only-available"), searchParams.get("only-amazing"), searchParams.get("sort"), 4);
+  const { isFetchingCategory, isCategoryError, category, hasCategoryNextPage, fetchCategoryNextPage } = useCategory(title.toLowerCase().split(" ").join("-"), searchParams.get("brands"), searchParams.get("price"), searchParams.get("only-available"), searchParams.get("only-amazing"), searchParams.get("sort"), 12);
 
   useEffect(() => {
     document.title = isCategoryError || isFetchingCategory ? "تکنوشاپ" : `تکنوشاپ - ${category.title}`;
