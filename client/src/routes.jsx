@@ -5,6 +5,7 @@ import Categories from "./pages/root/Categories";
 import Category from "./pages/root/Category";
 import Brands from "./pages/root/Brands";
 import Brand from "./pages/root/Brand";
+import Offers from "./pages/root/Offers";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ export default [
           { path: "categories/:title", element: <Category /> },
           { path: "brands", element: <Brands /> },
           { path: "brands/:name", element: <Brand /> },
+          { path: "offers", element: <Offers /> },
         ],
       },
       {
