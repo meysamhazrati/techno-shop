@@ -10,6 +10,12 @@ const schema = new Schema(
       minLength: 5,
       maxLength: 100,
     },
+    englishTitle: {
+      type: String,
+      required: true,
+      minLength: 5,
+      maxLength: 100,
+    },
     description: {
       type: String,
       required: true,
@@ -33,6 +39,12 @@ const schema = new Schema(
   },
   { timestamps: true }
 );
+
+schema.virtual("products", {
+  ref: "Product",
+  localField: "_id",
+  foreignField: "offer",
+});
 
 schema.statics.createValidation = (body) => create.validate(body);
 schema.statics.updateValidation = (body) => update.validate(body);
