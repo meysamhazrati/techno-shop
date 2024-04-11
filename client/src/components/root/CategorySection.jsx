@@ -8,9 +8,9 @@ import ProductSkeleton from "./ProductSkeleton";
 import NoResultFound from "../NoResultFound";
 
 const CategorySection = ({ title, englishTitle }) => {
-  const { isFetchingCategory, category } = useCategory(englishTitle.toLowerCase().split(" ").join("-"), null, null, null, null, null, 10);
+  const { isFetchingCategory, isCategoryError, category } = useCategory(englishTitle.toLowerCase().split(" ").join("-"), null, null, null, null, null, 10);
 
-  return (
+  return !isCategoryError && (
     <Section>
       <SectionHeader title={title} condition={category?.products.length > 4} button={true} route={`/categories/${englishTitle.toLowerCase().split(" ").join("-")}`} />
       {category?.products.length === 0 ? (
@@ -33,7 +33,7 @@ const CategorySection = ({ title, englishTitle }) => {
             <SwiperSlide key={index}>
               <ProductSkeleton />
             </SwiperSlide>
-          )) : category?.products.map((product) => (
+          )) : category.products.map((product) => (
             <SwiperSlide key={product._id}>
                 <Product {...product} category={{ title, englishTitle }} />
             </SwiperSlide>
