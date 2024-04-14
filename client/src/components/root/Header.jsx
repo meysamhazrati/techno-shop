@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import useMe from "../../hooks/authentication/me";
 import CartButton from "./CartButton";
 import ProfileButton from "./ProfileButton";
@@ -8,7 +8,8 @@ import SearchIcon from "../../icons/Search";
 import technoShop from "/techno-shop.svg";
 
 const Header = () => {
-  const [title, setTitle] = useState("");
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search")?.split("-").join(" ") || "");
 
   const header = useRef();
   const navigation = useRef();
@@ -61,23 +62,23 @@ const Header = () => {
           </Link>
           <div className="h-12 w-full rounded-3xl bg-zinc-200 px-6 text-zinc-700 lg:w-[450px] xl:w-[550px]">
             <div className="relative flex size-full items-center gap-x-4 overflow-hidden">
-              <div className="shrink-0 cursor-pointer" onClick={() => title.trim() && navigate(`/search/${title.trim().split(" ").join("-")}`)}>
+              <div className="shrink-0 cursor-pointer" onClick={() => search.trim() && navigate(`/products/?search=${search.trim().split(" ").join("-")}`)}>
                 <SearchIcon className="size-7" />
               </div>
               <input
                 type="text"
                 inputMode="search"
-                value={title}
+                value={search}
                 placeholder={window.innerWidth < 1024 ? "جستجو در" : "جستجو"}
                 className="w-full bg-transparent text-lg outline-none placeholder:text-zinc-700"
                 onInput={({ target }) => {
-                  setTitle(target.value);
+                  setSearch(target.value);
 
                   if (window.innerWidth < 1024) {
                     target.nextElementSibling.style.display = target.value ? "none" : "block";
                   }
                 }}
-                onKeyUp={({ key }) => title.trim() && key === "Enter" && navigate(`/search/${title.trim().split(" ").join("-")}`)}
+                onKeyUp={({ key }) => search.trim() && key === "Enter" && navigate(`/products/?search=${search.trim().split(" ").join("-")}`)}
               />
               <img src={technoShop} alt="Techno Shop" className="pointer-events-none absolute right-[122px] w-24 object-cover lg:hidden" />
             </div>
