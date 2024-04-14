@@ -5,22 +5,10 @@ import BarsArrowDownIcon from "../../icons/BarsArrowDown";
 const Sort = ({ sortFor }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sort, setSort] = useState(searchParams.get("sort") || null);
-  const [sorts, setSorts] = useState([]);
-
-  useEffect(() => {
-    setSorts(sortFor === "articles" ? [
-      { title: "قدیمی‌ترین", searchParam: "oldest" },
-      { title: "محبوب‌ترین", searchParam: "popular" },
-    ] : [
-      { title: "پرفروش‌ترین", searchParam: "best-seller" },
-      { title: "محبوب‌ترین", searchParam: "popular" },
-      { title: "ارزان‌ترین", searchParam: "cheap" },
-      { title: "گران‌ترین", searchParam: "expensive" },
-    ]);
-  }, [sortFor]);
 
   useEffect(() => {
     const newSearchParams = {
+      search: searchParams.get("search"),
       brands: searchParams.get("brands"),
       categories: searchParams.get("categories"),
       price: searchParams.get("price"),
@@ -43,8 +31,20 @@ const Sort = ({ sortFor }) => {
         <span className="text-xl">مرتب‌سازی:</span>
       </div>
       <div className="flex items-center gap-x-4 overflow-auto py-2 [&>*]:text-lg">
-        <button className={`text-${sorts.some(({ searchParam }) => searchParam === sort) ? "zinc-500" : "primary-900"}`} onClick={() => setSort(null)}>جدیدترین</button>
-        {sorts.map(({ title, searchParam }, index) => <button key={index} className={`text-${sort === searchParam ? "primary-900" : "zinc-500"}`} onClick={() => setSort(searchParam)}>{title}</button>)}
+        <button className={`text-${(sort === "oldest" || sort === "popular" || sort === "best-seller" || sort === "cheap" || sort === "expensive") ? "zinc-500" : "primary-900"}`} onClick={() => setSort(null)}>جدیدترین</button>
+        {sortFor === "articles" ? (
+          <>
+            <button className={`text-${sort === "oldest" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("oldest")}>{"قدیمی‌ترین"}</button>
+            <button className={`text-${sort === "popular" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("popular")}>{"محبوب‌ترین"}</button>
+          </>
+        ) : (
+          <>
+            <button className={`text-${sort === "best-seller" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("best-seller")}>{"پرفروش‌ترین"}</button>
+            <button className={`text-${sort === "popular" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("popular")}>{"محبوب‌ترین"}</button>
+            <button className={`text-${sort === "cheap" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("cheap")}>{"ارزان‌ترین"}</button>
+            <button className={`text-${sort === "expensive" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("expensive")}>{"گران‌ترین"}</button>
+          </>
+        )}
       </div>
     </div>
   );
