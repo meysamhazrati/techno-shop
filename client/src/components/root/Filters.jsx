@@ -17,6 +17,7 @@ const Filters = ({ brandsFilter, categoriesFilter, priceFilter, onlyAvailableFil
 
   useEffect(() => {
     const newSearchParams = {
+      search: searchParams.get("search"),
       brands: brands.join(","),
       categories: categories.join(","),
       price: price.join("-"),
@@ -39,7 +40,7 @@ const Filters = ({ brandsFilter, categoriesFilter, priceFilter, onlyAvailableFil
           <AdjustmentsIcon className="size-8" />
           <h6 className="text-2xl">فیلتر ها</h6>
         </div>
-        {Array.from(searchParams.keys()).length !== 0 && Array.from(searchParams.keys())[0] !== "sort" && (
+        {(brands.length || categories.length || price.length || onlyAvailable || onlyAmazing) && (
           <button className="text-primary-900" onClick={() => {
             setBrands([]);
             setCategories([]);
