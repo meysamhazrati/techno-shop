@@ -18,7 +18,7 @@ const AmazingOfferProduct = ({ _id, covers, title, colors, offer }) => {
           <div className="flex flex-col items-center">
             <AmazingOfferTimer width="32" fontSize="xs" expiresAt={offer.expiresAt} />
           </div>
-          <ProductPrice price={colors[0].price} offer={offer} priceFontSize="base" discountedPriceFontSize="xs" gapX="px" iconSize="4" />
+          <ProductPrice price={colors[0].price} offer={offer} priceFontSize="base" discountedPriceFontSize="xs" gapX="px" iconSize="4" hasInventory={colors[0].inventory} />
         </div>
       </div>
     </div>
