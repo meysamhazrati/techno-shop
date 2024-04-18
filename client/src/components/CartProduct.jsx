@@ -5,7 +5,7 @@ import ProductPrice from "./ProductPrice";
 import AmazingOfferTimer from "./AmazingOfferTimer";
 import VerifiedIcon from "../icons/Verified";
 
-const CartProduct = ({ quantity, product, color }) => {
+const CartProduct = ({ product, color }) => {
   return (
     <div className="grid grid-cols-[128px_1fr] items-center gap-x-4 gap-y-2 py-3">
       <div className="relative size-32">
@@ -28,8 +28,8 @@ const CartProduct = ({ quantity, product, color }) => {
         </div>
       </div>
       {Date.parse(product.offer?.expiresAt) > Date.now() && <AmazingOfferTimer width="full" fontSize="xs" expiresAt={product.offer.expiresAt} />}
-      <ProductButton id={product._id} quantity={quantity} color={color} />
-      <ProductPrice price={color.price} offer={product.offer} priceFontSize="base" discountedPriceFontSize="xs" gapX="px" iconSize="4" />
+      <ProductButton id={product._id} color={color} disabled={!color.inventory} />
+      <ProductPrice price={color.price} offer={product.offer} priceFontSize="base" discountedPriceFontSize="xs" gapX="px" iconSize="4" hasInventory={color.inventory} />
     </div>
   );
 };
