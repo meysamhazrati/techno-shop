@@ -239,7 +239,7 @@ const addToFavorites = async (request, response, next) => {
     const product = await productModel.findById(id);
 
     if (product) {
-      const isExists = favorites.some((product) => product.equals(id));
+      const isExists = favorites.some((product) => product._id.equals(id));
 
       if (isExists) {
         throw Object.assign(new Error("This product has already been added to your favorites."), { status: 409 });
@@ -265,7 +265,7 @@ const removeFromFavorites = async (request, response, next) => {
     const product = await productModel.findById(id);
 
     if (product) {
-      const isExists = favorites.some((product) => product.equals(id));
+      const isExists = favorites.some((product) => product._id.equals(id));
 
       if (isExists) {
         await model.findByIdAndUpdate(_id, { $pull: { favorites: id } });
