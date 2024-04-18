@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { me } from "../../axios/controllers/authentication";
 
-const shouldRetry = (error) => !/401|403|404/.test(error.response.status);
+const shouldRetry = ({ response }) => !/401|403|404/.test(response.status);
 const shouldRefetch = ({ state }) => !/401|403|404/.test(state.error?.response?.status);
 
 export default () => {
@@ -13,7 +13,7 @@ export default () => {
     refetchOnMount: shouldRefetch,
     refetchOnReconnect: shouldRefetch,
     refetchOnWindowFocus: shouldRefetch,
-    select: (data) => data.data,
+    select: ({ data }) => data,
   });
 
   return { isPendingMe: isPending, isFetchingMe: isFetching, isMeError: isError, me: data };
