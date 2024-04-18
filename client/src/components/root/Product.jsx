@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useMe from "../../hooks/authentication/me";
 import ProductCover from "../ProductCover";
 import ProductButton from "../ProductButton";
 import ProductPrice from "../ProductPrice";
@@ -8,16 +6,6 @@ import SquaresIcon from "../../icons/Squares";
 import StarIcon from "../../icons/Star";
 
 const Product = ({ _id, covers, title, colors, score, category, offer }) => {
-  const [quantity, setQuantity] = useState(0);
-
-  const { me } = useMe();
-
-  useEffect(() => {
-    const isExists = me?.cart.find(({ product, color }) => _id === product._id && colors[0]._id === color._id);
-
-    setQuantity(isExists ? isExists.quantity : 0);
-  }, [_id, colors, me?.cart]);
-
   return (
     <div className="relative overflow-hidden rounded-3xl bg-white">
       <div className="h-48 w-full">
@@ -39,17 +27,8 @@ const Product = ({ _id, covers, title, colors, score, category, offer }) => {
           </div>
         </div>
         <div className="flex items-center justify-between gap-x-5 border-t border-zinc-200 pt-4">
-          {colors[0].inventory ? (
-            <>
-              <ProductButton id={_id} quantity={quantity} color={colors[0]} />
-              <ProductPrice price={colors[0].price} offer={offer} priceFontSize="lg" discountedPriceFontSize="sm" gapX="[2px]" iconSize="[18px]" />
-            </>
-          ) : (
-            <>
-              <button disabled={true} className="flex h-12 w-full items-center justify-center overflow-hidden text-nowrap rounded-full bg-primary-100 font-vazirmatn-medium text-white">افزودن به سبد خرید</button>
-              <span className="text-lg text-red-700">ناموجود</span>
-            </>
-          )}
+          <ProductButton id={_id} color={colors[0]} disabled={!colors[0].inventory} />
+          <ProductPrice price={colors[0].price} offer={offer} priceFontSize="lg" discountedPriceFontSize="sm" gapX="[2px]" iconSize="5" hasInventory={colors[0].inventory} />
         </div>
       </div>
     </div>
