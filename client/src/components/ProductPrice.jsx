@@ -1,7 +1,7 @@
 import TomanIcon from "../icons/Toman";
 
-const ProductPrice = ({ price, offer, priceFontSize, discountedPriceFontSize, gapX, iconSize }) => {
-  return (
+const ProductPrice = ({ price, offer, priceFontSize, discountedPriceFontSize, gapX, iconSize, hasInventory }) => {
+  return hasInventory ? (
     <div className="flex flex-col">
       {Date.parse(offer?.expiresAt) > Date.now() && <span className={`text-${discountedPriceFontSize} text-zinc-400 line-through`}>{price.toLocaleString()}</span>}
       <span className={`flex items-center gap-x-${gapX} font-vazirmatn-bold text-${priceFontSize}`}>
@@ -9,6 +9,8 @@ const ProductPrice = ({ price, offer, priceFontSize, discountedPriceFontSize, ga
         <TomanIcon className={`size-${iconSize}`} />
       </span>
     </div>
+  ) : (
+    <span className={`text-${priceFontSize} text-red-700`}>ناموجود</span>
   );
 };
 
