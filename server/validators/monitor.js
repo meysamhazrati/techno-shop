@@ -10,7 +10,7 @@ const validator = object({
   maximumResponseTime: number().required().min(1).max(10),
   panel: string().required().min(2).max(20),
   backlight: string().required().min(3).max(20),
-  colors: number().required().min(1000000).max(1000000000),
+  color: number().required().min(1000000).max(1000000000),
 });
 
 export default validator;
