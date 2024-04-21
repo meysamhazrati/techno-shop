@@ -59,7 +59,7 @@ const schema = new Schema(
       minLength: 3,
       maxLength: 20,
     },
-    colors: {
+    color: {
       type: Number,
       required: true,
       min: 1000000,
