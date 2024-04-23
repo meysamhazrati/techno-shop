@@ -5,7 +5,7 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
   return !isError && (
     <Section>
       <SectionHeader title="مشخصات" />
-      <div className="mt-8 divide-y divide-zinc-200 rounded-3xl bg-white p-6 text-xl [&>*>span]:text-zinc-500 [&>*]:grid [&>*]:grid-cols-2 [&>*]:items-center [&>*]:py-4 first:[&>*]:pt-0 last:[&>*]:pb-0 sm:[&>*]:grid-cols-[250px_1fr]">
+      <div className="mt-8 divide-y divide-zinc-200 rounded-3xl bg-white p-6 text-xl [&>*>span]:text-zinc-400 [&>*]:grid [&>*]:grid-cols-2 [&>*]:items-center [&>*]:py-4 first:[&>*]:pt-0 last:[&>*]:pb-0 sm:[&>*]:grid-cols-[250px_1fr]">
         {isFetching ? Array(5).fill(0).map((specification, index) => (
           <div key={index}>
             <span>در حال بارگذاری</span>
