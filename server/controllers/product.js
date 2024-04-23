@@ -117,7 +117,7 @@ const get = async (request, response, next) => {
       { path: "brand", select: "-__v" },
       { path: "category", select: "-__v" },
       { path: "offer", select: "-organizer -__v" },
-      { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
+      { path: "comments", select: "-__v", match: { isConfirmed: true }, options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
     ]).lean();
 
     if (product) {
