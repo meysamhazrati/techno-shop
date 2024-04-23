@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import ChevronIcon from "../../icons/Chevron";
 
-const SectionHeader = ({ title, condition, button, navigation, route, quantity }) => {
+const SectionHeader = ({ title, condition, button, route, navigation, children }) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h2 className="font-vazirmatn-bold text-3xl">{title}</h2>
@@ -20,7 +20,7 @@ const SectionHeader = ({ title, condition, button, navigation, route, quantity }
           </button>
         </div>
       ) : (
-        <span className="mr-auto text-xl text-zinc-500">{quantity} کالا</span>
+        children
       ))}
     </div>
   );
