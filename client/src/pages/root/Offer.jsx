@@ -27,7 +27,9 @@ const Offer = () => {
 
   return !isOfferError && (
     <>
-      <SectionHeader title={isFetchingOffer ? "در حال بارگذاری" : offer.title} condition={true} quantity={isFetchingOffer ? 0 : offer.totalProducts} />
+      <SectionHeader title={isFetchingOffer ? "در حال بارگذاری" : offer.title} condition={true}>
+        <span className="mr-auto text-xl text-zinc-500">{isFetchingOffer ? 0 : offer.totalProducts} کالا</span>
+      </SectionHeader>
       <Section className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <Filters brandsFilter={true} categoriesFilter={true} priceFilter={true} onlyAvailableFilter={true} />
         <div className="w-full">
