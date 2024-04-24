@@ -6,11 +6,11 @@ import ArticleSkeleton from "./ArticleSkeleton";
 import NoResultFound from "../NoResultFound";
 
 const Articles = () => {
-  const { isFetchingArticles, isArticlesError, articles } = useArticles(null, null, 4);
+  const { isFetchingArticles, isArticlesError, articles } = useArticles(null, true, true, null, 4);
 
   return (
     <Section>
-      <SectionHeader title="خواندنی ها" condition={articles?.length > 4} button={true} route="/articles" />
+      <SectionHeader title="خواندنی ها" condition={articles?.length === 4} button={true} route="/articles" />
       {isArticlesError ? (
         <NoResultFound title="مقاله‌ای پیدا نشد!" />
       ) : (
