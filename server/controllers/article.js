@@ -30,7 +30,7 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { categories, sort, page = 1, length } = request.query;
+    const { categories, "only-published": onlyPublished = false, "only-confirmed": onlyConfirmed = false, sort, page = 1, length } = request.query;
 
     const filteredCategories = categories?.trim() ? await Promise.all(categories.trim().split(",").map(async (title) => (await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
 
@@ -40,9 +40,11 @@ const getAll = async (request, response, next) => {
       { path: "comments", select: "score" },
     ]).lean();
 
-    if (articles.length) {
+    const filteredArticles = articles.filter(({ isPublished, isConfirmed }) => (JSON.parse(onlyPublished) ? isPublished : true) && (JSON.parse(onlyConfirmed) ? isConfirmed : true));
+
+    if (filteredArticles.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || articles.length;
+      const lengthPerPage = parseInt(length) || filteredArticles.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
@@ -51,15 +53,15 @@ const getAll = async (request, response, next) => {
 
       switch (sort) {
         case "oldest": {
-          sortedArticles = articles.toSorted((firstArticle, secondArticle) => firstArticle.createdAt - secondArticle.createdAt);
+          sortedArticles = filteredArticles.toSorted((firstArticle, secondArticle) => firstArticle.createdAt - secondArticle.createdAt);
           break;
         }
         case "popular": {
-          sortedArticles = articles.toSorted((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
+          sortedArticles = filteredArticles.toSorted((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
           break;
         }
         default: {
-          sortedArticles = articles.toSorted((firstArticle, secondArticle) => secondArticle.createdAt - firstArticle.createdAt);
+          sortedArticles = filteredArticles.toSorted((firstArticle, secondArticle) => secondArticle.createdAt - firstArticle.createdAt);
           break;
         }
       }
@@ -85,7 +87,7 @@ const get = async (request, response, next) => {
     const article = await model.findById(id, "-__v").populate([
       { path: "author", select: "firstName lastName avatar" },
       { path: "category", select: "-__v" },
-      { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
+      { path: "comments", select: "-__v", match: { isConfirmed: true }, options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
     ]).lean();
 
     if (article) {
