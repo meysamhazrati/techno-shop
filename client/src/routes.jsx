@@ -7,6 +7,7 @@ import Brands from "./pages/root/Brands";
 import Brand from "./pages/root/Brand";
 import Products from "./pages/root/Products";
 import Product from "./pages/root/Product";
+import Articles from "./pages/root/Articles";
 import Offers from "./pages/root/Offers";
 import Offer from "./pages/root/Offer";
 import Error from "./pages/Error";
@@ -29,6 +30,7 @@ export default [
           { path: "brands/:name", element: <Brand /> },
           { path: "products", element: <Products /> },
           { path: "products/:id", element: <Product /> },
+          { path: "articles", element: <Articles /> },
           { path: "offers", element: <Offers /> },
           { path: "offers/:title", element: <Offer /> },
         ],
