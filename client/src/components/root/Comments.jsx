@@ -24,7 +24,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
     if (isFetchingMe || isMeError) {
       openToast("error", null, "لطفا ابتدا وارد حساب کاربری خود شوید.");
     } else {
-      if (/^\w{5,300}$/.test(body.trim())) {
+      if (body.trim().length >= 5 && body.trim().length <= 300) {
         createComment({ body: body.trim(), score, [submitFor]: id }, {
           onSuccess: () => {
             setBody("");
@@ -43,7 +43,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
         <span className="mr-auto text-xl text-zinc-500">{isFetching ? 0 : totalComments} دیدگاه</span>
       </SectionHeader>
       <div className="mt-8 flex flex-col items-start gap-6 lg:flex-row [&>*]:rounded-3xl [&>*]:p-6">
-        <div className="relative w-full overflow-hidden bg-white lg:sticky lg:top-[104px] lg:w-[400px] lg:shrink-0">
+        <aside className="relative w-full shrink-0 overflow-hidden bg-white lg:sticky lg:top-[104px] lg:w-[400px]">
           {(isFetchingMe || isMeError) && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/70">
               <h6 className="max-w-52 text-center text-xl">برای ثبت دیدگاه وارد حساب کاربری خود شوید.</h6>
@@ -62,7 +62,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
               {isPendingCreateComment ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت دیدگاه"}
             </button>
           </form>
-        </div>
+        </aside>
         <div className="w-full bg-white lg:min-h-[373px]">
           {comments?.length === 0 ? (
             <NoResultFound title="دیدگاهی پیدا نشد!" />
@@ -87,7 +87,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
                       </div>
                       <span className="text-zinc-400 xs:text-lg">{new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(comment.createdAt))}</span>
                     </div>
-                    <p className="mt-3 text-lg">{comment.body}</p>
+                    <p className="mt-3 text-lg" dangerouslySetInnerHTML={{ __html: comment.body.replaceAll("\n", "<br />") }}></p>
                   </div>
                 ))}
                 {isFetching && Array(5).fill(0).map((comment, index) => (
