@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: `${process.env.SERVER_URI}/api`,
   headers: {
     post: {
       "Content-Type": "application/json",
