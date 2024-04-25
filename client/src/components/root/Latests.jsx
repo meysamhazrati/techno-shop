@@ -10,7 +10,7 @@ const Latests = () => {
 
   return (
     <Section>
-      <SectionHeader title="جدیدترین ها" condition={products?.length > 8} button={true} route="/products" />
+      <SectionHeader title="جدیدترین ها" condition={products?.length === 8} button={true} route="/products" />
       {isProductsError ? (
         <NoResultFound title="محصولی پیدا نشد!" />
       ) : (
