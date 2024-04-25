@@ -1,6 +1,4 @@
 import express, { json, urlencoded, static as static_ } from "express";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 
 import cors from "./middlewares/cors.js";
 import notFoundHandler from "./middlewares/notFound.js";
@@ -24,20 +22,20 @@ app.use(cors);
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
-app.use(static_(join(dirname(fileURLToPath(import.meta.url)), "public")));
+app.use(static_("public"));
 
-app.use("/authentication", authenticationRouter);
-app.use("/users", userRouter);
-app.use("/addresses", addressRouter);
-app.use("/brands", brandRouter);
-app.use("/categories", categoryRouter);
-app.use("/products", productRouter);
-app.use("/orders", orderRouter);
-app.use("/articles", articleRouter);
-app.use("/comments", commentRouter);
-app.use("/tickets", ticketRouter);
-app.use("/offers", offerRouter);
-app.use("/discountCodes", discountCodeRouter);
+app.use("/api/authentication", authenticationRouter);
+app.use("/api/users", userRouter);
+app.use("/api/addresses", addressRouter);
+app.use("/api/brands", brandRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
+app.use("/api/articles", articleRouter);
+app.use("/api/comments", commentRouter);
+app.use("/api/tickets", ticketRouter);
+app.use("/api/offers", offerRouter);
+app.use("/api/discount-codes", discountCodeRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
