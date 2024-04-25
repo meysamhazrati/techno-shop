@@ -73,7 +73,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
                   <div key={comment._id} className="py-4 first:pt-0 last:pb-0">
                     <div className="flex items-center justify-between gap-x-3">
                       <div className="flex items-center gap-x-3">
-                        <img src={`http://localhost:3000/users/${comment.sender.avatar}`} alt="User Avatar" className="hidden size-14 rounded-full object-cover xs:block" />
+                        <img src={`${process.env.SERVER_URI}/users/${comment.sender.avatar}`} alt="User Avatar" className="hidden size-14 rounded-full object-cover xs:block" />
                         <div>
                           <div className="flex items-center gap-x-2">
                             <h5 className="line-clamp-1 text-2xl">{comment.sender.firstName} {comment.sender.lastName}</h5>

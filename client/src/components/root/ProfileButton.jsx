@@ -15,7 +15,7 @@ const ProfileButton = () => {
   return (
     <div className="group relative size-12">
       <Link to="/me" className="block size-full overflow-hidden rounded-full">
-        <img src={`http://localhost:3000/users/${me?.avatar}`} alt="My Avatar" className="size-full object-cover" />
+        <img src={`${process.env.SERVER_URI}/users/${me?.avatar}`} alt="My Avatar" className="size-full object-cover" />
       </Link>
       {me && (
         <div className="invisible absolute left-0 top-auto w-64 overflow-hidden rounded-3xl bg-white opacity-0 shadow transition-all group-hover:visible group-hover:opacity-100">
