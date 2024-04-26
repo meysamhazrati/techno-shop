@@ -29,6 +29,11 @@ const schema = new Schema(
       default: () => Date.now() + 1000 * 60 * 2,
       expires: "3h",
     },
+    isVerified: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   { timestamps: true }
 );
