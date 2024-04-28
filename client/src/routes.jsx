@@ -12,6 +12,7 @@ import Article from "./pages/root/Article";
 import Offers from "./pages/root/Offers";
 import Offer from "./pages/root/Offer";
 import Authentication from "./pages/authentication/Authentication";
+import Register from "./pages/authentication/Register";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -41,7 +42,9 @@ export default [
       {
         path: "authentication",
         element: <Authentication />,
-        children: [],
+        children: [
+          { path: "register", element: <Register /> }
+        ],
       },
       {
         path: "*",
