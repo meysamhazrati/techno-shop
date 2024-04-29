@@ -45,23 +45,25 @@ const Register = () => {
 
   return (
     <>
-      {currentComponent === "register" ? (
-        <div className="text-center">
-          <div className="relative flex items-center justify-center">
-            <h2 className="font-vazirmatn-bold text-2xl">اطلاعات کاربری</h2>
-            <button className="absolute left-0 flex size-9 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setCurrentComponent("send-otp")}>
-              <ChevronIcon className="size-6 rotate-180" />
-            </button>
-          </div>
-          <span className="mt-3 block text-lg text-zinc-500">اطلاعات حساب کاربری خود را وارد کنید.</span>
-        </div>
-      ) : (
-        <div className="text-center">
-          <h2 className="font-vazirmatn-bold text-2xl">ثبت نام</h2>
-          <span className="mt-3 block text-lg">قبلا ثبت نام کرده‌اید؟ <Link to="/authentication/login" className="text-primary-900">وارد شوید</Link>
-          </span>
-        </div>
-      )}
+      <div className="text-center">
+        {currentComponent === "send-otp" && (
+          <>
+            <h2 className="font-vazirmatn-bold text-2xl">ثبت نام</h2>
+            <span className="mt-3 block text-lg text-zinc-500">قبلا ثبت نام کرده‌اید؟ <Link to="/authentication/login" className="text-primary-900">وارد شوید</Link></span>
+          </>
+        )}
+        {currentComponent === "register" && (
+          <>
+            <div className="relative flex items-center justify-center">
+              <h2 className="font-vazirmatn-bold text-2xl">اطلاعات کاربری</h2>
+              <button className="absolute left-0 flex size-9 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setCurrentComponent("send-otp")}>
+                <ChevronIcon className="size-6 rotate-180" />
+              </button>
+            </div>
+            <span className="mt-3 block text-lg text-zinc-500">اطلاعات حساب کاربری خود را وارد کنید.</span>
+          </>
+        )}
+      </div>
       {currentComponent === "send-otp" ? (
         <SendOTP email={email} setEmail={setEmail} type="register" setSentAt={setSentAt} setCurrentComponent={setCurrentComponent} />
       ) : currentComponent === "verify-otp" ? (
