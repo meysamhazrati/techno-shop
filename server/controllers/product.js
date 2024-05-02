@@ -57,10 +57,10 @@ const getAll = async (request, response, next) => {
       { path: "brand", select: "-__v" },
       { path: "category", select: "-__v" },
       { path: "offer", select: "title percent expiresAt" },
-      { path: "comments", select: "score" },
+      { path: "comments", select: "score", match: { isConfirmed: true } },
     ]).lean();
 
-    const filteredProducts = products.filter(({ colors, offer }) => colors[0].price >= (price.split("-")[0] || 0) && colors[0].price <= (price.split("-")[1] || 1000000000) && (JSON.parse(onlyAvailable) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazing) ? offer?.expiresAt > new Date() : true));
+    const filteredProducts = products.filter(({ colors, offer }) => (offer?.expiresAt > new Date() ? colors[0].price - colors[0].price * (offer.percent / 100) : colors[0].price) >= (price.split("-")[0] || 0) && (offer?.expiresAt > new Date() ? colors[0].price - colors[0].price * (offer.percent / 100) : colors[0].price) <= (price.split("-")[1] || 1000000000) && (JSON.parse(onlyAvailable) ? colors[0].inventory !== 0 : true) && (JSON.parse(onlyAmazing) ? offer?.expiresAt > new Date() : true));
     
     if (filteredProducts.length) {
       const currentPage = parseInt(page);
@@ -81,11 +81,11 @@ const getAll = async (request, response, next) => {
           break;
         }
         case "cheap": {
-          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => firstProduct.colors[0].price - secondProduct.colors[0].price);
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => (firstProduct.offer?.expiresAt > new Date() ? firstProduct.colors[0].price - firstProduct.colors[0].price * (firstProduct.offer.percent / 100) : firstProduct.colors[0].price) - (secondProduct.offer?.expiresAt > new Date() ? secondProduct.colors[0].price - secondProduct.colors[0].price * (secondProduct.offer.percent / 100) : secondProduct.colors[0].price));
           break;
         }
         case "expensive": {
-          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => secondProduct.colors[0].price - firstProduct.colors[0].price);
+          sortedProducts = filteredProducts.toSorted((firstProduct, secondProduct) => (secondProduct.offer?.expiresAt > new Date() ? secondProduct.colors[0].price - secondProduct.colors[0].price * (secondProduct.offer.percent / 100) : secondProduct.colors[0].price) - (firstProduct.offer?.expiresAt > new Date() ? firstProduct.colors[0].price - firstProduct.colors[0].price * (firstProduct.offer.percent / 100) : firstProduct.colors[0].price));
           break;
         }
         default: {
