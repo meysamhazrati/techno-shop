@@ -222,7 +222,34 @@ const resetPassword = async (request, response, next) => {
   }
 };
 
-const me = async (request, response) => response.json(request.user);
+const me = async (request, response) => {
+  try {
+    const user = await userModel.findById(request.user._id, "-password -__v").populate([
+      { path: "cart", populate: [
+        { path: "product", select: "title warranty covers offer", populate: { path: "offer", select: "percent expiresAt" } },
+        { path: "color", select: "price inventory name code" },
+      ] },
+      { path: "favorites", select: "title covers", populate: [
+        { path: "colors", select: "price inventory name code" },
+        { path: "brand", select: "name englishName" },
+        { path: "category", select: "title englishTitle" },
+        { path: "offer", select: "percent expiresAt" },
+      ] },
+      { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
+      { path: "orders", select: "shippingCost totalAmount status products.quantity products.product.title products.product.covers products.color.name products.color.code destination.province destination.city createdAt updatedAt", options: { sort: { createdAt: -1 } } },
+      { path: "comments", select: "-isBuyer -__v", options: { sort: { createdAt: -1 } }, populate: [
+        { path: "product", select: "title covers" },
+        { path: "article", select: "title cover" },
+      ] },
+      { path: "articles", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "category", select: "title englishTitle" } },
+      { path: "tickets", select: "-__v", match: { ticket: { $exists: false } }, options: { sort: { createdAt: -1 } } },
+    ]).lean();
+
+    response.json(user);
+  } catch(error) {
+    next(error);
+  }
+};
 
 const logout = async (request, response) => response.cookie("token", "", { path: "/", maxAge: 0 }).json({ message: "You have successfully logged out." });
 
