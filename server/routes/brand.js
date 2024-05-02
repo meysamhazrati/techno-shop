@@ -2,14 +2,15 @@ import { Router } from "express";
 
 import multer from "../utilities/multer.js";
 import authentication from "../middlewares/authentication.js";
+import isBanned from "../middlewares/isBanned.js";
 import isAdmin from "../middlewares/isAdmin.js";
 import { create, getAll, get, update, remove } from "../controllers/brand.js";
 
 const router = Router();
 const uploader = multer("brands");
 
-router.route("/").post(authentication, isAdmin, uploader.single("logo"), create).get(getAll);
+router.route("/").post(authentication, isBanned, isAdmin, uploader.single("logo"), create).get(getAll);
 router.get("/:name", get);
-router.route("/:id").put(authentication, isAdmin, uploader.single("logo"), update).delete(authentication, isAdmin, remove);
+router.route("/:id").put(authentication, isBanned, isAdmin, uploader.single("logo"), update).delete(authentication, isBanned, isAdmin, remove);
 
 export default router;
