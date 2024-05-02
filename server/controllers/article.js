@@ -37,7 +37,7 @@ const getAll = async (request, response, next) => {
     const articles = await model.find({ category: filteredCategories }, "-body -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
       { path: "category", select: "-__v" },
-      { path: "comments", select: "score" },
+      { path: "comments", select: "score", match: { isConfirmed: true } },
     ]).lean();
 
     const filteredArticles = articles.filter(({ isPublished, isConfirmed }) => (JSON.parse(onlyPublished) ? isPublished : true) && (JSON.parse(onlyConfirmed) ? isConfirmed : true));
