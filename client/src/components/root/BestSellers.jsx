@@ -15,7 +15,7 @@ const BestSellers = () => {
     <Section>
       <SectionHeader title="پرفروش‌ترین ها" condition={products?.length > 4} navigation={true} />
       {isProductsError ? (
-        <NoResultFound title="محصولی پیدا نشد!" />
+        <NoResultFound title="محصولی پیدا نشد!" className="mt-8" />
       ) : (
         <Swiper
           slidesPerView={1}

@@ -35,7 +35,7 @@ const Category = () => {
         <div className="w-full">
           <Sort sortFor="products" />
           {category?.products.length === 0 ? (
-            <NoResultFound title="محصولی پیدا نشد!" />
+            <NoResultFound title="محصولی پیدا نشد!" className="mt-8" />
           ) : (
             <InfiniteScroll hasNextPage={hasCategoryNextPage} fetchNextPage={fetchCategoryNextPage}>
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">

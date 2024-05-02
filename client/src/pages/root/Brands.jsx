@@ -16,7 +16,7 @@ const Brands = () => {
   }, []);
 
   return isBrandsError ? (
-    <NoResultFound title="برندی پیدا نشد!" />
+    <NoResultFound title="برندی پیدا نشد!" className="mt-8" />
   ) : isFetchingBrands ? (
     Array(3).fill(0).map((brand, index) => (
       <Section key={index}>

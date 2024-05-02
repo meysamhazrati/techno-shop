@@ -15,7 +15,7 @@ const RelatedProducts = ({ categoryTitle }) => {
     <Section>
       <SectionHeader title="محصولات مرتبط" condition={category?.products.length > 4} navigation={true} />
       {category?.products.length === 0 ? (
-        <NoResultFound title="محصول مرتبطی پیدا نشد!" />
+        <NoResultFound title="محصول مرتبطی پیدا نشد!" className="mt-8" />
       ) : (
         <Swiper
           slidesPerView={1}

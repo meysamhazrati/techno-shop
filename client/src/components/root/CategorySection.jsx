@@ -14,7 +14,7 @@ const CategorySection = ({ title, englishTitle }) => {
     <Section>
       <SectionHeader title={title} condition={category?.products.length > 4} button={true} route={`/categories/${englishTitle.toLowerCase().split(" ").join("-")}`} />
       {category?.products.length === 0 ? (
-        <NoResultFound title="محصولی پیدا نشد!" />
+        <NoResultFound title="محصولی پیدا نشد!" className="mt-8" />
       ) : (
         <Swiper
           slidesPerView={1}

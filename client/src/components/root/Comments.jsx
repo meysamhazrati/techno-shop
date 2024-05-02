@@ -65,7 +65,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
         </aside>
         <div className="w-full bg-white lg:min-h-[373px]">
           {comments?.length === 0 ? (
-            <NoResultFound title="دیدگاهی پیدا نشد!" />
+            <NoResultFound title="دیدگاهی پیدا نشد!" className="lg:h-[325px]" />
           ) : (
             <InfiniteScroll hasNextPage={hasNextPage} fetchNextPage={fetchNextPage}>
               <div className="divide-y divide-zinc-200">

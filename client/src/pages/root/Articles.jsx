@@ -28,7 +28,7 @@ const Articles = () => {
         <div className="w-full">
           <Sort sortFor="articles" />
           {isArticlesError ? (
-            <NoResultFound title="مقاله‌ای پیدا نشد!" />
+            <NoResultFound title="مقاله‌ای پیدا نشد!" className="mt-8" />
           ) : (
             <InfiniteScroll hasNextPage={hasArticlesNextPage} fetchNextPage={fetchArticlesNextPage}>
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">

@@ -14,7 +14,7 @@ const OfferSection = ({ title, englishTitle, percent, expiresAt }) => {
     <Section>
       <SectionHeader title={title} condition={offer?.products.length > 4} button={true} route={`/offers/${englishTitle.toLowerCase().split(" ").join("-")}`} />
       {offer?.products.length === 0 ? (
-        <NoResultFound title="محصولی پیدا نشد!" />
+        <NoResultFound title="محصولی پیدا نشد!" className="mt-8" />
       ) : (
         <Swiper
           slidesPerView={1}

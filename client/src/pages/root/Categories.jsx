@@ -16,7 +16,7 @@ const Categories = () => {
   }, []);
 
   return isCategoriesError ? (
-    <NoResultFound title="دسته‌بندی‌ای پیدا نشد!" />
+    <NoResultFound title="دسته‌بندی‌ای پیدا نشد!" className="mt-8" />
   ) : isFetchingCategories ? (
     Array(3).fill(0).map((category, index) => (
       <Section key={index}>
