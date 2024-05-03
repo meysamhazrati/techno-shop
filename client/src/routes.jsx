@@ -15,6 +15,7 @@ import Authentication from "./pages/authentication/Authentication";
 import Register from "./pages/authentication/Register";
 import Login from "./pages/authentication/Login";
 import ResetPassword from "./pages/authentication/ResetPassword";
+import Me from "./pages/me/Me";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,11 @@ export default [
           { path: "login", element: <Login /> },
           { path: "reset-password", element: <ResetPassword /> },
         ],
+      },
+      {
+        path: "me",
+        element: <Me />,
+        children: [],
       },
       {
         path: "*",
