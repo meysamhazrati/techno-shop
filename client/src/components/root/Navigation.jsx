@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import useCategories from "../../hooks/category/categories";
 import useMe from "../../hooks/authentication/me";
 import HomeIcon from "../../icons/Home";
@@ -12,15 +12,15 @@ const Navigation = forwardRef((props, ref) => {
   return (
     <nav ref={ref} className="relative -top-10 -z-10 hidden h-12 items-center justify-between px-7 py-3 transition-all duration-300 lg:top-0 lg:flex">
       <div className="flex items-center gap-x-3">
-        <div className="flex cursor-pointer items-center gap-x-2 transition-colors hover:text-primary-900">
+        <NavLink to="/" className={({ isActive }) => `flex cursor-pointer items-center gap-x-2 transition-colors ${isActive ? "text-primary-900" : "hover:text-primary-900"}`}>
           <HomeIcon className="size-6" />
-          <Link to="/">خانه</Link>
-        </div>
+          <span>خانه</span>
+        </NavLink>
         {categories?.length > 0 && (
           <>
             <div className="h-6 w-px bg-zinc-200"></div>
             <div className="flex items-center gap-x-5">
-              {categories.map(({ _id, title, englishTitle }) => <Link key={_id} to={`/categories/${englishTitle.toLowerCase().split(" ").join("-")}`} className="transition-colors hover:text-primary-900">{title}</Link>)}
+              {categories.map(({ _id, title, englishTitle }) => <NavLink key={_id} to={`/categories/${englishTitle.toLowerCase().split(" ").join("-")}`} className={({ isActive }) => isActive ? "text-primary-900" : "transition-colors hover:text-primary-900"}>{title}</NavLink>)}
             </div>
           </>
         )}
