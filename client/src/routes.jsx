@@ -46,6 +46,7 @@ export default [
         path: "authentication",
         element: <Authentication />,
         children: [
+          { index: true, element: <Login /> },
           { path: "register", element: <Register /> },
           { path: "login", element: <Login /> },
           { path: "reset-password", element: <ResetPassword /> },
