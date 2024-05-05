@@ -236,7 +236,7 @@ const me = async (request, response) => {
         { path: "offer", select: "percent expiresAt" },
       ] },
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
-      { path: "orders", select: "shippingCost totalAmount status products.quantity products.product.title products.product.covers products.color.name products.color.code destination.province destination.city createdAt updatedAt", options: { sort: { createdAt: -1 } } },
+      { path: "orders", select: "shippingCost totalAmount status products._id products.quantity products.product._id products.product.title products.product.warranty products.product.covers products.color.price products.color.name products.color.code destination.province destination.city destination.body createdAt updatedAt", options: { sort: { createdAt: -1 } } },
       { path: "comments", select: "-isBuyer -__v", options: { sort: { createdAt: -1 } }, populate: [
         { path: "product", select: "title covers" },
         { path: "article", select: "title cover" },
