@@ -20,7 +20,7 @@ const Me = () => {
         <SideBar />
         <section className="flex w-full flex-col gap-4 xs:gap-y-8">
           <Header />
-          <section className="rounded-3xl bg-white">
+          <section className="w-full overflow-hidden rounded-3xl bg-white p-6 lg:w-[640px] xl:w-[864px]">
             <Outlet />
           </section>
         </section>
