@@ -16,6 +16,7 @@ import Register from "./pages/authentication/Register";
 import Login from "./pages/authentication/Login";
 import ResetPassword from "./pages/authentication/ResetPassword";
 import Me from "./pages/me/Me";
+import Dashboard from "./pages/me/Dashboard";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -55,7 +56,9 @@ export default [
       {
         path: "me",
         element: <Me />,
-        children: [],
+        children: [
+          { index: true, element: <Dashboard /> },
+        ],
       },
       {
         path: "*",
