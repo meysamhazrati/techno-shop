@@ -45,8 +45,8 @@ const Order = ({ _id, totalAmount, status, products, createdAt }) => {
         {products.map(({ _id, quantity, product }) => (
           <SwiperSlide key={_id} className="relative">
             <div className="absolute right-2 top-2 z-50 flex size-8 items-center justify-center rounded-full border border-zinc-900 bg-white">{quantity}</div>
-            <img src={`${process.env.SERVER_URI}/products/${product.covers[0]}`} alt="Product Cover" loading="lazy" className="h-28 w-full object-cover" />
-            <h4 className="mt-2 line-clamp-1">{product.title}</h4>
+            <img src={`${process.env.SERVER_URI}/products/${product.covers[0]}`} alt="Product Cover" loading="lazy" className="h-28 w-full rounded-3xl object-cover" />
+            <h4 className="mt-2 line-clamp-1 font-vazirmatn-medium">{product.title}</h4>
           </SwiperSlide>
         ))}
       </Swiper>
