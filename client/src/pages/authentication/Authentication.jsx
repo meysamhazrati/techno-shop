@@ -1,18 +1,19 @@
 import { useEffect } from "react";
-import { useNavigate, Link, Outlet } from "react-router-dom";
+import { useLocation, useNavigate, Link, Outlet } from "react-router-dom";
 import useMe from "../../hooks/authentication/me";
 import technoShop from "/techno-shop.svg";
 
 const Authentication = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const { isFetchingMe, isMeError } = useMe();
 
   useEffect(() => {
-    !isFetchingMe && !isMeError && navigate("/");
-  }, [isFetchingMe, isMeError, navigate]);
+    pathname !== "/authentication/reset-password" && !isFetchingMe && !isMeError && navigate("/");
+  }, [pathname, isFetchingMe, isMeError, navigate]);
 
-  return isMeError && (
+  return (pathname === "/authentication/reset-password" || isMeError) && (
     <main className="container flex min-h-svh flex-col items-center justify-center gap-y-10">
       <header>
         <Link to="/" className="max-w-48">
