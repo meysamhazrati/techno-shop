@@ -7,7 +7,7 @@ const Article = ({ _id, cover, title, author, score }) => {
   return (
     <div className="overflow-hidden rounded-3xl bg-white">
       <Link to={`/articles/${_id}`} className="block h-48 w-full">
-        <img src={`${process.env.SERVER_URI}/articles/${cover}`} alt="Product Cover" loading="lazy" className="size-full object-cover" />
+        <img src={`${process.env.SERVER_URI}/articles/${cover}`} alt="Article Cover" loading="lazy" className="size-full object-cover" />
       </Link>
       <div className="p-4">
         <h3 className="h-16 font-vazirmatn-medium text-xl/relaxed">
