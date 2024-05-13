@@ -24,7 +24,7 @@ const ProductButton = ({ id, color, disabled }) => {
 
   const remove = () => !isPendingAddToCart && !isPendingRemoveFromCart && removeFromCart({ color: color._id });
 
-  return quantity ? (
+  return !disabled && quantity ? (
     <div className="flex h-12 w-full items-center justify-between gap-x-1 overflow-hidden text-nowrap rounded-full border border-primary-900 px-2 text-primary-900">
       {color.inventory > quantity ? (
         <button onClick={add}>
@@ -44,7 +44,7 @@ const ProductButton = ({ id, color, disabled }) => {
       </button>
     </div>
   ) : (
-    <button disabled={disabled} className={`flex h-12 w-full items-center justify-center overflow-hidden text-nowrap rounded-full ${disabled ? "bg-primary-100" : "bg-primary-900 hover:bg-primary-800"} font-vazirmatn-medium text-white transition-colors`} onClick={add}>
+    <button disabled={disabled} className="flex h-12 w-full items-center justify-center overflow-hidden text-nowrap rounded-full bg-primary-900 font-vazirmatn-medium text-white transition-colors enabled:hover:bg-primary-800 disabled:bg-primary-100" onClick={add}>
       {isPendingAddToCart || isPendingRemoveFromCart ? <Loader width={"28px"} height={"7px"} color={"#ffffff"} /> : "افزودن به سبد خرید"}
     </button>
   );
