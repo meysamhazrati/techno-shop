@@ -9,17 +9,10 @@ import { schema as discountCodeSchema } from "../models/discountCode.js";
 
 const schema = new Schema(
   {
-    shippingCost: {
+    totalPrice: {
       type: Number,
       required: true,
       min: 0,
-      max: 10000000,
-    },
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 10000000000,
     },
     status: {
       type: String,
