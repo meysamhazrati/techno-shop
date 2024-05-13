@@ -9,32 +9,25 @@ const create = async (request, response, next) => {
   try {
     await model.validation(request.body);
 
-    const { shippingCost, totalAmount } = request.body;
+    const { totalPrice } = request.body;
 
     const products = await Promise.all(request.body.products.map(async ({ quantity, product, color }) => ({ quantity, product: await productModel.findById(product), color: await colorModel.findById(color) })));
-
-    const hasInventory = products.every(({ quantity, color }) => color.inventory >= quantity);
-
-    if (hasInventory) {
-      const buyer = await userModel.findById( request.user._id, "-cart -favorites");
-      const destination = await addressModel.findById(request.body.destination);
-      const discountCode = await discountCodeModel.findById(request.body.discountCode);
+    const buyer = await userModel.findById(request.user._id, "-cart -favorites");
+    const destination = await addressModel.findById(request.body.destination);
+    const discountCode = await discountCodeModel.findById(request.body.discountCode);
       
-      await model.create({
-        shippingCost,
-        totalAmount,
-        products,
-        buyer,
-        destination,
-        discountCode: discountCode ?? undefined,
-      });
+    await model.create({
+      totalPrice,
+      products,
+      buyer,
+      destination,
+      discountCode: discountCode ?? undefined,
+    });
       
-      await Promise.all(request.body.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: quantity, inventory: -quantity } })));
+    await userModel.findByIdAndUpdate(request.user._id, { $set: { cart: [] } });
+    await Promise.all(request.body.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: quantity, inventory: -quantity } })));
 
-      response.status(201).json({ message: "The order has been successfully added." });
-    } else {
-      throw Object.assign(new Error("The product(s) inventory is insufficient."), { status: 409 });
-    }
+    response.status(201).json({ message: "The order has been successfully added." });
   } catch (error) {
     next(error);
   }
@@ -44,7 +37,7 @@ const getAll = async (request, response, next) => {
   try {
     const { page = 1, length } = request.query;
 
-    const orders = await model.find({}, "shippingCost totalAmount status createdAt updatedAt buyer.firstName buyer.lastName").sort({ createdAt: -1 }).lean();
+    const orders = await model.find({}, "totalPrice status createdAt updatedAt buyer.firstName buyer.lastName").sort({ createdAt: -1 }).lean();
 
     if (orders.length) {
       const currentPage = parseInt(page);
