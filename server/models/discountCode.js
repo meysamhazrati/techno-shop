@@ -1,6 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 
-import { create, check } from "../validators/discountCode.js";
+import { create, use } from "../validators/discountCode.js";
 
 const schema = new Schema(
   {
@@ -18,7 +18,7 @@ const schema = new Schema(
       min: 1,
       max: 100,
     },
-    minimumAmount: {
+    minimumPrice: {
       type: Number,
       required: true,
       min: 0,
@@ -54,7 +54,7 @@ const schema = new Schema(
 );
 
 schema.statics.createValidation = (body) => create.validate(body);
-schema.statics.checkValidation = (body) => check.validate(body);
+schema.statics.useValidation = (body) => use.validate(body);
 
 export { schema };
 export default model("DiscountCode", schema);
