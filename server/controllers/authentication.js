@@ -226,7 +226,10 @@ const me = async (request, response) => {
   try {
     const user = await userModel.findById(request.user._id, "-password -__v").populate([
       { path: "cart", populate: [
-        { path: "product", select: "title warranty covers offer", populate: { path: "offer", select: "percent expiresAt" } },
+        { path: "product", select: "title warranty covers category offer", populate: [
+          { path: "category", select: "_id" },
+          { path: "offer", select: "percent expiresAt" },
+        ] },
         { path: "color", select: "price inventory name code" },
       ] },
       { path: "favorites", select: "title covers", populate: [
@@ -236,7 +239,7 @@ const me = async (request, response) => {
         { path: "offer", select: "percent expiresAt" },
       ] },
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
-      { path: "orders", select: "shippingCost totalAmount status products._id products.quantity products.product._id products.product.title products.product.warranty products.product.covers products.color.price products.color.name products.color.code destination.province destination.city destination.body createdAt updatedAt", options: { sort: { createdAt: -1 } } },
+      { path: "orders", select: "totalPrice status products._id products.quantity products.product._id products.product.title products.product.warranty products.product.covers products.color.price products.color.name products.color.code destination.province destination.city destination.body createdAt updatedAt", options: { sort: { createdAt: -1 } } },
       { path: "comments", select: "-isBuyer -__v", options: { sort: { createdAt: -1 } }, populate: [
         { path: "product", select: "title covers" },
         { path: "article", select: "title cover" },
