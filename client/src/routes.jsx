@@ -18,6 +18,7 @@ import ResetPassword from "./pages/authentication/ResetPassword";
 import Me from "./pages/me/Me";
 import Dashboard from "./pages/me/Dashboard";
 import Profile from "./pages/me/Profile";
+import Cart from "./pages/me/Cart";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -60,6 +61,7 @@ export default [
         children: [
           { index: true, element: <Dashboard /> },
           { path: "profile", element: <Profile /> },
+          { path: "cart", element: <Cart /> },
         ],
       },
       {
