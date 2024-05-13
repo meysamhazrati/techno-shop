@@ -1,16 +1,15 @@
 import model from "../models/discountCode.js";
-import orderModel from "../models/order.js";
 
 const create = async (request, response, next) => {
   try {
     await model.createValidation(request.body);
 
-    const { code, percent, minimumAmount, maximumUsage, expiresAt, categories } = request.body;
+    const { code, percent, minimumPrice, maximumUsage, expiresAt, categories } = request.body;
 
     await model.create({
       code,
       percent,
-      minimumAmount,
+      minimumPrice,
       maximumUsage,
       expiresAt: Date.now() + 1000 * 60 * 60 * expiresAt,
       creator: request.user._id,
@@ -49,11 +48,13 @@ const getAll = async (request, response, next) => {
   }
 };
 
-const check = async (request, response, next) => {
+const use = async (request, response, next) => {
   try {
-    await model.checkValidation(request.body);
+    await model.useValidation(request.body);
 
-    const { code, amount, categories } = request.body;
+    const { code } = request.params;
+
+    const { price, categories } = request.body;
 
     const discountCode = await model.findOne({ code });
 
@@ -61,48 +62,24 @@ const check = async (request, response, next) => {
       const isIncludes = categories.every((category) => discountCode.categories.includes(category));
 
       if (isIncludes) {
-        if (amount >= discountCode.minimumAmount) {
-          const userOrders = await orderModel.find({ buyer: request.user._id });
+        if (price >= discountCode.minimumPrice) {
+          if (discountCode.usages < discountCode.maximumUsage) {
+            if (discountCode.expiresAt > new Date()) {
+              await model.findByIdAndUpdate(discountCode._id, { $inc: { usages: 1 } });
 
-          const isUsed = userOrders.some(({ discountCode }) => discountCode._id.equals(discountCode));
-
-          if (isUsed) {
-            throw Object.assign(new Error("You have already used this discount code."), { status: 403 });
-          } else {
-            if (discountCode.usages < discountCode.maximumUsage) {
-              if (discountCode.expiresAt > new Date()) {
-                const { _id, percent } = discountCode;
-
-                response.json({ message: "You can use this discount code.", discountCode: { _id, percent } });
-              } else {
-                throw Object.assign(new Error("The entered discount code has expired."), { status: 410 });
-              }
+              response.json({ message: "The discount code has been successfully used.", discountCode });
             } else {
-              throw Object.assign(new Error("The maximum usage limit for this discount code has been reached."), { status: 403 });
+              throw Object.assign(new Error("The entered discount code has expired."), { status: 410 });
             }
+          } else {
+              throw Object.assign(new Error("The maximum usage limit for this discount code has been reached."), { status: 403 });
           }
         } else {
-          throw Object.assign(new Error("The total amount of your ordered product(s) is less than the minimum required amount for using this discount."), { status: 409 });
+          throw Object.assign(new Error("The total price of the product(s) is less than the minimum required price for using this discount code."), { status: 409 });
         }
       } else {
-        throw Object.assign(new Error("The ordered product(s) don't include this discount."), { status: 409 });
+        throw Object.assign(new Error("The entered discount code doesn't include this product(s)."), { status: 409 });
       }
-    } else {
-      throw Object.assign(new Error("The discount code was not found."), { status: 404 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const use = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-
-    const result = await model.findByIdAndUpdate(id, { $inc: { usages: 1 } });
-
-    if (result) {
-      response.json({ message: "The discount code has been successfully used." });
     } else {
       throw Object.assign(new Error("The discount code was not found."), { status: 404 });
     }
@@ -127,4 +104,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { create, getAll, check, use, remove };
+export { create, getAll, use, remove };
