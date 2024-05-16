@@ -20,6 +20,7 @@ import Dashboard from "./pages/me/Dashboard";
 import Profile from "./pages/me/Profile";
 import Cart from "./pages/me/Cart";
 import Addresses from "./pages/me/Addresses";
+import Orders from "./pages/me/Orders";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -64,6 +65,7 @@ export default [
           { path: "profile", element: <Profile /> },
           { path: "cart", element: <Cart /> },
           { path: "addresses", element: <Addresses /> },
+          { path: "orders", element: <Orders /> },
         ],
       },
       {
