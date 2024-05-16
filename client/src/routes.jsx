@@ -21,6 +21,7 @@ import Profile from "./pages/me/Profile";
 import Cart from "./pages/me/Cart";
 import Addresses from "./pages/me/Addresses";
 import Orders from "./pages/me/Orders";
+import Order from "./pages/me/Order";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -66,6 +67,7 @@ export default [
           { path: "cart", element: <Cart /> },
           { path: "addresses", element: <Addresses /> },
           { path: "orders", element: <Orders /> },
+          { path: "orders/:id", element: <Order /> },
         ],
       },
       {
