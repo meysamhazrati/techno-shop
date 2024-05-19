@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import useMe from "../../hooks/authentication/me";
+import useCancelOrder from "../../hooks/order/cancel";
+import useReturnOrder from "../../hooks/order/return";
 import ProductCover from "../../components/ProductCover";
+import Loader from "../../components/Loader";
 import TomanIcon from "../../icons/Toman";
 
 const Order = () => {
   const { id } = useParams();
+
   const [order, setOrder] = useState({});
+
+  const client = useQueryClient();
+
   const { me } = useMe();
+  const { isPendingCancelOrder, cancelOrder } = useCancelOrder(order._id);
+  const { isPendingReturnOrder, returnOrder } = useReturnOrder(order._id);
 
   useEffect(() => {
     document.title = `تکنوشاپ - من - ${id}`;
@@ -113,6 +123,12 @@ const Order = () => {
           </div>
         ))}
       </div>
+      {order.status !== "Canceled" && order.status !== "Returned" && (
+        <div className="mt-6 flex items-center gap-x-3 text-lg">
+          {order.status === "In progress" && <button disabled={isPendingCancelOrder} className="flex h-14 w-full items-center justify-center rounded-full bg-red-500 text-white sm:w-40" onClick={() => cancelOrder(null, { onSuccess: () => client.invalidateQueries({ queryKey: ["me"] }) })}>{isPendingCancelOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "لغو"}</button>}
+          {order.status === "Delivered" && <button disabled={isPendingReturnOrder} className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-200 text-zinc-700 sm:w-40" onClick={() => returnOrder(null, { onSuccess: () => client.invalidateQueries({ queryKey: ["me"] }) })}>{isPendingReturnOrder ? <Loader width={"40px"} height={"10px"} color={"#3f3f46"} /> : "مرجوع"}</button>}
+        </div>
+      )}
     </>
   );
 };
