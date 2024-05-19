@@ -144,7 +144,7 @@ const return_ = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const { _id, role } = request;
+    const { _id, role } = request.user;
 
     const order = await model.findById(id);
 
