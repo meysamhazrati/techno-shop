@@ -13,8 +13,11 @@ export default (id) => {
   const { isPending, mutate } = useMutation({
     mutationFn: () => removeFromFavorites(id),
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
-    onSuccess: () => client.invalidateQueries({ queryKey: ["me"] }),
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "لطفا ابتدا وارد حساب کاربری خود شوید." : null),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ["me"] });
+      openToast("success", null, "محصول مورد نظر با موفقیت از علاقه‌مندی های شما حذف شد.");
+    },
+    onError: ({ response }) => openToast("error", null, response.status === 403 ? "لطفا ابتدا وارد حساب کاربری خود شوید." : response.status === 404 ? "محصول مورد نظر پیدا نشد." : response.status === 409 ? "محصول مورد نظر در علاقه‌مندی های شما نمی‌باشد." : null),
   });
 
   return { isPendingRemoveFromFavorites: isPending, removeFromFavorites: mutate };
