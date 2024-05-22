@@ -13,8 +13,11 @@ export default (id) => {
   const { isPending, mutate } = useMutation({
     mutationFn: () => addToFavorites(id),
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
-    onSuccess: () => client.invalidateQueries({ queryKey: ["me"] }),
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "لطفا ابتدا وارد حساب کاربری خود شوید." : null),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ["me"] });
+      openToast("success", null, "محصول مورد نظر با موفقیت به علاقه‌مندی های شما اضافه شد.");
+    },
+    onError: ({ response }) => openToast("error", null, response.status === 403 ? "لطفا ابتدا وارد حساب کاربری خود شوید." : response.status === 404 ? "محصول مورد نظر پیدا نشد." : response.status === 409 ? "این محصول از قبل به علاقه‌مندی های شما اضافه شده است." : null),
   });
 
   return { isPendingAddToFavorites: isPending, addToFavorites: mutate };
