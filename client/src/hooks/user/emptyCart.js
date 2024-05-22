@@ -13,7 +13,10 @@ export default () => {
   const { isPending, mutate } = useMutation({
     mutationFn: emptyCart,
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
-    onSuccess: () => client.invalidateQueries({ queryKey: ["me"] }),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ["me"] });
+      openToast("success", null, "سبد خرید شما با موفقیت خالی شد.");
+    },
     onError: ({ response }) => openToast("error", null, response.status === 409 ? "سبد خرید شما در حال حاضر خالی است." : null),
   });
 
