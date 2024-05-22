@@ -1,6 +1,5 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/me";
 import useEditUser from "../../hooks/user/edit";
@@ -19,8 +18,6 @@ const Profile = () => {
   const file = useRef();
 
   const { openToast } = useContext(ToastContext);
-
-  const client = useQueryClient();
 
   const { me } = useMe();
   const { isPendingEditUser, editUser } = useEditUser();
@@ -45,7 +42,6 @@ const Profile = () => {
             editUser({ firstName: firstName.trim(), lastName: lastName.trim(), currentPassword: currentPassword ? currentPassword.trim() : undefined, newPassword: newPassword ? newPassword.trim() : undefined, avatar }, { onSuccess: () => {
               setCurrentPassword("");
               setNewPassword("");
-              client.invalidateQueries({ queryKey: ["me"] });
             }, });
           } else {
             openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
@@ -144,8 +140,8 @@ const Profile = () => {
             <Link to="/authentication/reset-password" className="mt-3 inline-block text-zinc-400 transition-colors hover:text-primary-900">رمز عبور خود را فراموش کردید؟</Link>
           </div>
         </div>
-        <button type="submit" disabled={isPendingEditUser} className="mt-6 flex h-14 w-full items-center justify-center rounded-full bg-primary-900 text-lg text-white transition-colors hover:bg-primary-800">
-          {isPendingEditUser ? <Loader width={"40px"} height={"10px"} color={"#ffffff"}></Loader> : "ثبت اطلاعات"}
+        <button type="submit" disabled={isPendingEditUser} className="mt-6 flex h-14 w-full items-center justify-center rounded-full bg-primary-900 text-lg text-white transition-colors enabled:hover:bg-primary-800">
+          {isPendingEditUser ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت اطلاعات"}
         </button>
       </form>
     </>
