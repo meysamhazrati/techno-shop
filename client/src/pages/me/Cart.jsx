@@ -6,6 +6,8 @@ import useUseDiscountCode from "../../hooks/discountCode/use";
 import useCreateOrder from "../../hooks/order/create";
 import CartProduct from "../../components/CartProduct";
 import NoResultFound from "../../components/NoResultFound";
+import Modal from "../../components/Modal";
+import Confirm from "../../components/Confirm";
 import Loader from "../../components/Loader";
 import TomanIcon from "../../icons/Toman";
 
@@ -18,6 +20,7 @@ const Cart = () => {
   const [categories, setCategories] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [destination, setDestination] = useState(null);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const { openToast } = useContext(ToastContext);
 
@@ -44,18 +47,18 @@ const Cart = () => {
     <>
       <div>
         <div className="flex items-center justify-between gap-x-2">
-          <span className="text-zinc-400">{productsQuantity.toLocaleString()} محصول</span>
-          <button disabled={isPendingEmptyCart} className="flex items-center gap-x-2 text-red-500" onClick={emptyCart}>حذف همه</button>
+          <span className="text-lg text-zinc-400">{productsQuantity.toLocaleString()} محصول</span>
+          <button disabled={isPendingEmptyCart} className="flex items-center gap-x-2 text-red-500" onClick={() => setIsRemoveModalOpen(true)}>حذف همه</button>
         </div>
         <div className="mt-4 divide-y divide-zinc-200">
           {me.cart.map((product) => <CartProduct key={product._id} {...product} />)}
         </div>
       </div>
       <div className="mt-6 border-t border-zinc-200 pt-6">
-        <span className="text-zinc-400">آدرس</span>
+        <span className="text-lg text-zinc-400">آدرس</span>
         <div className="mt-4 divide-y divide-zinc-200 text-lg">
           {me.addresses.length !== 0 ? me.addresses.map(({ _id, postalCode, body }) => (
-            <button key={_id} className={`flex w-full items-center gap-x-2 overflow-auto text-nowrap py-2 first:pt-0 last:pb-0 ${destination === _id ? "text-primary-900" : "text-zinc-900"}`} onClick={() => setDestination(_id)}>
+            <button key={_id} className={`flex items-center gap-x-2 overflow-auto text-nowrap py-2 first:pt-0 last:pb-0 ${destination === _id ? "text-primary-900" : "text-zinc-900"}`} onClick={() => setDestination(_id)}>
               <span>{postalCode}</span>
               <span className={`h-3 w-px ${destination === _id ? "bg-primary-900" : "bg-zinc-900"} shrink-0`}></span>
               <p>{body}</p>
@@ -134,6 +137,9 @@ const Cart = () => {
           {isPendingCreateOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت سفارش"}
         </button>
       </div>
+      <Modal isOpen={isRemoveModalOpen} onClose={() => setIsRemoveModalOpen(false)}>
+        <Confirm title="سبد خرید را خالی می‌کنید؟" isPending={isPendingEmptyCart} onCancel={() => setIsRemoveModalOpen(false)} onConfirm={() => emptyCart(null, { onSuccess: () => setIsRemoveModalOpen(false) })} />
+      </Modal>
     </>
   ) : (
     <div className="flex flex-col items-center justify-center gap-y-3">
