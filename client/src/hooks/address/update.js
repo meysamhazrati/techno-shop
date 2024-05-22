@@ -11,7 +11,7 @@ export default (id) => {
   const { isPending, mutate } = useMutation({
     mutationFn: ({ province, city, postalCode, body }) => update(id, { province, city, postalCode, body }),
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
-    onSuccess: () => openToast("success", null, "آدرس شما با موفقیت ویرایش شد."),
+    onSuccess: () => openToast("success", null, "آدرس مورد نظر با موفقیت ویرایش شد."),
     onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشد." : response.status === 403 ? "شما دسترسی لازم برای ویرایش این آدرس را ندارید." : response.status === 404 ? "آدرس مورد نظر پیدا نشد." : null),
   });
 
