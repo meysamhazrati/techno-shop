@@ -13,8 +13,11 @@ export default (id) => {
   const { isPending, mutate } = useMutation({
     mutationFn: ({ color }) => addToCart(id, { color }),
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
-    onSuccess: () => client.invalidateQueries({ queryKey: ["me"] }),
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "لطفا ابتدا وارد حساب کاربری خود شوید." : null),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ["me"] });
+      openToast("success", null, "محصول مورد نظر با موفقیت به سبد خرید شما اضافه شد.");
+    },
+    onError: ({ response }) => openToast("error", null, response.status === 403 ? "لطفا ابتدا وارد حساب کاربری خود شوید." : response.status === 404 ? "محصول مورد نظر پیدا نشد." : response.status === 409 ? "موجودی محصول مورد نظر کافی نمی‌باشد." : null),
   });
 
   return { isPendingAddToCart: isPending, addToCart: mutate };
