@@ -54,7 +54,7 @@ const Addresses = () => {
           openToast("error", null, "استان باید بین 2 تا 20 حروف باشد.");
         }
       }}>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <input
             type="text"
             value={province}
@@ -77,14 +77,14 @@ const Addresses = () => {
             className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none"
             onInput={({ target }) => /^\d{0,10}$/.test(target.value) && setPostalCode(target.value)}
           />
-          <input
-            type="text"
-            value={body}
-            placeholder="آدرس"
-            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none"
-            onInput={({ target }) => setBody(target.value)}
-          />
         </div>
+        <textarea
+          type="text"
+          value={body}
+          placeholder="آدرس"
+          className="mt-3 max-h-48 min-h-32 w-full rounded-3xl border border-zinc-200 p-4 text-lg outline-none"
+          onInput={({ target }) => setBody(target.value)}
+        />
         <button disabled={isPendingCreateAddress} className="mt-3 flex h-14 w-full items-center justify-center text-nowrap rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
           {isPendingCreateAddress ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ویرایش"}
         </button>
