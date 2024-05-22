@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/me";
 import useEmptyCart from "../../hooks/user/emptyCart";
 import useUseDiscountCode from "../../hooks/discountCode/use";

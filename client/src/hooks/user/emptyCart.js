@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import { emptyCart } from "../../axios/controllers/user";
 
 const shouldRetry = ({ response }) => response.status !== 409;

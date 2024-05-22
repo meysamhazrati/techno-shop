@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useResetPassword from "../../hooks/authentication/resetPassword";
 import SendOTP from "../../components/authentication/SendOTP";
 import VerifyOTP from "../../components/authentication/VerifyOTP";

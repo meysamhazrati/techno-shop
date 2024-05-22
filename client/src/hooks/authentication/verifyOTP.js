@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import { verifyOTP } from "../../axios/controllers/authentication";
 
 const shouldRetry = ({ response }) => !/400|401|409|410|429/.test(response.status);

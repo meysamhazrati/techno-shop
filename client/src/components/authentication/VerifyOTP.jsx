@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useSendOTP from "../../hooks/authentication/sendOTP";
 import useVerifyOTP from "../../hooks/authentication/verifyOTP";
 import Timer from "../Timer";

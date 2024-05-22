@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useSendOTP from "../../hooks/authentication/sendOTP";
 import Loader from "../Loader";
 

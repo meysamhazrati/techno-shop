@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import { edit } from "../../axios/controllers/user";
 
 const shouldRetry = ({ response }) => !/400|401/.test(response.status);

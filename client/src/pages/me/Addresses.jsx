@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/me";
 import useCreateAddress from "../../hooks/address/create";
 import Address from "../../components/me/Address";

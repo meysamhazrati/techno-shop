@@ -1,6 +1,5 @@
 import { createContext, useState } from "react";
-import Success from "../toasts/Success";
-import Error from "../toasts/Error";
+import Toast from "../components/Toast";
 
 const Context = createContext();
 
@@ -10,14 +9,14 @@ const Provider = ({ children }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const openToast = (status, title, description) => {
+  const open = (status, title, description) => {
     setIsOpen(true);
     setStatus(status);
     setTitle(title);
     setDescription(description);
   };
 
-  const closeToast = () => {
+  const close = () => {
     setIsOpen(false);
     setStatus(null);
     setTitle("");
@@ -25,12 +24,12 @@ const Provider = ({ children }) => {
   };
 
   return (
-    <Context.Provider value={{ openToast, closeToast }}>
+    <Context.Provider value={{ openToast: open }}>
       {children}
-      {isOpen && <>{status === "success" ? <Success title={title} description={description} /> : <Error title={title} description={description} />}</>}
+      {isOpen && <Toast status={status} title={title} description={description} onClose={close} />}
     </Context.Provider>
   );
 };
 
-export { Context };
+export { Context as ToastContext };
 export default Provider;

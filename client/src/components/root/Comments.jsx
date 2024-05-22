@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/me";
 import useCreateComment from "../../hooks/comment/create";
 import Section from "./Section";

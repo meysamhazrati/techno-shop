@@ -1,6 +1,6 @@
 import { useState, useRef, useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useUpdateAddress from "../../hooks/address/update";
 import useRemoveAddress from "../../hooks/address/remove";
 import Modal from "../Modal";

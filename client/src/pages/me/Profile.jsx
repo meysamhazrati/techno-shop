@@ -1,7 +1,7 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { Context as ToastContext } from "../../contexts/Toast";
+import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/me";
 import useEditUser from "../../hooks/user/edit";
 import Loader from "../../components/Loader";
