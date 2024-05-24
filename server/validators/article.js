@@ -11,7 +11,6 @@ const create = object({
 const update = object({
   title: string().required().min(5).max(100),
   body: string().required().min(100).max(10000),
-  isPublished: boolean().required(),
 });
 
 export { create, update };
