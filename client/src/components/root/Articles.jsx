@@ -6,7 +6,7 @@ import ArticleSkeleton from "./ArticleSkeleton";
 import NoResultFound from "../NoResultFound";
 
 const Articles = () => {
-  const { isFetchingArticles, isArticlesError, articles } = useArticles(null, true, true, null, 4);
+  const { isFetchingArticles, isArticlesError, articles } = useArticles(null, true, null, 4);
 
   return (
     <Section>

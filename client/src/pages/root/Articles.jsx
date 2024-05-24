@@ -12,7 +12,7 @@ import NoResultFound from "../../components/NoResultFound";
 
 const Articles = () => {
   const [searchParams] = useSearchParams();
-  const { isFetchingArticles, isArticlesError, articles, hasArticlesNextPage, fetchArticlesNextPage } = useArticles(searchParams.get("categories"), true, true, searchParams.get("sort"), 12);
+  const { isFetchingArticles, isArticlesError, articles, hasArticlesNextPage, fetchArticlesNextPage } = useArticles(searchParams.get("categories"), true, searchParams.get("sort"), 12);
 
   useEffect(() => {
     document.title = "تکنوشاپ - مقالات";
