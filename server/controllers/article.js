@@ -30,21 +30,19 @@ const create = async (request, response, next) => {
 
 const getAll = async (request, response, next) => {
   try {
-    const { categories, "only-published": onlyPublished = false, "only-confirmed": onlyConfirmed = false, sort, page = 1, length } = request.query;
+    const { categories, "only-published": onlyPublished = false, sort, page = 1, length } = request.query;
 
     const filteredCategories = categories?.trim() ? await Promise.all(categories.trim().split(",").map(async (title) => (await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
 
-    const articles = await model.find({ category: filteredCategories }, "-body -__v").populate([
+    const articles = await model.find({ isPublished: JSON.parse(onlyPublished) || undefined, category: filteredCategories }, "-body -__v").populate([
       { path: "author", select: "firstName lastName avatar" },
       { path: "category", select: "-__v" },
       { path: "comments", select: "score", match: { isConfirmed: true } },
     ]).lean();
 
-    const filteredArticles = articles.filter(({ isPublished, isConfirmed }) => (JSON.parse(onlyPublished) ? isPublished : true) && (JSON.parse(onlyConfirmed) ? isConfirmed : true));
-
-    if (filteredArticles.length) {
+    if (articles.length) {
       const currentPage = parseInt(page);
-      const lengthPerPage = parseInt(length) || filteredArticles.length;
+      const lengthPerPage = parseInt(length) || articles.length;
 
       const startIndex = (currentPage - 1) * lengthPerPage;
       const endIndex = startIndex + lengthPerPage;
@@ -53,15 +51,15 @@ const getAll = async (request, response, next) => {
 
       switch (sort) {
         case "oldest": {
-          sortedArticles = filteredArticles.toSorted((firstArticle, secondArticle) => firstArticle.createdAt - secondArticle.createdAt);
+          sortedArticles = articles.toSorted((firstArticle, secondArticle) => firstArticle.createdAt - secondArticle.createdAt);
           break;
         }
         case "popular": {
-          sortedArticles = filteredArticles.toSorted((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
+          sortedArticles = articles.toSorted((firstArticle, secondArticle) => parseFloat((secondArticle.comments.reduce((previous, { score }) => previous + score, 5) / (secondArticle.comments.length + 1) || 5).toFixed(1)) - parseFloat((firstArticle.comments.reduce((previous, { score }) => previous + score, 5) / (firstArticle.comments.length + 1) || 5).toFixed(1)));
           break;
         }
         default: {
-          sortedArticles = filteredArticles.toSorted((firstArticle, secondArticle) => secondArticle.createdAt - firstArticle.createdAt);
+          sortedArticles = articles.toSorted((firstArticle, secondArticle) => secondArticle.createdAt - firstArticle.createdAt);
           break;
         }
       }
@@ -108,32 +106,23 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
+    await model.updateValidation(request.body);
+
     const { id } = request.params;
 
-    const { _id, role } = request.user;
+    const cover = request.file;
+    const { title, body } = request.body;
 
-    const article = await model.findById(id);
+    const result = await model.findByIdAndUpdate(id, {
+      title,
+      cover: cover?.filename,
+      body,
+    });
 
-    if (article) {
-      if (role === "ADMIN" || _id.equals(article.author)) {
-        await model.updateValidation(request.body);
+    if (result) {
+      cover && unlink(`public/articles/${result.cover}`, (error) => console.error(error));
 
-        const cover = request.file;
-        const { title, body, isPublished } = request.body;
-
-        await model.findByIdAndUpdate(id, {
-          title,
-          cover: cover?.filename,
-          body,
-          isPublished: article.isPublished || isPublished,
-        });
-
-        cover && unlink(`public/articles/${article.cover}`, (error) => console.error(error));
-
-        response.json({ message: `The article has been successfully edited and ${article.isPublished || JSON.parse(isPublished) ? "published" : "drafted"}.` });
-      } else {
-        throw Object.assign(new Error("You don't have access to edit this article."), { status: 403 });
-      }
+      response.json({ message: "The article has been successfully edited." });
     } else {
       throw Object.assign(new Error("The article was not found."), { status: 404 });
     }
@@ -148,21 +137,15 @@ const publish = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const { _id, role } = request.user;
-
     const article = await model.findById(id);
 
     if (article) {
-      if (role === "ADMIN" || _id.equals(article.author)) {
-        if (article.isPublished) {
-          throw Object.assign(new Error("This article is currently published."), { status: 409 });
-        } else {
-          await model.findByIdAndUpdate(id, { isPublished: true });
-
-          response.json({ message: "The article has been successfully published." });
-        }
+      if (article.isPublished) {
+        throw Object.assign(new Error("This article has already been published."), { status: 409 });
       } else {
-        throw Object.assign(new Error("You don't have access to publish this article."), { status: 403 });
+        await model.findByIdAndUpdate(id, { isPublished: true });
+
+        response.json({ message: "The article has been successfully published." });
       }
     } else {
       throw Object.assign(new Error("The article was not found."), { status: 404 });
@@ -176,71 +159,13 @@ const draft = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const { _id, role } = request.user;
-
     const article = await model.findById(id);
 
     if (article) {
-      if (role === "ADMIN" || _id.equals(article.author)) {
-        if (article.isPublished) {
-          await model.findByIdAndUpdate(id, { isPublished: false });
+      if (article.isPublished) {
+        await model.findByIdAndUpdate(id, { isPublished: false });
 
-          response.json({ message: "The article has been successfully drafted." });
-        } else {
-          throw Object.assign(new Error("This article has not been published."), { status: 409 });
-        }
-      } else {
-        throw Object.assign(new Error("You don't have access to draft this article."), { status: 403 });
-      }
-    } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const confirm = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-
-    const article = await model.findById(id);
-
-    if (article) {
-      if(article.isPublished) {
-        if (article.isConfirmed) {
-          throw Object.assign(new Error("This article has already been confirmed."), { status: 409 });
-        } else {
-          await model.findByIdAndUpdate(id, { isConfirmed: true });
-  
-          response.json({ message: "The article has been successfully confirmed." });
-        }
-      } else {
-        throw Object.assign(new Error("This article has not been published."), { status: 409 });
-      }
-    } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const reject = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-
-    const article = await model.findById(id);
-
-    if (article) {
-      if(article.isPublished) {
-        if (article.isConfirmed) {
-          await model.findByIdAndUpdate(id, { isConfirmed: false });
-  
-          response.json({ message: "The article has been successfully rejected." });
-        } else {
-          throw Object.assign(new Error("This article has already been rejected."), { status: 409 });
-        }
+        response.json({ message: "The article has been successfully drafted." });
       } else {
         throw Object.assign(new Error("This article has not been published."), { status: 409 });
       }
@@ -256,22 +181,14 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const { _id, role } = request.user;
+    const result = await model.findByIdAndDelete(id);
 
-    const article = await model.findById(id);
+    if (result) {
+      unlink(`public/articles/${result.cover}`, (error) => console.error(error));
 
-    if (article) {
-      if (role === "ADMIN" || _id.equals(article.author)) {
-        await model.findByIdAndDelete(id);
+      await commentModel.deleteMany({ article: id });
 
-        unlink(`public/articles/${article.cover}`, (error) => console.error(error));
-
-        await commentModel.deleteMany({ article: id });
-
-        response.json({ message: "The article has been successfully removed." });
-      } else {
-        throw Object.assign(new Error("You don't have access to remove this article."), { status: 403 });
-      }
+      response.json({ message: "The article has been successfully removed." });
     } else {
       throw Object.assign(new Error("The article was not found."), { status: 404 });
     }
@@ -280,4 +197,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { create, getAll, get, update, publish, draft, confirm, reject, remove };
+export { create, getAll, get, update, publish, draft, remove };
