@@ -234,8 +234,6 @@ const me = async (request, response) => {
       ] },
       { path: "favorites", select: "title covers", populate: [
         { path: "colors", select: "price inventory name code" },
-        { path: "brand", select: "name englishName" },
-        { path: "category", select: "title englishTitle" },
         { path: "offer", select: "percent expiresAt" },
       ] },
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
@@ -244,7 +242,6 @@ const me = async (request, response) => {
         { path: "product", select: "title covers" },
         { path: "article", select: "title cover" },
       ] },
-      { path: "articles", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "category", select: "title englishTitle" } },
       { path: "tickets", select: "-__v", match: { ticket: { $exists: false } }, options: { sort: { createdAt: -1 } } },
     ]).lean();
 
