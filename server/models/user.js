@@ -88,12 +88,6 @@ schema.virtual("comments", {
   foreignField: "sender",
 });
 
-schema.virtual("articles", {
-  ref: "Article",
-  localField: "_id",
-  foreignField: "author",
-});
-
 schema.virtual("tickets", {
   ref: "Ticket",
   localField: "_id",
