@@ -23,6 +23,7 @@ import Addresses from "./pages/me/Addresses";
 import Orders from "./pages/me/Orders";
 import Order from "./pages/me/Order";
 import Favorites from "./pages/me/Favorites";
+import Comments from "./pages/me/Comments";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -70,6 +71,7 @@ export default [
           { path: "orders", element: <Orders /> },
           { path: "orders/:id", element: <Order /> },
           { path: "favorites", element: <Favorites /> },
+          { path: "comments", element: <Comments /> },
         ],
       },
       {
