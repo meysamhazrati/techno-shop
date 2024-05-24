@@ -24,11 +24,6 @@ const schema = new Schema(
       type: Boolean,
       required: true,
     },
-    isConfirmed: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
     author: {
       type: Types.ObjectId,
       ref: "User",
