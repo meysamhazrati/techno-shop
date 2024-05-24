@@ -10,7 +10,7 @@ export default () => {
 
   const { openToast } = useContext(ToastContext);
 
-  const { mutate } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["me"] });
@@ -20,5 +20,5 @@ export default () => {
     onError: () => openToast("error"),
   });
 
-  return { logout: mutate };
+  return { isPendingLogout: isPending, logout: mutate };
 };
