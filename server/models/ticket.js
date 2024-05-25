@@ -6,12 +6,12 @@ const schema = new Schema(
   {
     department: {
       type: String,
-      required: true,
+      required: false,
       enum: ["Management", "Finance", "Order Tracking", "Support", "Feedback", "Other"],
     },
     title: {
       type: String,
-      required: true,
+      required: false,
       minLength: 2,
       maxLength: 20,
     },
