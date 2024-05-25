@@ -26,7 +26,7 @@ const reply = async (request, response, next) => {
 
     const { _id, role } = request.user;
 
-    const ticket = await model.findById(id);
+    const ticket = await model.findOne({ _id: id, ticket: { $exists: false } });
 
     if (ticket) {
       if (role === "ADMIN" || _id.equals(ticket.sender)) {
@@ -80,7 +80,7 @@ const get = async (request, response, next) => {
 
     const { _id, role } = request.user;
 
-    const ticket = await model.findById(id, "-__v").populate([
+    const ticket = await model.findOne({ _id: id, ticket: { $exists: false } }, "-__v").populate([
       { path: "sender", select: "firstName lastName" },
       { path: "replies", select: "-__v", populate: { path: "sender", select: "firstName lastName" } },
     ]).lean();
@@ -103,7 +103,7 @@ const open = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const ticket = await model.findById(id);
+    const ticket = await model.findOne({ _id: id, ticket: { $exists: false } });
 
     if (ticket) {
       if (ticket.isOpen) {
@@ -125,7 +125,7 @@ const close = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const ticket = await model.findById(id);
+    const ticket = await model.findOne({ _id: id, ticket: { $exists: false } });
 
     if (ticket) {
       if (ticket.isOpen) {
@@ -147,7 +147,7 @@ const remove = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const result = await model.findByIdAndDelete(id);
+    const result = await model.findOneAndDelete({ _id: id, ticket: { $exists: false } });
 
     if (result) {
       await model.deleteMany({ ticket: id });
