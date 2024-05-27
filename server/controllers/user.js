@@ -13,7 +13,7 @@ const getAll = async (request, response, next) => {
   try {
     const { page = 1, length } = request.query;
 
-    const users = await model.find({}, "-password -cart -favorites -__v").sort({ createdAt: -1 }).lean();
+    const users = await model.find({}, "-password -cart -__v").sort({ createdAt: -1 }).lean();
 
     if (users.length) {
       const currentPage = parseInt(page);
@@ -39,7 +39,7 @@ const get = async (request, response, next) => {
   try {
     const { id } = request.params;
 
-    const user = await model.findById(id, "-password -cart -favorites -__v").populate([
+    const user = await model.findById(id, "-password -cart -__v").populate([
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
       { path: "orders", select: "-products -destination -discountCode -__v", options: { sort: { createdAt: -1 } } },
       { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "product article", select: "title" } },
@@ -230,74 +230,6 @@ const emptyCart = async (request, response, next) => {
   }
 };
 
-const addToFavorites = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-
-    const { _id, favorites } = request.user;
-
-    const product = await productModel.findById(id);
-
-    if (product) {
-      const isExists = favorites.some((product) => product.equals(id));
-
-      if (isExists) {
-        throw Object.assign(new Error("This product has already been added to your favorites."), { status: 409 });
-      } else {
-        await model.findByIdAndUpdate(_id, { $push: { favorites: id } });
-
-        response.json({ message: "The product has been successfully added to your favorites." });
-      }
-    } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const removeFromFavorites = async (request, response, next) => {
-  try {
-    const { id } = request.params;
-
-    const { _id, favorites } = request.user;
-
-    const product = await productModel.findById(id);
-
-    if (product) {
-      const isExists = favorites.some((product) => product.equals(id));
-
-      if (isExists) {
-        await model.findByIdAndUpdate(_id, { $pull: { favorites: id } });
-
-        return response.json({ message: "The product has been successfully removed from your favorites." });
-      } else {
-        throw Object.assign(new Error("This product doesn't exist in your favorites."), { status: 409 });
-      }
-    } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const emptyFavorites = async (request, response, next) => {
-  try {
-    const { _id, favorites } = request.user;
-
-    if (favorites.length) {
-      await model.findByIdAndUpdate(_id, { $set: { favorites: [] } });
-
-      response.json({ message: "Your favorites has been successfully emptied." });
-    } else {
-      throw Object.assign(new Error("Your favorites is already empty."), { status: 409 });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
 const ban = async (request, response, next) => {
   try {
     const { id } = request.params;
@@ -365,4 +297,4 @@ const remove = async (request, response, next) => {
   }
 };
 
-export { getAll, get, edit, update, addToCart, removeFromCart, emptyCart, addToFavorites, removeFromFavorites, emptyFavorites, ban, unBan, remove };
+export { getAll, get, edit, update, addToCart, removeFromCart, emptyCart, ban, unBan, remove };
