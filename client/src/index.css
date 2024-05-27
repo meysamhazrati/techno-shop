@@ -47,14 +47,15 @@
   @media screen and (min-width: 1024px) {
     ::-webkit-scrollbar {
       width: 0.5rem;
+      height: 0.5rem;
     }
 
     ::-webkit-scrollbar-track {
-      background-color: #cae3f7;
+      background-color: #e4e4e7;
     }
 
     ::-webkit-scrollbar-thumb {
-      background-color: #7fbbec;
+      background-color: #a1a1aa;
     }
   }
 }
