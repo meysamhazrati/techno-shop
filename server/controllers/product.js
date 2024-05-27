@@ -5,7 +5,7 @@ import model from "../models/product.js";
 import colorModel from "../models/color.js";
 import brandModel from "../models/brand.js";
 import categoryModel from "../models/category.js";
-import userModel from "../models/user.js";
+import favoriteModel from "../models/favorite.js";
 import commentModel from "../models/comment.js";
 import mobileModel from "../models/mobile.js";
 import tabletModel from "../models/tablet.js";
@@ -176,7 +176,7 @@ const remove = async (request, response, next) => {
     if (result) {
       result.covers.forEach((cover) => unlink(`public/products/${cover}`, (error) => console.error(error)));
 
-      await userModel.updateMany({ $or: [{ "cart.product": id }, { favorites: id }] }, { $pull: { cart: { product: id }, favorites: id } });
+      await favoriteModel.deleteMany({ product: id });
       await colorModel.deleteMany({ product: id });
       await commentModel.deleteMany({ product: id });
 
