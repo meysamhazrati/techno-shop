@@ -1,29 +1,28 @@
 import { useState, useEffect } from "react";
 import useMe from "../hooks/authentication/me";
-import useAddToFavorites from "../hooks/user/addToFavorites";
-import useRemoveFromFavorites from "../hooks/user/removeFromFavorites";
+import useCreateFavorite from "../hooks/favorite/create";
+import useRemoveFavorite from "../hooks/favorite/remove";
+import Loader from "../components/Loader";
 import HeartIcon from "../icons/Heart";
 
-const ProductFavoriteButton = ({ id, size }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+const ProductFavoriteButton = ({ product }) => {
+  const [id, setId] = useState(null);
 
   const { me } = useMe();
-  const { isPendingAddToFavorites, addToFavorites } = useAddToFavorites(id);
-  const { isPendingRemoveFromFavorites, removeFromFavorites } = useRemoveFromFavorites(id);
+  const { isPendingCreateFavorite, createFavorite } = useCreateFavorite();
+  const { isPendingRemoveFavorite, removeFavorite } = useRemoveFavorite(id);
 
   useEffect(() => {
-    const isExists = me?.favorites.some((product) => id === product._id);
-
-    setIsFavorite(isExists);
-  }, [me, id]);
-
-  const add = () => !isPendingAddToFavorites && !isPendingRemoveFromFavorites && addToFavorites();
-
-  const remove = () => !isPendingAddToFavorites && !isPendingRemoveFromFavorites && removeFromFavorites();
+    setId(me?.favorites.find((favorite) => favorite.product._id === product)?._id);
+  }, [me, product]);
 
   return (
-    <button className="flex items-center justify-center" onClick={() => (isFavorite ? remove() : add())}>
-      <HeartIcon className={`size-${size} ${isFavorite ? "fill-red-500 stroke-red-500" : "fill-none stroke-black"}`} />
+    <button disabled={isPendingCreateFavorite || isPendingRemoveFavorite} className={`flex size-14 shrink-0 items-center justify-center rounded-full transition-colors ${id ? "hover:bg-red-100" : "hover:bg-zinc-200 hover:text-zinc-700"}`} onClick={() => (id ? removeFavorite() : createFavorite({ product }))}>
+      {isPendingCreateFavorite || isPendingRemoveFavorite ? (
+        <Loader width={"36px"} height={"9px"} color={id ? "#ef4444" : "#18181b"} />
+      ) : (
+        <HeartIcon className={`size-9 ${id ? "fill-red-500 stroke-red-500" : "fill-none stroke-current"}`} />
+      )}
     </button>
   );
 };
