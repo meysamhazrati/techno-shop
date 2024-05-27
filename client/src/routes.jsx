@@ -25,6 +25,7 @@ import Order from "./pages/me/Order";
 import Favorites from "./pages/me/Favorites";
 import Comments from "./pages/me/Comments";
 import Tickets from "./pages/me/Tickets";
+import Ticket from "./pages/me/Ticket";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -74,6 +75,7 @@ export default [
           { path: "favorites", element: <Favorites /> },
           { path: "comments", element: <Comments /> },
           { path: "tickets", element: <Tickets /> },
+          { path: "tickets/:id", element: <Ticket /> },
         ],
       },
       {
