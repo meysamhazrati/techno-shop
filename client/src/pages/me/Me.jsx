@@ -11,7 +11,7 @@ const Me = () => {
   const { isPendingMe, isMeError } = useMe();
 
   useEffect(() => {
-    isMeError && navigate("/");
+    isMeError && navigate("/authentication/login");
   }, [isMeError, navigate]);
 
   return !isPendingMe && !isMeError && (
