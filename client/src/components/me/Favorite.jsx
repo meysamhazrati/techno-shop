@@ -5,25 +5,25 @@ import ProductFavoriteButton from "../ProductFavoriteButton";
 import ProductPrice from "../ProductPrice";
 import AmazingOfferTimer from "../AmazingOfferTimer";
 
-const Favorite = ({ _id, covers, title, colors, offer }) => {
+const Favorite = ({ product }) => {
   return (
     <div className="grid grid-cols-[200px_1fr] items-center gap-x-4 overflow-auto py-4 first:pt-0 last:pb-0">
-      <div className="relative h-28 w-full">
-        <ProductCover id={_id} covers={covers} />
-        {colors[0].inventory > 0 && Date.parse(offer?.expiresAt) > Date.now() && <div className="absolute right-0 top-0 z-10 flex h-6 w-11 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-sm text-white">{offer.percent}%</div>}
+      <div className="relative h-32 w-full">
+        <ProductCover id={product._id} covers={product.covers} />
+        {product.colors[0].inventory > 0 && Date.parse(product.offer?.expiresAt) > Date.now() && <div className="absolute right-0 top-0 z-10 flex h-6 w-11 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-sm text-white">{product.offer.percent}%</div>}
       </div>
       <div className="min-w-80">
         <h3 className="font-vazirmatn-medium text-lg">
-          <Link to={`/products/${_id}`} className="line-clamp-1 transition-colors hover:text-primary-900">{title}</Link>
+          <Link to={`/products/${product._id}`} className="line-clamp-1 transition-colors hover:text-primary-900">{product.title}</Link>
         </h3>
         <div className="mt-4 flex items-center justify-between gap-x-4">
-          {colors[0].inventory > 0 && Date.parse(offer?.expiresAt) > Date.now() && <AmazingOfferTimer width="40" fontSize="sm" expiresAt={offer.expiresAt} />}
+          {product.colors[0].inventory > 0 && Date.parse(product.offer?.expiresAt) > Date.now() && <AmazingOfferTimer width="40" fontSize="sm" expiresAt={product.offer.expiresAt} />}
         </div>
         <div className="mt-4 flex items-center justify-between gap-x-4">
-          <ProductPrice price={colors[0].price} offer={offer} priceFontSize="lg" discountedPriceFontSize="sm" gapX="[2px]" iconSize="5" hasInventory={colors[0].inventory} />
-          <div className="flex w-2/3 items-center gap-x-4">
-            <ProductFavoriteButton id={_id} size="8" />
-            <ProductButton id={_id} color={colors[0]} disabled={!colors[0].inventory} />
+          <ProductPrice price={product.colors[0].price} offer={product.offer} priceFontSize="lg" discountedPriceFontSize="sm" gapX="[2px]" iconSize="5" hasInventory={product.colors[0].inventory} />
+          <div className="flex w-full items-center gap-x-4 سئ:w-2/3">
+            <ProductFavoriteButton product={product._id} />
+            <ProductButton id={product._id} color={product.colors[0]} disabled={!product.colors[0].inventory} />
           </div>
         </div>
       </div>
