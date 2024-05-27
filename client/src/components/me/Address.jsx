@@ -24,6 +24,31 @@ const Address = ({ _id, province, city, postalCode, body }) => {
   const { isPendingUpdateAddress, updateAddress } = useUpdateAddress(_id);
   const { isPendingRemoveAddress, removeAddress } = useRemoveAddress(_id);
 
+  const submit = (event) => {
+    event.preventDefault();
+
+    if (newProvince.trim().length >= 2 && newProvince.trim().length <= 20) {
+      if (newCity.trim().length >= 2 && newCity.trim().length <= 20) {
+        if (/\d{10}/.test(newPostalCode.trim())) {
+          if (newBody.trim().length >= 10 && newBody.trim().length <= 100) {
+            updateAddress({ province: newProvince.trim(), city: newCity.trim(), postalCode: newPostalCode.trim(), body: newBody.trim() }, { onSuccess: () => {
+              client.invalidateQueries({ queryKey: ["me"] });
+              setIsEditModalOpen(false);
+            } });
+          } else {
+            openToast("error", null, "آدرس باید بین 10 تا 100 حروف باشد.");
+          }
+        } else {
+          openToast("error", null, "کدپستی معتبر نمی‌باشد.");
+        }
+      } else {
+        openToast("error", null, "شهر باید بین 2 تا 20 حروف باشد.");
+      }
+    } else {
+      openToast("error", null, "استان باید بین 2 تا 20 حروف باشد.");
+    }
+  }
+
   return (
     <>
       <div className="py-4 text-lg first:pt-0 last:pb-0">
@@ -55,42 +80,19 @@ const Address = ({ _id, province, city, postalCode, body }) => {
       </div>
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش آدرس</h6>
-        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
-          event.preventDefault();
-
-          if (newProvince.trim().length >= 2 && newProvince.trim().length <= 20) {
-            if (newCity.trim().length >= 2 && newCity.trim().length <= 20) {
-              if (/\d{10}/.test(newPostalCode.trim())) {
-                if (newBody.trim().length >= 10 && newBody.trim().length <= 100) {
-                  updateAddress({ province: newProvince.trim(), city: newCity.trim(), postalCode: newPostalCode.trim(), body: newBody.trim() }, { onSuccess: () => {
-                    client.invalidateQueries({ queryKey: ["me"] });
-                    setIsEditModalOpen(false);
-                  } });
-                } else {
-                  openToast("error", null, "آدرس باید بین 10 تا 100 حروف باشد.");
-                }
-              } else {
-                openToast("error", null, "کدپستی معتبر نمی‌باشد.");
-              }
-            } else {
-              openToast("error", null, "شهر باید بین 2 تا 20 حروف باشد.");
-            }
-          } else {
-            openToast("error", null, "استان باید بین 2 تا 20 حروف باشد.");
-          }
-        }}>
+        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={submit}>
           <input
             type="text"
             value={newProvince}
             placeholder="استان"
-            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none"
+            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => setNewProvince(target.value)}
           />
           <input
             type="text"
             value={newCity}
             placeholder="شهر"
-            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none"
+            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => setNewCity(target.value)}
           />
           <input
@@ -98,14 +100,14 @@ const Address = ({ _id, province, city, postalCode, body }) => {
             inputMode="numeric"
             value={newPostalCode}
             placeholder="کدپستی"
-            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none"
+            className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => /^\d{0,10}$/.test(target.value) && setNewPostalCode(target.value)}
           />
           <textarea
             type="text"
             value={newBody}
             placeholder="آدرس"
-            className="max-h-48 min-h-32 rounded-3xl border border-zinc-200 p-4 text-lg outline-none"
+            className="max-h-48 min-h-32 rounded-3xl border border-zinc-200 p-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => setNewBody(target.value)}
            />
           <button disabled={isPendingUpdateAddress} className="flex h-14 w-full items-center justify-center text-nowrap rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
