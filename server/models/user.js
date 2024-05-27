@@ -60,12 +60,6 @@ const schema = new Schema(
         },
       },
     ],
-    favorites: [
-      {
-        type: Types.ObjectId,
-        ref: "Product",
-      },
-    ],
   },
   { timestamps: true }
 );
@@ -80,6 +74,12 @@ schema.virtual("orders", {
   ref: "Order",
   localField: "_id",
   foreignField: "buyer._id",
+});
+
+schema.virtual("favorites", {
+  ref: "Favorite",
+  localField: "_id",
+  foreignField: "user",
 });
 
 schema.virtual("comments", {
