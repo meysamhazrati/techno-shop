@@ -27,7 +27,7 @@ const Ticket = ({ _id, title, department, body, isOpen, createdAt }) => {
           <ChevronIcon className="size-6 rotate-180" />
         </Link>
       </div>
-      <p className="mt-2">{body}</p>
+      <p className="mt-2" dangerouslySetInnerHTML={{ __html: body.replaceAll("\n", "<br />") }}></p>
     </div>
   );
 };
