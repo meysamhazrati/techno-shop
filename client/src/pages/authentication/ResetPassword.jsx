@@ -66,7 +66,7 @@ const ResetPassword = () => {
             className="rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => setPassword(target.value)}
           />
-          <button type="submit" disabled={isPendingResetPassword} className="flex w-full items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-lg text-white transition-colors hover:bg-primary-800">
+          <button type="submit" disabled={isPendingResetPassword} className="flex w-full items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-lg text-white transition-colors enabled:hover:bg-primary-800">
             {isPendingResetPassword ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "بازنشانی"}
           </button>
         </form>
