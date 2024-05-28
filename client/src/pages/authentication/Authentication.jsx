@@ -10,7 +10,7 @@ const Authentication = () => {
   const { isFetchingMe, isMeError } = useMe();
 
   useEffect(() => {
-    pathname !== "/authentication/reset-password" && !isFetchingMe && !isMeError && navigate("/");
+    pathname !== "/authentication/reset-password" && !isFetchingMe && !isMeError && navigate("/me");
   }, [pathname, isFetchingMe, isMeError, navigate]);
 
   return (pathname === "/authentication/reset-password" || isMeError) && (
