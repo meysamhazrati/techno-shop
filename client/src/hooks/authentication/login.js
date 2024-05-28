@@ -15,7 +15,7 @@ export default () => {
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
     onSuccess: () => {
       openToast("success", null, "با موفقیت به حساب کاربری خود وارد شدید.");
-      navigate("/");
+      navigate("/me");
     },
     onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشد." : response.status === 401 ? "ایمیل یا رمز عبور وارد شده معتبر نمی‌باشد." : response.status === 403 ? "این ایمیل مسدود شده است." : null),
   });

@@ -15,7 +15,7 @@ export default () => {
     retry: (failureCount, error) => shouldRetry(error) && failureCount < 2,
     onSuccess: () => {
       openToast("success", null, "رمز عبور شما با موفقیت بازنشانی شد.");
-      navigate("/");
+      navigate("/me/profile");
     },
     onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشد." : response.status === 401 ? "ایمیل وارد شده تایید نشده است." : response.status === 409 ? "این رمز عبور قبلا استفاده شده است." : null),
   });
