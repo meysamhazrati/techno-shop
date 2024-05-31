@@ -5,6 +5,7 @@ import useCreateComment from "../../hooks/comment/create";
 import Section from "./Section";
 import SectionHeader from "./SectionHeader";
 import InfiniteScroll from "../InfiniteScroll";
+import UserAvatar from "../UserAvatar";
 import NoResultFound from "../NoResultFound";
 import Loader from "../Loader";
 import StarIcon from "../../icons/Star";
@@ -40,7 +41,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
   return !isError && (
     <Section>
       <SectionHeader title="دیدگاه ها" condition={true}>
-        <span className="mr-auto text-xl text-zinc-500">{isFetching ? 0 : totalComments} دیدگاه</span>
+        <span className="mr-auto text-xl text-zinc-500">{isFetching ? 0 : totalComments.toLocaleString()} دیدگاه</span>
       </SectionHeader>
       <div className="mt-8 flex flex-col items-start gap-6 lg:flex-row [&>*]:rounded-3xl [&>*]:p-6">
         <aside className="relative w-full shrink-0 overflow-hidden bg-white lg:sticky lg:top-[104px] lg:w-[400px]">
@@ -58,8 +59,8 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
           </div>
           <form onSubmit={submit}>
             <textarea value={body} className="mt-4 max-h-96 min-h-52 w-full rounded-3xl border border-zinc-200 p-4 text-lg outline-none placeholder:text-zinc-400" placeholder="دیدگاه شما..." onInput={({ target }) => setBody(target.value)} />
-            <button type="submit" disabled={isFetchingMe || isMeError} className="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-primary-900 text-lg text-white transition-colors hover:bg-primary-800 disabled:bg-primary-100">
-              {isPendingCreateComment ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت دیدگاه"}
+            <button type="submit" disabled={isFetchingMe || isMeError} className="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-primary-900 text-lg text-white transition-colors enabled:hover:bg-primary-800 disabled:bg-primary-100">
+              {isPendingCreateComment ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت"}
             </button>
           </form>
         </aside>
@@ -73,7 +74,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
                   <div key={comment._id} className="py-4 first:pt-0 last:pb-0">
                     <div className="flex items-center justify-between gap-x-3">
                       <div className="flex items-center gap-x-3">
-                        <img src={`${process.env.SERVER_URI}/users/${comment.sender.avatar}`} alt="User Avatar" className="hidden size-14 rounded-full object-cover xs:block" />
+                        <UserAvatar user={comment.sender} className="hidden size-14 text-lg xs:flex" />
                         <div>
                           <div className="flex items-center gap-x-2">
                             <h5 className="line-clamp-1 text-2xl">{comment.sender.firstName} {comment.sender.lastName}</h5>
