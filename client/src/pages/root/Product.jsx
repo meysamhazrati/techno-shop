@@ -90,7 +90,7 @@ const Product = () => {
               >
                 {product?.covers.map((cover, index) => (
                   <SwiperSlide key={index}>
-                     <img src={`${process.env.SERVER_URI}/products/${cover}`} alt="Product Cover" className="size-full object-cover" />
+                     <img src={`${process.env.SERVER_URI}/images/products/${cover}`} alt="Product Cover" className="size-full object-cover" />
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -99,7 +99,7 @@ const Product = () => {
               <div className="flex flex-col gap-y-6">
                 <div className="flex items-center gap-x-4">
                   <Link to={`/brands/${product?.brand.englishName.toLowerCase().split(" ").join("-")}`} className="size-24 shrink-0 overflow-hidden rounded-full">
-                    <img src={`${process.env.SERVER_URI}/brands/${product?.brand.logo}`} alt="Product Brand" className="size-full object-cover" />
+                    <img src={`${process.env.SERVER_URI}/images/brands/${product?.brand.logo}`} alt="Product Brand" className="size-full object-cover" />
                   </Link>
                   <div>
                     <h2 className="line-clamp-2 font-vazirmatn-bold text-2xl/relaxed">{product?.title}</h2>

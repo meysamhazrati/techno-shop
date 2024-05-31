@@ -20,7 +20,7 @@ const Comment = ({ _id, body, score, isConfirmed, product, article, createdAt })
         <div className="flex items-center justify-between gap-x-10 overflow-auto">
           <div className="flex shrink-0 items-center gap-x-3 sm:shrink">
             <Link to={product ? `/products/${product._id}` : `/articles/${article._id}`} className="h-28 w-44 shrink-0 overflow-hidden rounded-3xl">
-              <img src={`${process.env.SERVER_URI}/${product ? `products/${product.covers[0]}` : `articles/${article.cover}`}`} alt={`${product ? "Product" : "Article"} Cover`} loading="lazy" className="size-full object-cover" />
+              <img src={`${process.env.SERVER_URI}/images/${product ? `products/${product.covers[0]}` : `articles/${article.cover}`}`} alt={`${product ? "Product" : "Article"} Cover`} loading="lazy" className="size-full object-cover" />
             </Link>
             <div>
               <div className="flex items-center gap-x-2">

@@ -62,7 +62,7 @@ const Article = () => {
           <>
             <div className="w-full rounded-3xl bg-white p-6">
               <h2 className="line-clamp-2 hidden font-vazirmatn-bold text-2xl/relaxed lg:block">{article.title}</h2>
-              <img src={`${process.env.SERVER_URI}/articles/${article.cover}`} alt="Article Cover" className="w-full rounded-3xl object-cover lg:mt-4" />
+              <img src={`${process.env.SERVER_URI}/images/articles/${article.cover}`} alt="Article Cover" className="w-full rounded-3xl object-cover lg:mt-4" />
               <div className="mt-6 border-t border-zinc-200 pt-6 text-lg first:[&>*]:mt-0 [&>h3]:mt-4 [&>h3]:font-vazirmatn-bold [&>h3]:text-2xl [&>h4]:mt-3 [&>h4]:font-vazirmatn-bold [&>h4]:text-xl [&>p]:mt-1" dangerouslySetInnerHTML={{ __html: article.body }}></div>
             </div>
             <aside className="w-full shrink-0 rounded-3xl bg-white p-6 lg:sticky lg:top-[104px] lg:w-96">
