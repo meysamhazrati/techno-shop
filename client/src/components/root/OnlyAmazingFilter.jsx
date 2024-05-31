@@ -5,7 +5,7 @@ const OnlyAmazingFilter = ({ setOnlyAmazing }) => {
 
   return (
     <div className="flex w-full items-center justify-between py-4">
-      <span className="text-xl">فقط کالاهای شگفت‌انگیز</span>
+      <span className="text-xl">فقط محصولات شگفت‌انگیز</span>
       <input
         type="checkbox"
         checked={JSON.parse(searchParams.get("only-amazing")) || false}
