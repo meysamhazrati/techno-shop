@@ -16,13 +16,13 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {length && width && (height || thickness) && (
               <div>
                 <span>ابعاد</span>
-                <p>{height || thickness} × {width} × {length} میلی‌متر</p>
+                <p>{(height || thickness).toLocaleString()} × {width.toLocaleString()} × {length.toLocaleString()} میلی‌متر</p>
               </div>
             )}
             {weight && (
               <div>
                 <span>وزن</span>
-                <p>{weight} گرم</p>
+                <p>{weight.toLocaleString()} گرم</p>
               </div>
             )}
             {chip && (
@@ -40,25 +40,25 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {CPU && CPUSeries && CPUGeneration && CPUFrequency && CPUCore && (
               <div>
                 <span>پردازنده</span>
-                <p>{CPU} {CPUSeries} {CPUGeneration} / فرکانس {CPUFrequency} گیگاهرتز / {CPUCore} هسته</p>
+                <p>{CPU} {CPUSeries} {CPUGeneration} / فرکانس {CPUFrequency.toLocaleString()} گیگاهرتز / {CPUCore.toLocaleString()} هسته</p>
               </div>
             )}
             {GPU && GPUModel && VRAM && (
               <div>
                 <span>پردازنده گرافیکی</span>
-                <p>{GPU} {GPUModel} / حافظه {VRAM} گیگابایت</p>
+                <p>{GPU} {GPUModel} / حافظه {VRAM.toLocaleString()} گیگابایت</p>
               </div>
             )}
             {operatingSystem && operatingSystemVersion && (
               <div>
                 <span>سیستم عامل</span>
-                <p>{operatingSystem === "No operating system" ? "فاقد سیستم عامل" : `${operatingSystemVersion} ${operatingSystem}`}</p>
+                <p>{operatingSystem === "No operating system" ? "فاقد سیستم عامل" : `${operatingSystemVersion.toLocaleString()} ${operatingSystem}`}</p>
               </div>
             )}
             {internalMemory && (
               <div>
                 <span>حافظه داخلی</span>
-                <p>{internalMemory} گیگابایت {internalMemoryType ? `/ ${internalMemoryType}` : ""}</p>
+                <p>{internalMemory.toLocaleString()} گیگابایت {internalMemoryType ? `/ ${internalMemoryType}` : ""}</p>
               </div>
             )}
             {drive && (
@@ -70,13 +70,13 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {storage && (
               <div>
                 <span>ظرفیت</span>
-                <p>{storage} گیگابایت</p>
+                <p>{storage.toLocaleString()} گیگابایت</p>
               </div>
             )}
             {RAM && (
               <div>
                 <span>مقدار RAM</span>
-                <p>{RAM} گیگابایت {RAMType ? `/ ${RAMType}` : ""}</p>
+                <p>{RAM.toLocaleString()} گیگابایت {RAMType ? `/ ${RAMType}` : ""}</p>
               </div>
             )}
             {memoryCard && (
@@ -88,7 +88,7 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {SIMCard && (
               <div>
                 <span>تعداد سیم‌کارت</span>
-                <p>{SIMCard} عدد</p>
+                <p>{SIMCard.toLocaleString()} عدد</p>
               </div>
             )}
             {network && (
@@ -100,25 +100,25 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {battery && batteryCapacity && (
               <div>
                 <span>باطری</span>
-                <p>{battery} / {batteryCapacity} میلی‌آمپر</p>
+                <p>{battery} / {batteryCapacity.toLocaleString()} میلی‌آمپر</p>
               </div>
             )}
             {chargingPort && chargingSpeed && (
               <div>
                 <span>شارژ</span>
-                <p>{chargingPort} / سرعت {chargingSpeed} وات</p>
+                <p>{chargingPort} / سرعت {chargingSpeed.toLocaleString()} وات</p>
               </div>
             )}
             {screen && screenSize && resolutionWidth && resolutionHeight && (
               <div>
                 <span>صفحه نمایش</span>
-                <p>{screen} / اندازه {screenSize} اینچ / {resolutionHeight} × {resolutionWidth} پیکسل</p>
+                <p>{screen} / اندازه {screenSize.toLocaleString()} اینچ / {resolutionHeight.toLocaleString()} × {resolutionWidth.toLocaleString()} پیکسل</p>
               </div>
             )}
             {camera && photoResolution && videoResolutionWidth && videoResolutionHeight && videoFPS && (
               <div>
                 <span>دوربین</span>
-                <p>{camera} عدد / {photoResolution} مگاپیکسل / {videoResolutionHeight} × {videoResolutionWidth} پیکسل {videoFPS} فریم بر ثانیه</p>
+                <p>{camera.toLocaleString()} عدد / {photoResolution.toLocaleString()} مگاپیکسل / {videoResolutionHeight.toLocaleString()} × {videoResolutionWidth.toLocaleString()} پیکسل {videoFPS.toLocaleString()} فریم بر ثانیه</p>
               </div>
             )}
             {headphoneJack && (
@@ -148,19 +148,19 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {(buttons || keys) && (
               <div>
                 <span>تعداد کلید</span>
-                <p>{buttons || keys} عدد</p>
+                <p>{(buttons || keys).toLocaleString()} عدد</p>
               </div>
             )}
             {minimumDPI && maximumDPI && (
               <div>
                 <span>محدوده DPI</span>
-                <p>{minimumDPI} تا {maximumDPI}</p>
+                <p>{minimumDPI.toLocaleString()} تا {maximumDPI.toLocaleString()}</p>
               </div>
             )}
             {minimumResponseTime && maximumResponseTime && (
               <div>
                 <span>محدوده زمان پاسخ‌گویی</span>
-                <p>{minimumResponseTime} تا {maximumResponseTime} میلی‌ثانیه</p>
+                <p>{minimumResponseTime.toLocaleString()} تا {maximumResponseTime.toLocaleString()} میلی‌ثانیه</p>
               </div>
             )}
             {panel && (
@@ -178,13 +178,13 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {color && (
               <div>
                 <span>تعداد رنگ</span>
-                <p>{color} رنگ</p>
+                <p>{color.toLocaleString()} رنگ</p>
               </div>
             )}
             {impedance && (
               <div>
                 <span>امپدانس</span>
-                <p>{impedance} اهم</p>
+                <p>{impedance.toLocaleString()} اهم</p>
               </div>
             )}
             {strapMaterial && (
