@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import useArticle from "../../hooks/article/article";
 import Section from "../../components/root/Section";
 import Breadcrumb from "../../components/root/Breadcrumb";
+import UserAvatar from "../../components/UserAvatar";
 import Comments from "../../components/root/Comments";
 import RelatedProducts from "../../components/root/RelatedProducts";
 import StarIcon from "../../icons/Star";
@@ -67,7 +68,7 @@ const Article = () => {
             </div>
             <aside className="w-full shrink-0 rounded-3xl bg-white p-6 lg:sticky lg:top-[104px] lg:w-96">
               <div className="flex items-center gap-x-3">
-                <img src={`${process.env.SERVER_URI}/users/${article?.author.avatar}`} alt="Author Avatar" className="size-16 rounded-full object-cover" />
+                <UserAvatar user={article.author} className="size-16 text-xl" />
                 <div>
                   <h5 className="line-clamp-1 font-vazirmatn-medium text-2xl">{article?.author.firstName} {article?.author.lastName}</h5>
                   <span className="mt-1 block text-lg text-zinc-400">{new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(article.createdAt))}</span>
@@ -82,7 +83,7 @@ const Article = () => {
                 <div className="size-1.5 rounded-full bg-zinc-400"></div>
                 <Link to={`/categories/${article.category.englishTitle.toLowerCase().split(" ").join("-")}`} className="transition-colors hover:text-primary-900">{article.category.title}</Link>
                 <div className="size-1.5 rounded-full bg-zinc-400"></div>
-                <span>{article.totalComments} دیدگاه</span>
+                <span>{article.totalComments.toLocaleString()} دیدگاه</span>
               </div>
             </aside>
           </>
