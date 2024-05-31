@@ -89,7 +89,7 @@ const edit = async (request, response, next) => {
     });
 
     if (avatar && user.avatar !== "user.png") {
-      unlink(`public/users/${user.avatar}`, (error) => console.error(error));
+      unlink(`public/images/users/${user.avatar}`, (error) => console.error(error));
     }
 
     response.json({ message: "Your information has been successfully edited." });
@@ -127,7 +127,7 @@ const update = async (request, response, next) => {
 
       if (result) {
         if (avatar && result.avatar !== "user.png") {
-          unlink(`public/users/${result.avatar}`, (error) => console.error(error));
+          unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
         }
 
         response.json({ message: "The user has been successfully edited." });
@@ -281,7 +281,7 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      result.avatar !== "user.png" && unlink(`public/users/${result.avatar}`, (error) => console.error(error));
+      result.avatar !== "user.png" && unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
 
       await addressModel.deleteMany({ recipient: id });
       await commentModel.deleteMany({ sender: id });

@@ -120,7 +120,7 @@ const update = async (request, response, next) => {
     });
 
     if (result) {
-      cover && unlink(`public/articles/${result.cover}`, (error) => console.error(error));
+      cover && unlink(`public/images/articles/${result.cover}`, (error) => console.error(error));
 
       response.json({ message: "The article has been successfully edited." });
     } else {
@@ -184,7 +184,7 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      unlink(`public/articles/${result.cover}`, (error) => console.error(error));
+      unlink(`public/images/articles/${result.cover}`, (error) => console.error(error));
 
       await commentModel.deleteMany({ article: id });
 

@@ -174,7 +174,7 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      result.covers.forEach((cover) => unlink(`public/products/${cover}`, (error) => console.error(error)));
+      result.covers.forEach((cover) => unlink(`public/images/products/${cover}`, (error) => console.error(error)));
 
       await favoriteModel.deleteMany({ product: id });
       await colorModel.deleteMany({ product: id });

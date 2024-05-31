@@ -124,7 +124,7 @@ const update = async (request, response, next) => {
     const result = await model.findByIdAndUpdate(id, { name, englishName, logo: logo?.filename });
 
     if (result) {
-      logo && unlink(`public/brands/${result.logo}`, (error) => console.error(error));
+      logo && unlink(`public/images/brands/${result.logo}`, (error) => console.error(error));
 
       response.json({ message: "The brand has been successfully edited." });
     } else {
@@ -144,7 +144,7 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      unlink(`public/brands/${result.logo}`, (error) => console.error(error));
+      unlink(`public/images/brands/${result.logo}`, (error) => console.error(error));
 
       response.json({ message: "The brand has been successfully removed." });
     } else {
