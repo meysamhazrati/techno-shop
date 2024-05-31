@@ -29,7 +29,7 @@ export default (code) => {
           break;
         }
         case 409: {
-          message = response.message === "The total price of the product(s) is less than the minimum required price for using this discount code." ? "مبلغ کل محصول(ها) کمتر از حداقل مبلغ مورد نیاز برای استفاده از این کد تخفیف است." : "کد تخفیف وارد شده شامل این محصول(ها) نمی‌باشد.";
+          message = response.data.message === "The total price of the product(s) is less than the minimum required price for using this discount code." ? "مبلغ کل محصول(ها) کمتر از حداقل مبلغ مورد نیاز برای استفاده از این کد تخفیف است." : "کد تخفیف وارد شده شامل این محصول(ها) نمی‌باشد.";
           break;
         }
         case 410: {
