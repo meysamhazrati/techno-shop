@@ -5,6 +5,7 @@ import model from "../models/user.js";
 import productModel from "../models/product.js";
 import colorModel from "../models/color.js";
 import addressModel from "../models/address.js";
+import favoriteModel from "../models/favorite.js";
 import commentModel from "../models/comment.js";
 import articleModel from "../models/article.js";
 import ticketModel from "../models/ticket.js";
@@ -43,7 +44,6 @@ const get = async (request, response, next) => {
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
       { path: "orders", select: "-products -destination -discountCode -__v", options: { sort: { createdAt: -1 } } },
       { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "product article", select: "title" } },
-      { path: "articles", select: "-body -__v", options: { sort: { createdAt: -1 } }, populate: { path: "category", select: "-__v" } },
       { path: "tickets", select: "-body -__v", match: { ticket: { $exists: false } }, options: { sort: { createdAt: -1 } } },
     ]).lean();
 
@@ -88,9 +88,7 @@ const edit = async (request, response, next) => {
       avatar: avatar?.filename,
     });
 
-    if (avatar && user.avatar !== "user.png") {
-      unlink(`public/images/users/${user.avatar}`, (error) => console.error(error));
-    }
+    avatar && unlink(`public/images/users/${user.avatar}`, (error) => console.error(error));
 
     response.json({ message: "Your information has been successfully edited." });
   } catch (error) {
@@ -126,9 +124,7 @@ const update = async (request, response, next) => {
       });
 
       if (result) {
-        if (avatar && result.avatar !== "user.png") {
-          unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
-        }
+        avatar && unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
 
         response.json({ message: "The user has been successfully edited." });
       } else {
@@ -281,9 +277,10 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      result.avatar !== "user.png" && unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
+      unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
 
       await addressModel.deleteMany({ recipient: id });
+      await favoriteModel.deleteMany({ user: id });
       await commentModel.deleteMany({ sender: id });
       await articleModel.deleteMany({ author: id });
       await ticketModel.deleteMany({ sender: id });
