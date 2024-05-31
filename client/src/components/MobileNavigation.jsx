@@ -17,12 +17,12 @@ const MobileNavigation = () => {
         <SquaresIcon solid={location.pathname.startsWith("/categories")} className="mx-auto size-7" />
         <span className="mt-1 hidden xs:block">دسته‌بندی ها</span>
       </Link>
-      <Link to="/me/cart">
-        <CartIcon solid={location.pathname === "/me/cart"} className="mx-auto size-7" />
+      <Link to="/cart">
+        <CartIcon solid={location.pathname === "/cart"} className="mx-auto size-7" />
         <span className="mt-1 hidden xs:block">سبد خرید</span>
       </Link>
       <Link to="/me">
-        <UserIcon solid={location.pathname.startsWith("/me") && location.pathname !== "/me/cart"} className="mx-auto size-7" />
+        <UserIcon solid={location.pathname.startsWith("/me")} className="mx-auto size-7" />
         <span className="mt-1 hidden xs:block">حساب کاربری</span>
       </Link>
     </nav>
