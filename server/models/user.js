@@ -36,7 +36,6 @@ const schema = new Schema(
     avatar: {
       type: String,
       required: false,
-      default: "user.png",
     },
     isBanned: {
       type: Boolean,
