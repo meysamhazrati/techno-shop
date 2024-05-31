@@ -5,9 +5,9 @@ const Landing = () => {
   return (
     <Section className="flex flex-col-reverse items-center gap-y-10 lg:flex-row [&>*]:w-full lg:[&>*]:w-1/2">
       <div className="flex flex-col items-center gap-y-5 text-center lg:items-start lg:gap-y-7 lg:text-right">
-        <h1 className="max-w-[322px] font-vazirmatn-black text-4xl sm:max-w-[430px] sm:text-5xl/tight md:max-w-[537px] md:text-6xl/tight lg:max-w-[371px] lg:text-5xl/tight xl:max-w-[463px] xl:text-6xl/tight">با ما به دنیای تکنولوژی سفر کنید!</h1>
-        <p className="max-w-[368px] sm:max-w-[460px] sm:text-xl/7 md:max-w-[552px] md:text-2xl/9 lg:text-xl/7 xl:text-2xl/9">تکنوشاپ یک فروشگاه آنلاین کالای دیجیتال با تنوع محصول بسیاری از جمله موبایل، لپ‌تاپ، کامپیوتر و... هست که در عصر تکنولوژی امروزی، همه ما به آن ها نیاز داریم.</p>
-        <div className="flex flex-wrap items-center gap-x-7 gap-y-3 text-white">
+        <h1 className="max-w-[370px] font-vazirmatn-black text-4xl sm:max-w-[500px] sm:text-5xl/tight md:max-w-[570px] md:text-6xl/tight lg:max-w-[400px] lg:text-5xl/tight xl:max-w-[470px] xl:text-6xl/tight">با ما به دنیای تکنولوژی سفر کنید!</h1>
+        <p className="max-w-[370px] sm:max-w-[470px] sm:text-xl/7 md:max-w-[570px] md:text-2xl/9 lg:text-xl/7 xl:text-2xl/9">تکنوشاپ یک فروشگاه اینترنتی است که تنوع گسترده‌ای از جدیدترین محصولات دیجیتال را با مناسب‌ترین قیمت ممکن به شما ارائه می‌دهد. با ما سریع و مطمئن خرید کنید.</p>
+        <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-white">
           <Link to="products" className="flex h-10 w-28 items-center justify-center rounded-3xl bg-primary-900 text-sm transition-colors hover:bg-primary-800 sm:h-11 sm:w-36 sm:text-base md:h-12 md:w-40 md:text-xl lg:h-11 lg:w-36 lg:text-base xl:h-12 xl:w-40 xl:text-xl">فروشگاه</Link>
           <Link to="/me/tickets" className="flex h-10 w-28 items-center justify-center rounded-3xl bg-primary-500 text-sm transition-colors hover:bg-primary-600 sm:h-11 sm:w-36 sm:text-base md:h-12 md:w-40 md:text-xl lg:h-11 lg:w-36 lg:text-base xl:h-12 xl:w-40 xl:text-xl">ارتباط با ما</Link>
         </div>
