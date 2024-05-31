@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import useMe from "../../hooks/authentication/me";
-import CartProduct from "../CartProduct";
+import CartProduct from "./CartProduct";
 import CartIcon from "../../icons/Cart";
 import TomanIcon from "../../icons/Toman";
 
 const CartButton = () => {
-  const { isMeError, me } = useMe();
+  const { me } = useMe();
 
   return (
     <div className="group relative size-12 rounded-full transition-colors hover:bg-zinc-200">
-      <Link to={isMeError ? "/authentication/login" : "/me/cart"} className="flex size-full items-center justify-center rounded-full">
+      <Link to="/cart" className="flex size-full items-center justify-center rounded-full">
         <CartIcon className="size-7 transition-colors group-hover:stroke-zinc-700" />
       </Link>
       {me?.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity }) => previous + quantity, 0) > 0 && (
@@ -28,7 +28,7 @@ const CartButton = () => {
                   <TomanIcon className="size-5" />
                 </span>
               </div>
-              <Link to="/me/cart" className="rounded-full bg-primary-900 px-7 py-3 text-white transition-colors hover:bg-primary-800">ثبت سفارش</Link>
+              <Link to="/cart" className="rounded-full bg-primary-900 px-7 py-3 text-white transition-colors hover:bg-primary-800">ثبت سفارش</Link>
             </div>
           </div>
         </>
