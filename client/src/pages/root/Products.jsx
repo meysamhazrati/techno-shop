@@ -21,7 +21,7 @@ const Products = () => {
   return (
     <>
       <SectionHeader title="محصولات" condition={true}>
-        <span className="mr-auto text-xl text-zinc-500">{isProductsError || isFetchingProducts ? 0 : products.length} کالا</span>
+        <span className="mr-auto text-xl text-zinc-500">{isProductsError || isFetchingProducts ? 0 : products.length.toLocaleString()} محصول</span>
       </SectionHeader>
       <Section className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <Filters brandsFilter={true} categoriesFilter={true} priceFilter={true} onlyAvailableFilter={true} onlyAmazingFilter={true} />

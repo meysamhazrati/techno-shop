@@ -28,7 +28,7 @@ const Brand = () => {
   return !isBrandError && (
     <>
       <SectionHeader title={isFetchingBrand ? "در حال بارگذاری" : brand.name} condition={true}>
-        <span className="mr-auto text-xl text-zinc-500">{isFetchingBrand ? 0 : brand.totalProducts} کالا</span>
+        <span className="mr-auto text-xl text-zinc-500">{isFetchingBrand ? 0 : brand.totalProducts.toLocaleString()} محصول</span>
       </SectionHeader>
       <Section className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <Filters categoriesFilter={true} priceFilter={true} onlyAvailableFilter={true} onlyAmazingFilter={true} />

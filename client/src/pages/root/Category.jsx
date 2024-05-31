@@ -28,7 +28,7 @@ const Category = () => {
   return !isCategoryError && (
     <>
       <SectionHeader title={isFetchingCategory ? "در حال بارگذاری" : category.title} condition={true}>
-        <span className="mr-auto text-xl text-zinc-500">{isFetchingCategory ? 0 : category.totalProducts} کالا</span>
+        <span className="mr-auto text-xl text-zinc-500">{isFetchingCategory ? 0 : category.totalProducts.toLocaleString()} محصول</span>
       </SectionHeader>
       <Section className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <Filters brandsFilter={true} priceFilter={true} onlyAvailableFilter={true} onlyAmazingFilter={true} />

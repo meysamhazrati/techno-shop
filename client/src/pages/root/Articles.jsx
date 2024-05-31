@@ -21,7 +21,7 @@ const Articles = () => {
   return (
     <>
       <SectionHeader title="مقالات" condition={true}>
-        <span className="mr-auto text-xl text-zinc-500">{isArticlesError || isFetchingArticles ? 0 : articles.length} مقاله</span>
+        <span className="mr-auto text-xl text-zinc-500">{isArticlesError || isFetchingArticles ? 0 : articles.length.toLocaleString()} مقاله</span>
       </SectionHeader>
       <Section className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <Filters categoriesFilter={true} />
