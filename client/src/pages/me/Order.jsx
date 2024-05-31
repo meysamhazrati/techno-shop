@@ -1,15 +1,19 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import useOrder from "../../hooks/order/order";
 import useCancelOrder from "../../hooks/order/cancel";
 import useReturnOrder from "../../hooks/order/return";
 import ProductCover from "../../components/ProductCover";
-import Loader from "../../components/Loader";
+import Modal from "../../components/Modal";
+import Confirm from "../../components/Confirm";
 import TomanIcon from "../../icons/Toman";
 
 const Order = () => {
   const { id } = useParams();
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
 
   const client = useQueryClient();
 
@@ -127,10 +131,22 @@ const Order = () => {
       </div>
       {!isFetchingOrder && order.status !== "Canceled" && order.status !== "Returned" && (
         <div className="mt-6 flex items-center gap-x-3 text-lg">
-          {order.status === "In progress" && <button disabled={isPendingCancelOrder} className="flex h-14 w-full items-center justify-center rounded-full bg-red-500 text-white sm:w-40" onClick={() => cancelOrder(null, { onSuccess: () => client.invalidateQueries({ queryKey: ["order", { id }] }) })}>{isPendingCancelOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "لغو"}</button>}
-          {order.status === "Delivered" && <button disabled={isPendingReturnOrder} className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-200 text-zinc-700 sm:w-40" onClick={() => returnOrder(null, { onSuccess: () => client.invalidateQueries({ queryKey: ["order", { id }] }) })}>{isPendingReturnOrder ? <Loader width={"40px"} height={"10px"} color={"#3f3f46"} /> : "مرجوع"}</button>}
+          {order.status === "In progress" && <button className="flex h-14 w-full items-center justify-center rounded-full bg-red-500 text-white sm:w-40" onClick={() => setIsCancelModalOpen(true)}>لغو</button>}
+          {order.status === "Delivered" && <button className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-200 text-zinc-700 sm:w-40" onClick={() => setIsReturnModalOpen(true)}>مرجوع</button>}
         </div>
       )}
+      <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)}>
+        <Confirm title="این سفارش را لغو می‌کنید؟" isPending={isPendingCancelOrder} onCancel={() => setIsCancelModalOpen(false)} onConfirm={() => cancelOrder(null, { onSuccess: () => {
+          client.invalidateQueries({ queryKey: ["order", { id }] });
+          setIsCancelModalOpen(false);
+        } })} />
+      </Modal>
+      <Modal isOpen={isReturnModalOpen} onClose={() => setIsReturnModalOpen(false)}>
+        <Confirm title="این سفارش را مرجوع می‌کنید؟" isPending={isPendingReturnOrder} onCancel={() => setIsReturnModalOpen(false)} onConfirm={() => returnOrder(null, { onSuccess: () => {
+          client.invalidateQueries({ queryKey: ["order", { id }] });
+          setIsReturnModalOpen(false);
+        } })} />
+      </Modal>
     </>
   );
 };
