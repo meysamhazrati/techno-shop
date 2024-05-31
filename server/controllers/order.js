@@ -12,7 +12,7 @@ const create = async (request, response, next) => {
     const { totalPrice } = request.body;
 
     const products = await Promise.all(request.body.products.map(async ({ quantity, product, color }) => ({ quantity, product: await productModel.findById(product), color: await colorModel.findById(color) })));
-    const buyer = await userModel.findById(request.user._id, "-cart -favorites");
+    const buyer = await userModel.findById(request.user._id, "-cart");
     const destination = await addressModel.findById(request.body.destination);
     const discountCode = await discountCodeModel.findById(request.body.discountCode);
       
@@ -122,6 +122,8 @@ const cancel = async (request, response, next) => {
       if (role === "ADMIN" || _id.equals(order.buyer)) {
         if (order.status === "In progress") {
           await model.findByIdAndUpdate(id, { status: "Canceled" });
+
+          await Promise.all(order.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: -quantity, inventory: quantity } })));
 
           response.json({ message: "The order has been successfully canceled." });
         } else if (order.status === "Canceled") {
