@@ -4,7 +4,8 @@ import useMe from "../../hooks/authentication/me";
 import useEmptyCart from "../../hooks/user/emptyCart";
 import useUseDiscountCode from "../../hooks/discountCode/use";
 import useCreateOrder from "../../hooks/order/create";
-import CartProduct from "../../components/CartProduct";
+import SelectBox from "../../components/SelectBox";
+import CartProduct from "../../components/root/CartProduct";
 import NoResultFound from "../../components/NoResultFound";
 import Modal from "../../components/Modal";
 import Confirm from "../../components/Confirm";
@@ -20,7 +21,8 @@ const Cart = () => {
   const [categories, setCategories] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [destination, setDestination] = useState(null);
-  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [isEmptyModalOpen, setIsEmptyModalOpen] = useState(false);
 
   const { openToast } = useContext(ToastContext);
 
@@ -30,118 +32,40 @@ const Cart = () => {
   const { isPendingCreateOrder, createOrder } = useCreateOrder();
 
   useEffect(() => {
-    document.title = "تکنوشاپ - من - سبد خرید";
+    document.title = "تکنوشاپ - سبد خرید";
   }, []);
 
   useEffect(() => {
-    setProductsQuantity(me.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity }) => previous + quantity, 0),);
-    setProductsPrice(me.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity, color }) => previous + quantity * color.price, 0));
-    setProductsPriceWithDiscount(me.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity, product, color }) => previous + quantity * (Date.parse(product.offer?.expiresAt) > Date.now() ? color.price - color.price * (product.offer.percent / 100) : color.price), 0));
-    setAmazingOfferPrice(me.cart.filter(({ product, color }) => color.inventory !== 0 && Date.parse(product.offer?.expiresAt) > Date.now()).reduce((previous, { quantity, product, color }) => previous + (quantity * color.price * product.offer.percent) / 100, 0));
-    setTotalPrice(productsPriceWithDiscount - productsPriceWithDiscount * ((discountCode?.percent || 0) / 100));
-    setCategories(me.cart.filter(({ color }) => color.inventory !== 0).map(({ product }) => product.category._id));
-    setDestination(me.addresses[0]._id || null);
+    if (me) {
+      setProductsQuantity(me.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity }) => previous + quantity, 0));
+      setProductsPrice(me.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity, color }) => previous + quantity * color.price, 0));
+      setProductsPriceWithDiscount(me.cart.filter(({ color }) => color.inventory !== 0).reduce((previous, { quantity, product, color }) => previous + quantity * (Date.parse(product.offer?.expiresAt) > Date.now() ? color.price - color.price * (product.offer.percent / 100) : color.price), 0));
+      setAmazingOfferPrice(me.cart.filter(({ product, color }) => color.inventory !== 0 && Date.parse(product.offer?.expiresAt) > Date.now()).reduce((previous, { quantity, product, color }) => previous + (quantity * color.price * product.offer.percent) / 100, 0));
+      setTotalPrice(productsPriceWithDiscount - productsPriceWithDiscount * ((discountCode?.percent || 0) / 100));
+      setCategories(me.cart.filter(({ color }) => color.inventory !== 0).map(({ product }) => product.category._id));
+      setAddresses(me.addresses.map(({ _id, body }) => ({ title: body, value: _id })));
+    }
   }, [me, productsPriceWithDiscount, discountCode]);
 
-  return me.cart.filter(({ color }) => color.inventory !== 0).length !== 0 ? (
-    <>
-      <div>
-        <div className="flex items-center justify-between gap-x-2">
-          <span className="text-lg text-zinc-400">{productsQuantity.toLocaleString()} محصول</span>
-          <button disabled={isPendingEmptyCart} className="flex items-center gap-x-2 text-red-500" onClick={() => setIsRemoveModalOpen(true)}>حذف همه</button>
-        </div>
-        <div className="mt-4 divide-y divide-zinc-200">
-          {me.cart.map((product) => <CartProduct key={product._id} {...product} />)}
-        </div>
-      </div>
-      <div className="mt-6 border-t border-zinc-200 pt-6">
-        <span className="text-lg text-zinc-400">آدرس</span>
-        <div className="mt-4 divide-y divide-zinc-200 text-lg">
-          {me.addresses.length !== 0 ? me.addresses.map(({ _id, postalCode, body }) => (
-            <button key={_id} className={`flex items-center gap-x-2 overflow-auto text-nowrap py-2 first:pt-0 last:pb-0 ${destination === _id ? "text-primary-900" : "text-zinc-900"}`} onClick={() => setDestination(_id)}>
-              <span>{postalCode}</span>
-              <span className={`h-3 w-px ${destination === _id ? "bg-primary-900" : "bg-zinc-900"} shrink-0`}></span>
-              <p>{body}</p>
-            </button>
-          )) : (
-            <NoResultFound title="آدرسی پیدا نشد!" />
-          )}
-        </div>
-      </div>
-      <div className="mt-6 border-t border-zinc-200 pt-6 text-lg">
-        <div className="overflow-auto text-nowrap">
-          <div className="flex items-center justify-between gap-x-4">
-            <span className="text-zinc-400">محصولات ({productsQuantity.toLocaleString()}):</span>
-            <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
-              {productsPrice.toLocaleString()}
-              <TomanIcon className="size-5" />
-            </span>
-          </div>
-          {me.cart.filter(({ color }) => color.inventory !== 0).some(({ product }) => Date.parse(product.offer?.expiresAt) > Date.now()) && (
-            <div className="mt-2 flex items-center justify-between gap-x-4">
-              <span className="text-zinc-400">پیشنهاد شگفت انگیز (%{Math.round((amazingOfferPrice / productsPrice) * 100)}):</span>
-              <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
-                {amazingOfferPrice.toLocaleString()}
-                <TomanIcon className="size-5" />
-              </span>
-            </div>
-          )}
-          {discountCode && (
-            <div className="mt-2 flex items-center justify-between gap-x-4">
-              <span className="text-zinc-400">کد تخفیف (%{discountCode.percent}):</span>
-              <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
-                {((productsPriceWithDiscount * discountCode.percent) / 100).toLocaleString()}
-                <TomanIcon className="size-5" />
-              </span>
-            </div>
-          )}
-          <div className="mt-2 flex items-center justify-between gap-x-4">
-            <span className="text-zinc-400">مبلغ قابل پرداخت:</span>
-            <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
-              {totalPrice.toLocaleString()}
-              <TomanIcon className="size-5" />
-            </span>
-          </div>
-        </div>
-        {!discountCode && (
-          <form className="mt-6 flex items-center gap-x-2 text-lg" onSubmit={(event) => {
-            event.preventDefault();
+  const submit = (event) => {
+    event.preventDefault();
 
-            if (/^[a-zA-Z\d]{7}$/.test(code.trim())) {
-              if (totalPrice > 1000) {
-                if (categories.length >= 1 && categories.length <= 7) {
-                  useDiscountCode({ price: totalPrice, categories });
-                } else {
-                  openToast("error", null, "تعداد دسته‌بندی‌ محصولات باید بین 1 تا 7 باشد.");
-                }
-              } else {
-                openToast("error", null, "مبلغ کل محصول(ها) باید بالای 1000 تومان باشد.");
-              }
-            } else {
-              openToast("error", null, "کد تخفیف باید 7 کاراکتر باشد.");
-            }
-          }}>
-            <input
-              type="text"
-              value={code}
-              placeholder="کد تخفیف"
-              className="h-14 w-full rounded-3xl border border-zinc-200 px-4 outline-none"
-              onInput={({ target }) => /^[a-zA-Z\d]{0,7}$/.test(target.value) && setCode(target.value)}
-            />
-            <button type="submit" disabled={isPendingUseDiscountCode} className="flex h-14 w-48 items-center justify-center rounded-full bg-primary-900 text-white transition-colors hover:bg-primary-800">
-              {isPendingCreateOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "اعمال"}
-            </button>
-          </form>
-        )}
-        <button disabled={isPendingCreateOrder} className="mt-6 flex h-14 w-full items-center justify-center rounded-full bg-primary-900 text-lg text-white transition-colors hover:bg-primary-800" onClick={() => createOrder({ totalPrice, products: me.cart.filter(({ color }) => color.inventory !== 0).map(({ quantity, product, color }) => ({ quantity, product: product._id, color: color._id })), destination, discountCode })}>
-          {isPendingCreateOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت سفارش"}
-        </button>
-      </div>
-      <Modal isOpen={isRemoveModalOpen} onClose={() => setIsRemoveModalOpen(false)}>
-        <Confirm title="سبد خرید را خالی می‌کنید؟" isPending={isPendingEmptyCart} onCancel={() => setIsRemoveModalOpen(false)} onConfirm={() => emptyCart(null, { onSuccess: () => setIsRemoveModalOpen(false) })} />
-      </Modal>
-    </>
-  ) : (
+    if (/^[a-zA-Z\d]{7}$/.test(code.trim())) {
+      if (totalPrice > 1000) {
+        if (categories.length >= 1 && categories.length <= 7) {
+          useDiscountCode({ price: totalPrice, categories });
+        } else {
+          openToast("error", null, "تعداد دسته‌بندی‌ محصولات باید بین 1 تا 7 باشد.");
+        }
+      } else {
+        openToast("error", null, "مبلغ کل محصول(ها) باید بالای 1000 تومان باشد.");
+      }
+    } else {
+      openToast("error", null, "کد تخفیف باید 7 کاراکتر باشد.");
+    }
+  };
+
+  return !me?.cart.filter(({ color }) => color.inventory !== 0).length ? (
     <div className="flex flex-col items-center justify-center gap-y-3">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" className="max-w-52 sm:max-w-64">
         <path d="M0 508.53c0-25.39 12.38-48.36 32.39-64.99 20.02-16.64 47.66-26.93 78.19-26.93h91.4c-4.38 32.02-10.92 85.91-17.13 161.16-.79 9.58-1.72 19.57-2.78 29.84-13.18-4.61-27.63-7.15-42.81-7.15h-28.68c-61.07 0-110.59-41.16-110.59-91.93zM559.69 48.94H110.59c-30.53 0-58.17 10.29-78.19 26.92C12.38 92.49 0 115.47 0 140.85c0 50.77 49.51 91.92 110.59 91.92h235.92c61.08 0 110.61 41.16 110.61 91.93 0 2.03-.08 4.04-.24 6.04l22.41-18.4c1.75-1.44 4.33-1.14 5.69.66l22.5 29.82c1.35 1.8 3.92 2.12 5.67.7l34.13-27.75v-58.44c-7.8.7-18.86.14-29.05-5.84-18.31-10.74-10.6-21.88-10.6-21.88 0 0-13.28-7.57-19.66-26.12-6.36-18.58 5.18-24.83 5.18-24.83 0 0-11.53-9.57-13.13-28.27-1.61-18.7 21.09-41.39 21.09-41.39 0 0 .02-.44.07-1.2l-1.16.42c.38-.52.81-1 1.23-1.49.47-6.01 2.35-22.41 9.44-30.76 8.78-10.36 44.95-8.75 44.95-8.75 0 0-1.7-9.15 4.07-18.27zm-99.9 150.9c-10.22 0-18.51-8.29-18.51-18.51s8.29-18.51 18.51-18.51 18.51 8.29 18.51 18.51-8.29 18.51-18.51 18.51zM618.5 51.39s-1.39-.99-3.72-2.46h4.94c-.99 1.51-1.21 2.46-1.21 2.46zM1000 876.21c0 25.39-12.38 48.36-32.4 64.99-20.01 16.64-47.65 26.92-78.18 26.92H110.59c-61.07 0-110.59-41.16-110.59-91.92 0-25.37 12.38-48.36 32.39-64.99 20.02-16.63 47.66-26.92 78.19-26.92h28.68c6.62 0 13.12-.49 19.41-1.41-8.71 56.13-16.78 102.57-19.92 120.29-.68 3.85 2.51 7.27 6.41 6.87 171.29-17.75 519.37 26.85 567.79 33.25 3.15.41 6.08-1.77 6.56-4.91 9.96-8.31 20.86-16.33 32.07-23.93l-.83 10.79 9.59-16.59c38.46-24.95 78.85-44.53 97.39-53.08 6.08-2.8 9.49-9.35 8.29-15.95-2-11.01-5.28-29.82-9.24-55.35h32.61c61.07 0 110.59 41.16 110.59 91.92zM1000 508.53c0 25.39-12.38 48.36-32.4 64.99-20.01 16.64-47.65 26.93-78.18 26.93h-55.67c-.48-4.82-.94-9.7-1.41-14.63-9.16-97.03-18.88-158.95-24.69-193.1 19.64 14.84 45.72 23.87 74.34 23.87h7.43c61.07 0 110.59 41.16 110.59 91.93zM889.41 48.94h-194.34c2.23 2.33 3.43 3.93 3.43 3.93 0 0 13.13-7.16 27.86 9.95 13.78 16.02 4.91 62.4 3.71 68.34.41.28.81.56 1.2.87l-.52.23c2.55 1.7 10.44 8.51 14.41 29.37 4.78 25.08-22.37 41.2-22.37 41.2 0 0 1.19 14.92-12.55 31.33-13.72 16.43-45.98 8.76-45.98 8.76 0 0-4.17 16.52-18.7 27.26-14.53 10.74-57.11 3.4-57.11 3.4l-21.68 53.43 13.92 20.01c1.4 2.03 4.29 2.29 6.04.56l35.24-34.73c1.69-1.68 4.48-1.49 5.92.41l22.91 29.7c1.33 1.75 3.83 2.07 5.56.73l40.49-31.26c1.87-1.45 4.6-.94 5.83 1.09l20.51 34.17c1.2 2.03 3.9 2.55 5.78 1.13l42.46-21.21c-.03-.97-.06-1.94-.06-2.92 0-25.39 12.37-48.36 32.39-64.99s47.66-26.93 78.21-26.93h7.43c30.53 0 58.17-10.29 78.18-26.92 20.02-16.63 32.4-39.61 32.4-64.99 0-50.76-49.51-91.92-110.59-91.92zm-209.92 226.74c-3.96 0-7.16-3.21-7.16-7.17s3.2-7.17 7.16-7.17 7.17 3.21 7.17 7.17-3.21 7.17-7.17 7.17zm83.57-126.58c-9.58 0-17.33-9.22-17.33-20.6s7.75-20.59 17.33-20.59 17.33 9.22 17.33 20.59-7.76 20.6-17.33 20.6zM178.08 643.5c-4.39 36.97-9.81 75.84-15.26 112.16-3.99.84-8.14 1.28-12.38 1.28-33.18 0-60.08-26.91-60.08-60.08s26.9-60.08 60.08-60.08c9.96 0 19.37 2.43 27.64 6.73z" fill="#a1a1aa" opacity="0.25" />
@@ -176,6 +100,79 @@ const Cart = () => {
         <ellipse cx="249.6" cy="109.88" rx="41.25" ry="19.63" fill="#a1a1aa" opacity="0.5" transform="rotate(-38.47 249.567 109.89)" />
       </svg>
       <h6 className="text-center text-xl sm:text-2xl">سبد خرید شما خالی است!</h6>
+    </div>
+  ) : (
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-8">
+      <section className="w-full rounded-3xl bg-white p-6">
+        <div className="flex items-center justify-between gap-x-2">
+          <span className="text-lg text-zinc-400">{productsQuantity.toLocaleString()} محصول</span>
+          <button disabled={isPendingEmptyCart} className="flex items-center gap-x-2 text-red-500" onClick={() => setIsEmptyModalOpen(true)}>حذف همه</button>
+        </div>
+        <div className="mt-4 divide-y divide-zinc-200">
+          {me.cart.map((product) => <CartProduct key={product._id} {...product} />)}
+        </div>
+      </section>
+      <aside className="w-full shrink-0 text-lg lg:sticky lg:top-28 lg:w-96">
+        <div className="rounded-3xl bg-white p-6">
+          {me.addresses.length !== 0 ? <SelectBox title="آدرس" options={addresses} currentValue={destination} setValue={setDestination} /> : <NoResultFound title="آدرسی پیدا نشد!" />}
+        </div>
+        <div className="mt-4 rounded-3xl bg-white p-6 lg:mt-8">
+          <div className="overflow-auto text-nowrap">
+            <div className="flex items-center justify-between gap-x-4">
+              <span className="text-zinc-400">محصولات ({productsQuantity.toLocaleString()}):</span>
+              <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
+                {productsPrice.toLocaleString()}
+                <TomanIcon className="size-5" />
+              </span>
+            </div>
+            {me.cart.filter(({ color }) => color.inventory !== 0).some(({ product }) => Date.parse(product.offer?.expiresAt) > Date.now()) && (
+              <div className="mt-2 flex items-center justify-between gap-x-4">
+                <span className="text-zinc-400">پیشنهاد شگفت انگیز (%{Math.round((amazingOfferPrice / productsPrice) * 100)}):</span>
+                <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
+                  {amazingOfferPrice.toLocaleString()}
+                  <TomanIcon className="size-5" />
+                </span>
+              </div>
+            )}
+            {discountCode && (
+              <div className="mt-2 flex items-center justify-between gap-x-4">
+                <span className="text-zinc-400">کد تخفیف (%{discountCode.percent}):</span>
+                <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
+                  {((productsPriceWithDiscount * discountCode.percent) / 100).toLocaleString()}
+                  <TomanIcon className="size-5" />
+                </span>
+              </div>
+            )}
+            <div className="mt-2 flex items-center justify-between gap-x-4">
+              <span className="text-zinc-400">مبلغ قابل پرداخت:</span>
+              <span className="flex items-center gap-x-[2px] font-vazirmatn-bold">
+                {totalPrice.toLocaleString()}
+                <TomanIcon className="size-5" />
+              </span>
+            </div>
+          </div>
+          {!discountCode && (
+            <form className="mt-6 flex items-center gap-x-2 text-lg" onSubmit={submit}>
+              <input
+                type="text"
+                value={code}
+                placeholder="کد تخفیف"
+                className="h-14 w-full rounded-3xl border border-zinc-200 px-4 outline-none placeholder:text-zinc-400"
+                onInput={({ target }) => /^[a-zA-Z\d]{0,7}$/.test(target.value) && setCode(target.value)}
+              />
+              <button type="submit" disabled={isPendingUseDiscountCode} className="flex h-14 w-48 items-center justify-center rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
+                {isPendingCreateOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "اعمال"}
+              </button>
+            </form>
+          )}
+          <button disabled={isPendingCreateOrder} className="mt-6 flex h-14 w-full items-center justify-center rounded-full bg-primary-900 text-lg text-white transition-colors enabled:hover:bg-primary-800" onClick={() => createOrder({ totalPrice, products: me.cart.filter(({ color }) => color.inventory !== 0).map(({ quantity, product, color }) => ({ quantity, product: product._id, color: color._id })), destination, discountCode })}>
+            {isPendingCreateOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت سفارش"}
+          </button>
+        </div>
+      </aside>
+      <Modal isOpen={isEmptyModalOpen} onClose={() => setIsEmptyModalOpen(false)}>
+        <Confirm title="سبد خرید را خالی می‌کنید؟" isPending={isPendingEmptyCart} onCancel={() => setIsEmptyModalOpen(false)} onConfirm={() => emptyCart(null, { onSuccess: () => setIsEmptyModalOpen(false) })} />
+      </Modal>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import Articles from "./pages/root/Articles";
 import Article from "./pages/root/Article";
 import Offers from "./pages/root/Offers";
 import Offer from "./pages/root/Offer";
+import Cart from "./pages/root/Cart";
 import Authentication from "./pages/authentication/Authentication";
 import Register from "./pages/authentication/Register";
 import Login from "./pages/authentication/Login";
@@ -18,7 +19,6 @@ import ResetPassword from "./pages/authentication/ResetPassword";
 import Me from "./pages/me/Me";
 import Dashboard from "./pages/me/Dashboard";
 import Profile from "./pages/me/Profile";
-import Cart from "./pages/me/Cart";
 import Addresses from "./pages/me/Addresses";
 import Orders from "./pages/me/Orders";
 import Order from "./pages/me/Order";
@@ -50,6 +50,7 @@ export default [
           { path: "articles/:id", element: <Article /> },
           { path: "offers", element: <Offers /> },
           { path: "offers/:title", element: <Offer /> },
+          { path: "cart", element: <Cart /> },
         ],
       },
       {
@@ -68,7 +69,6 @@ export default [
         children: [
           { index: true, element: <Dashboard /> },
           { path: "profile", element: <Profile /> },
-          { path: "cart", element: <Cart /> },
           { path: "addresses", element: <Addresses /> },
           { path: "orders", element: <Orders /> },
           { path: "orders/:id", element: <Order /> },
