@@ -12,7 +12,7 @@ const SelectBox = ({ title, options, currentValue, setValue }) => {
   return (
     <div className="relative h-14 rounded-3xl border border-zinc-200 px-4 text-lg">
       <div className="flex h-full items-center justify-between gap-x-2">
-        <h6 className={currentOption.title ? "text-zinc-900" : "text-zinc-400"}>{currentOption.title || title}</h6>
+        <h6 className={`overflow-auto text-nowrap ${currentOption.title ? "text-zinc-900" : "text-zinc-400"}`}>{currentOption.title || title}</h6>
         <button type="button" className="flex size-8 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setIsOpen((isOpen) => !isOpen)}>
           <ChevronIcon className={`size-5 ${isOpen ? "-rotate-90" : "rotate-90"} transition-transform`} />
         </button>
