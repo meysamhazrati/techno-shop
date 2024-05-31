@@ -61,9 +61,9 @@ const Product = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-6 flex items-center justify-between gap-x-10">
+              <div className="mt-6 flex items-center justify-between gap-x-5">
                 <div className="h-6 w-24 rounded-full bg-skeleton"></div>
-                <div className="flex w-3/5 items-center gap-x-5">
+                <div className="flex w-full items-center gap-x-5 xs:w-3/5">
                   <HeartIcon className="size-9 shrink-0 fill-skeleton stroke-skeleton" />
                   <div className="h-12 w-full rounded-full bg-skeleton"></div>
                 </div>
@@ -112,7 +112,7 @@ const Product = () => {
                     <span>{product?.score}</span>
                   </div>
                   <div className="size-1.5 rounded-full bg-zinc-400"></div>
-                  <span>{product?.totalComments} دیدگاه</span>
+                  <span>{product?.totalComments.toLocaleString()} دیدگاه</span>
                   <div className="size-1.5 rounded-full bg-zinc-400"></div>
                   <span>{product?.warranty} ماه گارانتی</span>
                   <div className="size-1.5 rounded-full bg-zinc-400"></div>
@@ -127,14 +127,14 @@ const Product = () => {
               </div>
               <div className="mt-6">
                 {product?.colors[0].inventory !== 0 && Date.parse(product?.offer?.expiresAt) > Date.now() && (
-                  <div className="mb-1.5 flex shrink items-center justify-between gap-x-8">
+                  <div className="mb-1.5 flex shrink items-center justify-between gap-x-5">
                     <AmazingOfferTimer width="48" fontSize="lg" expiresAt={product?.offer?.expiresAt} />
                   </div>
                 )}
-                <div className="flex items-center justify-between gap-x-10">
+                <div className="flex items-center justify-between gap-x-5">
                   <ProductPrice price={color?.price || 0} offer={product?.offer} priceFontSize="xl" discountedPriceFontSize="base" gapX="[2px]" iconSize="5" hasInventory={color?.inventory} />
-                  <div className="flex h-14 w-3/5 items-center gap-x-5">
-                    <ProductFavoriteButton id={product?._id} size="9" />
+                  <div className="flex h-14 w-full items-center gap-x-5 xs:w-3/5">
+                    <ProductFavoriteButton product={product?._id} />
                     <ProductButton id={product?._id} color={color} disabled={!color?.inventory} />
                   </div>
                 </div>
