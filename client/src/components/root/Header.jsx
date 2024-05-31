@@ -87,7 +87,7 @@ const Header = () => {
         <div className="hidden items-center gap-x-6 lg:flex">
           <CartButton />
           {isPendingMe ? (
-            <div className="h-12 w-48 animate-pulse rounded-3xl bg-zinc-200"></div>
+            <div className="size-12 animate-pulse rounded-full bg-skeleton"></div>
           ) : isMeError ? (
             <div className="relative flex h-12 w-48 flex-1 items-center text-lg text-white">
               <Link to="/authentication/login" className="flex h-full w-28 items-center justify-center rounded-3xl bg-primary-500 transition-colors hover:bg-primary-600">ورود</Link>
