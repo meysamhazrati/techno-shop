@@ -26,14 +26,14 @@ const Footer = () => {
       <div className="mt-10 grid grid-cols-[360px_1fr_1fr_1fr] xl:grid-cols-4 xl:gap-x-10">
         <div>
           <h5 className="font-vazirmatn-medium text-lg">با ما به دنیای تکنولوژی سفر کنید!</h5>
-          <p className="mt-3 max-w-72 leading-[28.5px] text-zinc-500">تکنوشاپ یک فروشگاه آنلاین کالای دیجیتال با تنوع محصول بسیاری از جمله موبایل، لپ‌تاپ، کامپیوتر و... هست که در عصر تکنولوژی امروزی، همه ما به آن ها نیاز داریم.</p>
+          <p className="mt-3 max-w-72 leading-[28.5px] text-zinc-500">تکنوشاپ یک فروشگاه اینترنتی است که تنوع گسترده‌ای از جدیدترین محصولات دیجیتال را با مناسب‌ترین قیمت ممکن به شما ارائه می‌دهد. با ما سریع و مطمئن خرید کنید.</p>
         </div>
         <div>
           <h5 className="font-vazirmatn-medium text-lg">خدمات مشتریان</h5>
           <div className="mt-3 flex flex-col items-start gap-y-1.5 text-zinc-500 [&>*]:transition-colors hover:[&>*]:text-primary-900">
             <Link to="/privacy">حریم خصوصی</Link>
             <Link to="/terms-and-conditions">قوانین و مقررات</Link>
-            <Link to="/me/frequently-asked-questions">پرسش های متداول</Link>
+            <Link to="/frequently-asked-questions">پرسش های متداول</Link>
             <Link to="/me/tickets">ارتباط با ما</Link>
           </div>
         </div>
