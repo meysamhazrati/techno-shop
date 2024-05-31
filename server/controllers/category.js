@@ -1,3 +1,5 @@
+import { unlink } from "fs";
+
 import model from "../models/category.js";
 import brandModel from "../models/brand.js";
 
