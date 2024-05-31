@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import ProductCover from "./ProductCover";
-import ProductButton from "./ProductButton";
-import ProductPrice from "./ProductPrice";
-import AmazingOfferTimer from "./AmazingOfferTimer";
-import VerifiedIcon from "../icons/Verified";
+import ProductCover from "../ProductCover";
+import ProductButton from "../ProductButton";
+import ProductPrice from "../ProductPrice";
+import AmazingOfferTimer from "../AmazingOfferTimer";
+import VerifiedIcon from "../../icons/Verified";
 
 const CartProduct = ({ product, color }) => {
   return (
