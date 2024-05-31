@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/me";
 import useEditUser from "../../hooks/user/edit";
+import UserAvatar from "../../components/UserAvatar";
 import Loader from "../../components/Loader";
 import ChangeIcon from "../../icons/Change";
 
@@ -62,7 +63,7 @@ const Profile = () => {
       <form onSubmit={submit}>
         <div className="flex flex-col items-center gap-6 sm:flex-row">
           <div className="relative size-52 shrink-0">
-            <img ref={image} src={`${process.env.SERVER_URI}/users/${me.avatar}`} alt="My Avatar" className="size-full rounded-full object-cover" />
+            {file.current?.files.length ? <img ref={image} alt="User Avatar" className="size-full rounded-full object-cover" /> : <UserAvatar user={me} className="size-full text-5xl" />}
             <input
               ref={file}
               type="file"
