@@ -5,7 +5,6 @@ import Modal from "../Modal";
 import Confirm from "../Confirm";
 import HomeIcon from "../../icons/Home";
 import UserIcon from "../../icons/User";
-import CartIcon from "../../icons/Cart";
 import MapIcon from "../../icons/Map";
 import BagIcon from "../../icons/Bag";
 import HeartIcon from "../../icons/Heart";
@@ -38,10 +37,6 @@ const SideBar = () => {
             <UserIcon className="size-7" />
             <span>نمایه</span>
           </NavLink>
-          <NavLink to="/me/cart" className={({ isActive }) => isActive ? "bg-primary-900 text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
-            <CartIcon className="size-7" />
-            <span>سبد خرید</span>
-          </NavLink>
           <NavLink to="/me/addresses" className={({ isActive }) => isActive ? "bg-primary-900 text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
             <MapIcon className="size-7" />
             <span>آدرس ها</span>
@@ -71,9 +66,7 @@ const SideBar = () => {
         </button>
       </aside>
       <Modal isOpen={isLogoutModalOpen} onClose={() => setIsLogoutModalOpen(false)}>
-        <Confirm title="خارج می‌شوید؟" isPending={isPendingLogout} onCancel={() => setIsLogoutModalOpen(false)} onConfirm={() => logout(null, { onSuccess: () => {
-          setIsLogoutModalOpen(false);
-        } })} />
+        <Confirm title="خارج می‌شوید؟" isPending={isPendingLogout} onCancel={() => setIsLogoutModalOpen(false)} onConfirm={() => logout(null, { onSuccess: () => setIsLogoutModalOpen(false) })} />
       </Modal>
     </>
   );
