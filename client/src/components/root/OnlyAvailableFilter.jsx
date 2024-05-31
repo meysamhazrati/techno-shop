@@ -5,7 +5,7 @@ const OnlyAvailableFilter = ({ setOnlyAvailable }) => {
 
   return (
     <div className="flex w-full items-center justify-between py-4">
-      <span className="text-xl">فقط کالاهای موجود</span>
+      <span className="text-xl">فقط محصولات موجود</span>
       <input
         type="checkbox"
         checked={JSON.parse(searchParams.get("only-available")) || false}
