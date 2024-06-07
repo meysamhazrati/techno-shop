@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContext } from "../../contexts/Toast";
-import useLogin from "../../hooks/authentication/login";
+import useLogin from "../../hooks/authentication/useLogin";
 import Loader from "../../components/Loader";
 
 const Login = () => {

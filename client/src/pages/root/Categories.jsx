@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import useCategories from "../../hooks/category/categories";
+import useCategories from "../../hooks/category/useCategories";
 import Section from "../../components/root/Section";
 import SectionHeader from "../../components/root/SectionHeader";
 import CategorySection from "../../components/root/CategorySection";

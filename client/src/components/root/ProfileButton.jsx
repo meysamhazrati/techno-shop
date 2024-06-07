@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useMe from "../../hooks/authentication/me";
-import useLogout from "../../hooks/authentication/logout";
+import useMe from "../../hooks/authentication/useMe";
+import useLogout from "../../hooks/authentication/useLogout";
 import UserAvatar from "../UserAvatar";
 import Modal from "../Modal";
 import Confirm from "../Confirm";

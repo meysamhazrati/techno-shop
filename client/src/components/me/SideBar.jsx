@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import useLogout from "../../hooks/authentication/logout";
+import useLogout from "../../hooks/authentication/useLogout";
 import Modal from "../Modal";
 import Confirm from "../Confirm";
 import HomeIcon from "../../icons/Home";

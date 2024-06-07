@@ -2,8 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
-import useTicket from "../../hooks/ticket/ticket";
-import useReplyTicket from "../../hooks/ticket/reply";
+import useTicket from "../../hooks/ticket/useTicket";
+import useReplyTicket from "../../hooks/ticket/useReplyTicket";
 import Loader from "../../components/Loader";
 
 const Ticket = () => {

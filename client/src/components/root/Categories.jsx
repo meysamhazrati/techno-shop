@@ -1,4 +1,4 @@
-import useCategories from "../../hooks/category/categories";
+import useCategories from "../../hooks/category/useCategories";
 import Section from "./Section";
 import Category from "./Category";
 import CategorySkeleton from "./CategorySkeleton";

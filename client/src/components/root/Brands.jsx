@@ -1,4 +1,4 @@
-import useBrands from "../../hooks/brand/brands";
+import useBrands from "../../hooks/brand/useBrands";
 import Section from "./Section";
 import Brand from "./Brand";
 import BrandSkeleton from "./BrandSkeleton";

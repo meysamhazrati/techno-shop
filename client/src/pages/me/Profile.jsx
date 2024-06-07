@@ -1,8 +1,8 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContext } from "../../contexts/Toast";
-import useMe from "../../hooks/authentication/me";
-import useEditUser from "../../hooks/user/edit";
+import useMe from "../../hooks/authentication/useMe";
+import useEditUser from "../../hooks/user/useEditUser";
 import UserAvatar from "../../components/UserAvatar";
 import Loader from "../../components/Loader";
 import ChangeIcon from "../../icons/Change";

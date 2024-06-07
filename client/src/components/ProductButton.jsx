@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import useMe from "../hooks/authentication/me";
-import useAddToCart from "../hooks/user/addToCart";
-import useRemoveFromCart from "../hooks/user/removeFromCart";
+import useMe from "../hooks/authentication/useMe";
+import useAddToCart from "../hooks/user/useAddToCart";
+import useRemoveFromCart from "../hooks/user/useRemoveFromCart";
 import Loader from "./Loader";
 import PlusIcon from "../icons/Plus";
 import MinusIcon from "../icons/Minus";

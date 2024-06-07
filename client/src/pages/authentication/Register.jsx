@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContext } from "../../contexts/Toast";
-import useRegister from "../../hooks/authentication/register";
+import useRegister from "../../hooks/authentication/useRegister";
 import SendOTP from "../../components/authentication/SendOTP";
 import VerifyOTP from "../../components/authentication/VerifyOTP";
 import Loader from "../../components/Loader";

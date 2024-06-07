@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import useArticle from "../../hooks/article/article";
+import useArticle from "../../hooks/article/useArticle";
 import Section from "../../components/root/Section";
 import Breadcrumb from "../../components/root/Breadcrumb";
 import UserAvatar from "../../components/UserAvatar";

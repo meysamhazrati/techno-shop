@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { ToastContext } from "../../contexts/Toast";
-import useSendOTP from "../../hooks/authentication/sendOTP";
-import useVerifyOTP from "../../hooks/authentication/verifyOTP";
+import useSendOTP from "../../hooks/authentication/useSendOTP";
+import useVerifyOTP from "../../hooks/authentication/useVerifyOTP";
 import Timer from "../Timer";
 import Loader from "../Loader";
 import ChevronIcon from "../../icons/Chevron";

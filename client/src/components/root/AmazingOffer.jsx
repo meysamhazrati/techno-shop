@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
-import useProducts from "../../hooks/product/products";
+import useProducts from "../../hooks/product/useProducts";
 import Section from "./Section";
 import AmazingOfferProduct from "./AmazingOfferProduct";
 import AmazingOfferProductSkeleton from "./AmazingOfferProductSkeleton";

@@ -1,4 +1,4 @@
-import useProducts from "../../hooks/product/products";
+import useProducts from "../../hooks/product/useProducts";
 import Section from "./Section";
 import SectionHeader from "./SectionHeader";
 import Product from "./Product";

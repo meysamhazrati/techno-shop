@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import useMe from "../../hooks/authentication/me";
+import useMe from "../../hooks/authentication/useMe";
 import CartButton from "./CartButton";
 import ProfileButton from "./ProfileButton";
 import Navigation from "./Navigation";

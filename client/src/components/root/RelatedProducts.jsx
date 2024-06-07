@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
-import useCategory from "../../hooks/category/category";
+import useCategory from "../../hooks/category/useCategory";
 import Section from "./Section";
 import SectionHeader from "./SectionHeader";
 import Product from "./Product";

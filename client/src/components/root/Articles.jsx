@@ -1,4 +1,4 @@
-import useArticles from "../../hooks/article/articles";
+import useArticles from "../../hooks/article/useArticles";
 import Section from "./Section";
 import SectionHeader from "./SectionHeader";
 import Article from "./Article";

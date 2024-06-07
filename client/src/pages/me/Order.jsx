@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import useOrder from "../../hooks/order/order";
-import useCancelOrder from "../../hooks/order/cancel";
-import useReturnOrder from "../../hooks/order/return";
+import useOrder from "../../hooks/order/useOrder";
+import useCancelOrder from "../../hooks/order/useCancelOrder";
+import useReturnOrder from "../../hooks/order/useReturnOrder";
 import ProductCover from "../../components/ProductCover";
 import Modal from "../../components/Modal";
 import Confirm from "../../components/Confirm";

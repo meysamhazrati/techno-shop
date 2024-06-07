@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 import { ToastContext } from "../../contexts/Toast";
-import useMe from "../../hooks/authentication/me";
-import useEmptyCart from "../../hooks/user/emptyCart";
-import useUseDiscountCode from "../../hooks/discountCode/use";
-import useCreateOrder from "../../hooks/order/create";
+import useMe from "../../hooks/authentication/useMe";
+import useEmptyCart from "../../hooks/user/useEmptyCart";
+import useUseDiscountCode from "../../hooks/discountCode/useUseDiscountCode";
+import useCreateOrder from "../../hooks/order/useCreateOrder";
 import SelectBox from "../../components/SelectBox";
 import CartProduct from "../../components/root/CartProduct";
 import NoResultFound from "../../components/NoResultFound";

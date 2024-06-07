@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import useProduct from "../../hooks/product/product";
+import useProduct from "../../hooks/product/useProduct";
 import Section from "../../components/root/Section";
 import Breadcrumb from "../../components/root/Breadcrumb";
 import ProductSpecifications from "../../components/root/ProductSpecifications";

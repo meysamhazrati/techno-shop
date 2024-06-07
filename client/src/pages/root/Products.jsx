@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import useProducts from "../../hooks/product/products";
+import useProducts from "../../hooks/product/useProducts";
 import Section from "../../components/root/Section";
 import SectionHeader from "../../components/root/SectionHeader";
 import Filters from "../../components/root/Filters";

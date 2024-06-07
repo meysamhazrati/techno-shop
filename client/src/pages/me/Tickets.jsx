@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { ToastContext } from "../../contexts/Toast";
-import useMe from "../../hooks/authentication/me";
-import useCreateTicket from "../../hooks/ticket/create";
+import useMe from "../../hooks/authentication/useMe";
+import useCreateTicket from "../../hooks/ticket/useCreateTicket";
 import Ticket from "../../components/me/Ticket";
 import SelectBox from "../../components/SelectBox";
 import NoResultFound from "../../components/NoResultFound";

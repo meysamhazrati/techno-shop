@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import useOffers from "../../hooks/offer/offers";
+import useOffers from "../../hooks/offer/useOffers";
 import Section from "../../components/root/Section";
 import SectionHeader from "../../components/root/SectionHeader";
 import OfferSection from "../../components/root/OfferSection";

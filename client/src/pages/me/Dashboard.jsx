@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import useMe from "../../hooks/authentication/me";
+import useMe from "../../hooks/authentication/useMe";
 import Order from "../../components/me/Order";
 import Comment from "../../components/me/Comment";
 import Ticket from "../../components/me/Ticket";

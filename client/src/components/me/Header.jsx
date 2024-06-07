@@ -1,4 +1,4 @@
-import useMe from "../../hooks/authentication/me";
+import useMe from "../../hooks/authentication/useMe";
 import UserAvatar from "../UserAvatar";
 
 const Header = () => {

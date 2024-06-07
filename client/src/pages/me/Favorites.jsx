@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useMe from "../../hooks/authentication/me";
+import useMe from "../../hooks/authentication/useMe";
 import Favorite from "../../components/me/Favorite";
 import NoResultFound from "../../components/NoResultFound";
 

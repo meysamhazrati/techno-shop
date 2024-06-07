@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ToastContext } from "../../contexts/Toast";
-import useSendOTP from "../../hooks/authentication/sendOTP";
+import useSendOTP from "../../hooks/authentication/useSendOTP";
 import Loader from "../Loader";
 
 const SendOTP = ({ email, setEmail, type, setSentAt, setCurrentComponent }) => {

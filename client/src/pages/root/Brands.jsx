@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import useBrands from "../../hooks/brand/brands";
+import useBrands from "../../hooks/brand/useBrands";
 import Section from "../../components/root/Section";
 import SectionHeader from "../../components/root/SectionHeader";
 import BrandSection from "../../components/root/BrandSection";

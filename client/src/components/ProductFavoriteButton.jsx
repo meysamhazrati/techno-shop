@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import useMe from "../hooks/authentication/me";
-import useCreateFavorite from "../hooks/favorite/create";
-import useRemoveFavorite from "../hooks/favorite/remove";
+import useMe from "../hooks/authentication/useMe";
+import useCreateFavorite from "../hooks/favorite/useCreateFavorite";
+import useRemoveFavorite from "../hooks/favorite/useRemoveFavorite";
 import Loader from "../components/Loader";
 import HeartIcon from "../icons/Heart";
 

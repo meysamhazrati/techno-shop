@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import useBrands from "../../hooks/brand/brands";
+import useBrands from "../../hooks/brand/useBrands";
 import ChevronIcon from "../../icons/Chevron";
 
 const BrandsFilter = ({ setBrands }) => {

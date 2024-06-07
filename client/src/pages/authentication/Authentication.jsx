@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate, Link, Outlet } from "react-router-dom";
-import useMe from "../../hooks/authentication/me";
+import useMe from "../../hooks/authentication/useMe";
 import technoShop from "/techno-shop.svg";
 
 const Authentication = () => {

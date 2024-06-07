@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import useRemoveComment from "../../hooks/comment/remove";
+import useRemoveComment from "../../hooks/comment/useRemoveComment";
 import Modal from "../Modal";
 import Confirm from "../Confirm";
 import StarIcon from "../../icons/Star";
