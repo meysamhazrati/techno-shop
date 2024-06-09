@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ChevronIcon from "../icons/Chevron";
+import ChevronIcon from "../icons/ChevronIcon";
 
 const SelectBox = ({ title, options, currentValue, setValue }) => {
   const [currentOption, setCurrentOption] = useState({});

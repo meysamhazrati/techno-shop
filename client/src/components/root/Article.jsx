@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import UserIcon from "../../icons/User";
-import StarIcon from "../../icons/Star";
-import ChevronIcon from "../../icons/Chevron";
+import UserIcon from "../../icons/UserIcon";
+import StarIcon from "../../icons/StarIcon";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const Article = ({ _id, cover, title, author, score }) => {
   return (

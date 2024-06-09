@@ -5,10 +5,10 @@ import Order from "../../components/me/Order";
 import Comment from "../../components/me/Comment";
 import Ticket from "../../components/me/Ticket";
 import NoResultFound from "../../components/NoResultFound";
-import ChevronIcon from "../../icons/Chevron";
-import BagIcon from "../../icons/Bag";
-import CommentIcon from "../../icons/Comment";
-import TicketIcon from "../../icons/Ticket";
+import ChevronIcon from "../../icons/ChevronIcon";
+import BagIcon from "../../icons/BagIcon";
+import CommentIcon from "../../icons/CommentIcon";
+import TicketIcon from "../../icons/TicketIcon";
 
 const Dashboard = () => {
   const { me } = useMe();

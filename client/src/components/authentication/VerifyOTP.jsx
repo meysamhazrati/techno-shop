@@ -4,7 +4,7 @@ import useSendOTP from "../../hooks/authentication/useSendOTP";
 import useVerifyOTP from "../../hooks/authentication/useVerifyOTP";
 import Timer from "../Timer";
 import Loader from "../Loader";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
   const [code, setCode] = useState("");

@@ -6,7 +6,7 @@ import Breadcrumb from "../../components/root/Breadcrumb";
 import UserAvatar from "../../components/UserAvatar";
 import Comments from "../../components/root/Comments";
 import RelatedProducts from "../../components/root/RelatedProducts";
-import StarIcon from "../../icons/Star";
+import StarIcon from "../../icons/StarIcon";
 
 const Article = () => {
   const { id } = useParams();

@@ -8,7 +8,7 @@ import InfiniteScroll from "../InfiniteScroll";
 import UserAvatar from "../UserAvatar";
 import NoResultFound from "../NoResultFound";
 import Loader from "../Loader";
-import StarIcon from "../../icons/Star";
+import StarIcon from "../../icons/StarIcon";
 
 const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comments, totalComments, submitFor }) => {
   const [body, setBody] = useState("");

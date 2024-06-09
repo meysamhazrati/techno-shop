@@ -5,11 +5,11 @@ import useLogout from "../../hooks/authentication/useLogout";
 import UserAvatar from "../UserAvatar";
 import Modal from "../Modal";
 import Confirm from "../Confirm";
-import UserIcon from "../../icons/User";
-import BagIcon from "../../icons/Bag";
-import HeartIcon from "../../icons/Heart";
-import CommentIcon from "../../icons/Comment";
-import TicketIcon from "../../icons/Ticket";
+import UserIcon from "../../icons/UserIcon";
+import BagIcon from "../../icons/BagIcon";
+import HeartIcon from "../../icons/HeartIcon";
+import CommentIcon from "../../icons/CommentIcon";
+import TicketIcon from "../../icons/TicketIcon";
 import ExitIcon from "../../icons/Exit";
 
 const ProfileButton = () => {

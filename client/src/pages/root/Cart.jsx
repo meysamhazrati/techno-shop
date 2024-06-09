@@ -10,7 +10,7 @@ import NoResultFound from "../../components/NoResultFound";
 import Modal from "../../components/Modal";
 import Confirm from "../../components/Confirm";
 import Loader from "../../components/Loader";
-import TomanIcon from "../../icons/Toman";
+import TomanIcon from "../../icons/TomanIcon";
 
 const Cart = () => {
   const [productsQuantity, setProductsQuantity] = useState(0);

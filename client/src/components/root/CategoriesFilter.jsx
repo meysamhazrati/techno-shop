@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useCategories from "../../hooks/category/useCategories";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const CategoriesFilter = ({ setCategories }) => {
   const [searchParams] = useSearchParams();

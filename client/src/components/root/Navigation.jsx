@@ -2,8 +2,8 @@ import { forwardRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import useCategories from "../../hooks/category/useCategories";
 import useMe from "../../hooks/authentication/useMe";
-import HomeIcon from "../../icons/Home";
-import PinIcon from "../../icons/Pin";
+import HomeIcon from "../../icons/HomeIcon";
+import PinIcon from "../../icons/PinIcon";
 
 const Navigation = forwardRef((props, ref) => {
   const { isPendingMe, me } = useMe();

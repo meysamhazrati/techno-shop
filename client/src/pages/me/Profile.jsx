@@ -5,7 +5,7 @@ import useMe from "../../hooks/authentication/useMe";
 import useEditUser from "../../hooks/user/useEditUser";
 import UserAvatar from "../../components/UserAvatar";
 import Loader from "../../components/Loader";
-import ChangeIcon from "../../icons/Change";
+import ChangeIcon from "../../icons/ChangeIcon";
 
 const Profile = () => {
   const [firstName, setFirstName] = useState("");

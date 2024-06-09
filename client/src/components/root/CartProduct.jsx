@@ -3,7 +3,7 @@ import ProductCover from "../ProductCover";
 import ProductButton from "../ProductButton";
 import ProductPrice from "../ProductPrice";
 import AmazingOfferTimer from "../AmazingOfferTimer";
-import VerifiedIcon from "../../icons/Verified";
+import VerifiedIcon from "../../icons/VerifiedIcon";
 
 const CartProduct = ({ product, color }) => {
   return (

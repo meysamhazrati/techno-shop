@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const Ticket = ({ _id, title, department, body, isOpen, createdAt }) => {
   return (

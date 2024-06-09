@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
 import ProductCover from "../ProductCover";
-import ChevronIcon from "../../icons/Chevron";
-import TomanIcon from "../../icons/Toman";
+import ChevronIcon from "../../icons/ChevronIcon";
+import TomanIcon from "../../icons/TomanIcon";
 import "swiper/css";
 import "swiper/css/free-mode";
 

@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import ProductCover from "../ProductCover";
 import ProductButton from "../ProductButton";
 import ProductPrice from "../ProductPrice";
-import SquaresIcon from "../../icons/Squares";
-import StarIcon from "../../icons/Star";
+import SquaresIcon from "../../icons/SquaresIcon";
+import StarIcon from "../../icons/StarIcon";
 
 const Product = ({ _id, covers, title, colors, score, category, offer }) => {
   return (

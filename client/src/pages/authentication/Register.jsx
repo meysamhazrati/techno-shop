@@ -5,7 +5,7 @@ import useRegister from "../../hooks/authentication/useRegister";
 import SendOTP from "../../components/authentication/SendOTP";
 import VerifyOTP from "../../components/authentication/VerifyOTP";
 import Loader from "../../components/Loader";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");

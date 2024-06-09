@@ -4,8 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import useRemoveComment from "../../hooks/comment/useRemoveComment";
 import Modal from "../Modal";
 import Confirm from "../Confirm";
-import StarIcon from "../../icons/Star";
-import TrashIcon from "../../icons/Trash";
+import StarIcon from "../../icons/StarIcon";
+import TrashIcon from "../../icons/TrashIcon";
 
 const Comment = ({ _id, body, score, isConfirmed, product, article, createdAt }) => {
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import useMe from "../../hooks/authentication/useMe";
 import CartProduct from "./CartProduct";
-import CartIcon from "../../icons/Cart";
-import TomanIcon from "../../icons/Toman";
+import CartIcon from "../../icons/CartIcon";
+import TomanIcon from "../../icons/TomanIcon";
 
 const CartButton = () => {
   const { me } = useMe();

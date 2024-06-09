@@ -4,7 +4,7 @@ import useMe from "../../hooks/authentication/useMe";
 import CartButton from "./CartButton";
 import ProfileButton from "./ProfileButton";
 import Navigation from "./Navigation";
-import SearchIcon from "../../icons/Search";
+import SearchIcon from "../../icons/SearchIcon";
 import technoShop from "/techno-shop.svg";
 
 const Header = () => {

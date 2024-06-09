@@ -4,7 +4,7 @@ import useResetPassword from "../../hooks/authentication/useResetPassword";
 import SendOTP from "../../components/authentication/SendOTP";
 import VerifyOTP from "../../components/authentication/VerifyOTP";
 import Loader from "../../components/Loader";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");

@@ -7,7 +7,7 @@ import useReturnOrder from "../../hooks/order/useReturnOrder";
 import ProductCover from "../../components/ProductCover";
 import Modal from "../../components/Modal";
 import Confirm from "../../components/Confirm";
-import TomanIcon from "../../icons/Toman";
+import TomanIcon from "../../icons/TomanIcon";
 
 const Order = () => {
   const { id } = useParams();

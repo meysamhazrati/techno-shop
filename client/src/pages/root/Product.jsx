@@ -12,9 +12,9 @@ import ProductPrice from "../../components/ProductPrice";
 import Comments from "../../components/root/Comments";
 import RelatedProducts from "../../components/root/RelatedProducts";
 import AmazingOfferTimer from "../../components/AmazingOfferTimer";
-import ChevronIcon from "../../icons/Chevron";
-import HeartIcon from "../../icons/Heart";
-import StarIcon from "../../icons/Star";
+import ChevronIcon from "../../icons/ChevronIcon";
+import HeartIcon from "../../icons/HeartIcon";
+import StarIcon from "../../icons/StarIcon";
 import "swiper/css";
 
 const Product = () => {

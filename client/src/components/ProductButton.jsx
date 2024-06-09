@@ -3,9 +3,9 @@ import useMe from "../hooks/authentication/useMe";
 import useAddToCart from "../hooks/user/useAddToCart";
 import useRemoveFromCart from "../hooks/user/useRemoveFromCart";
 import Loader from "./Loader";
-import PlusIcon from "../icons/Plus";
-import MinusIcon from "../icons/Minus";
-import TrashIcon from "../icons/Trash";
+import PlusIcon from "../icons/PlusIcon";
+import MinusIcon from "../icons/MinusIcon";
+import TrashIcon from "../icons/TrashIcon";
 
 const ProductButton = ({ id, color, disabled }) => {
   const [quantity, setQuantity] = useState(0);

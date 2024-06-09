@@ -1,8 +1,8 @@
 import { useLocation, Link } from "react-router-dom";
-import HomeIcon from "../icons/Home";
-import SquaresIcon from "../icons/Squares";
-import CartIcon from "../icons/Cart";
-import UserIcon from "../icons/User";
+import HomeIcon from "../icons/HomeIcon";
+import SquaresIcon from "../icons/SquaresIcon";
+import CartIcon from "../icons/CartIcon";
+import UserIcon from "../icons/UserIcon";
 
 const MobileNavigation = () => {
   const location = useLocation();

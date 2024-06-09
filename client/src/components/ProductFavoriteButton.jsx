@@ -3,7 +3,7 @@ import useMe from "../hooks/authentication/useMe";
 import useCreateFavorite from "../hooks/favorite/useCreateFavorite";
 import useRemoveFavorite from "../hooks/favorite/useRemoveFavorite";
 import Loader from "../components/Loader";
-import HeartIcon from "../icons/Heart";
+import HeartIcon from "../icons/HeartIcon";
 
 const ProductFavoriteButton = ({ product }) => {
   const [id, setId] = useState(null);

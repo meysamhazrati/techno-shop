@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import TomanIcon from "../../icons/Toman";
+import TomanIcon from "../../icons/TomanIcon";
 
 const PriceFilter = ({ setPrice }) => {
   const [searchParams] = useSearchParams();

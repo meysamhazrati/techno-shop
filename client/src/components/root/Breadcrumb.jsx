@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Section from "../../components/root/Section";
-import HomeIcon from "../../icons/Home";
-import ChevronIcon from "../../icons/Chevron";
+import HomeIcon from "../../icons/HomeIcon";
+import ChevronIcon from "../../icons/ChevronIcon";
 
 const Breadcrumb = ({ title, route, categoryTitle, categoryRoute }) => {
   return (

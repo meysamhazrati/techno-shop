@@ -5,7 +5,7 @@ import useProducts from "../../hooks/product/useProducts";
 import Section from "./Section";
 import AmazingOfferProduct from "./AmazingOfferProduct";
 import AmazingOfferProductSkeleton from "./AmazingOfferProductSkeleton";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 import "swiper/css";
 import "swiper/css/free-mode";
 

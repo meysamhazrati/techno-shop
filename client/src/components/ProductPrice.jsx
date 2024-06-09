@@ -1,4 +1,4 @@
-import TomanIcon from "../icons/Toman";
+import TomanIcon from "../icons/TomanIcon";
 
 const ProductPrice = ({ price, offer, priceFontSize, discountedPriceFontSize, gapX, iconSize, hasInventory }) => {
   return hasInventory ? (

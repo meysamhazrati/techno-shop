@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import useCategories from "../../hooks/category/useCategories";
-import ChevronIcon from "../../icons/Chevron";
+import ChevronIcon from "../../icons/ChevronIcon";
 import technoShop from "/techno-shop.svg";
 
 const Footer = () => {

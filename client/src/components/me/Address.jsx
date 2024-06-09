@@ -6,8 +6,8 @@ import useRemoveAddress from "../../hooks/address/useRemoveAddress";
 import Modal from "../Modal";
 import Confirm from "../Confirm";
 import Loader from "../Loader";
-import PencilIcon from "../../icons/Pencil";
-import TrashIcon from "../../icons/Trash";
+import PencilIcon from "../../icons/PencilIcon";
+import TrashIcon from "../../icons/TrashIcon";
 
 const Address = ({ _id, province, city, postalCode, body }) => {
   const [newProvince, setNewProvince] = useState(province);

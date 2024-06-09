@@ -5,7 +5,7 @@ import CategoriesFilter from "./CategoriesFilter";
 import PriceFilter from "./PriceFilter";
 import OnlyAvailableFilter from "./OnlyAvailableFilter";
 import OnlyAmazingFilter from "./OnlyAmazingFilter";
-import AdjustmentsIcon from "../../icons/Adjustments";
+import AdjustmentsIcon from "../../icons/AdjustmentsIcon";
 
 const Filters = ({ brandsFilter, categoriesFilter, priceFilter, onlyAvailableFilter, onlyAmazingFilter }) => {
   const [searchParams, setSearchParams] = useSearchParams();
