@@ -10,7 +10,7 @@ import BagIcon from "../../icons/BagIcon";
 import HeartIcon from "../../icons/HeartIcon";
 import CommentIcon from "../../icons/CommentIcon";
 import TicketIcon from "../../icons/TicketIcon";
-import ExitIcon from "../../icons/Exit";
+import PowerIcon from "../../icons/PowerIcon";
 
 const ProfileButton = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -52,7 +52,7 @@ const ProfileButton = () => {
             </div>
             <button className="h-12 w-full px-6 transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setIsLogoutModalOpen(true)}>
               <div className="flex size-full items-center gap-x-2 border-t border-zinc-200 [&>*]:transition-colors">
-                <ExitIcon className="size-6" />
+                <PowerIcon className="size-6" />
                 <span>خروج</span>
               </div>
             </button>
