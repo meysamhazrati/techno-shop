@@ -3,7 +3,7 @@ import ProductCover from "../ProductCover";
 import ProductButton from "../ProductButton";
 import ProductPrice from "../ProductPrice";
 import AmazingOfferTimer from "../AmazingOfferTimer";
-import VerifiedIcon from "../../icons/VerifiedIcon";
+import ShieldIcon from "../../icons/ShieldIcon";
 
 const CartProduct = ({ product, color }) => {
   return (
@@ -22,7 +22,7 @@ const CartProduct = ({ product, color }) => {
             <span>{color.name}</span>
           </div>
           <div>
-            <VerifiedIcon className="size-6 shrink-0" />
+            <ShieldIcon className="size-6 shrink-0" />
             <span>گارانتی {product.warranty} ماهه</span>
           </div>
         </div>
