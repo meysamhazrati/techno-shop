@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import BarsArrowDownIcon from "../../icons/BarsArrowDown";
+import SortIcon from "../../icons/SortIcon";
 
 const Sort = ({ sortFor }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,7 +27,7 @@ const Sort = ({ sortFor }) => {
   return (
     <div className="flex h-20 items-center gap-x-6 rounded-3xl bg-white px-4 md:w-full lg:w-[608px] xl:w-full">
       <div className="flex items-center gap-x-1">
-        <BarsArrowDownIcon className="size-7" />
+        <SortIcon className="size-7" />
         <span className="text-xl">مرتب‌سازی:</span>
       </div>
       <div className="flex items-center gap-x-4 overflow-auto py-2 [&>*]:text-lg">
