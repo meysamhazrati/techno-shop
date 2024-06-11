@@ -26,6 +26,7 @@ import Favorites from "./pages/me/Favorites";
 import Comments from "./pages/me/Comments";
 import Tickets from "./pages/me/Tickets";
 import Ticket from "./pages/me/Ticket";
+import Admin from "./pages/admin/Admin";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -77,6 +78,11 @@ export default [
           { path: "tickets", element: <Tickets /> },
           { path: "tickets/:id", element: <Ticket /> },
         ],
+      },
+      {
+        path: "admin",
+        element: <Admin />,
+        children: [],
       },
       {
         path: "*",
