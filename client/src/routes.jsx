@@ -27,6 +27,7 @@ import Comments from "./pages/me/Comments";
 import Tickets from "./pages/me/Tickets";
 import Ticket from "./pages/me/Ticket";
 import Admin from "./pages/admin/Admin";
+import Dashboard_ from "./pages/admin/Dashboard";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -82,7 +83,9 @@ export default [
       {
         path: "admin",
         element: <Admin />,
-        children: [],
+        children: [
+          { index: true, element: <Dashboard_ /> },
+        ],
       },
       {
         path: "*",
