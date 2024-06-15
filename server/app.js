@@ -16,6 +16,7 @@ import commentRouter from "./routes/comment.js";
 import ticketRouter from "./routes/ticket.js";
 import offerRouter from "./routes/offer.js";
 import discountCodeRouter from "./routes/discountCode.js";
+import statisticRouter from "./routes/statistic.js";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/comments", commentRouter);
 app.use("/api/tickets", ticketRouter);
 app.use("/api/offers", offerRouter);
 app.use("/api/discount-codes", discountCodeRouter);
+app.use("/api/statistics", statisticRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
