@@ -28,6 +28,7 @@ import Tickets from "./pages/me/Tickets";
 import Ticket from "./pages/me/Ticket";
 import Admin from "./pages/admin/Admin";
 import Dashboard_ from "./pages/admin/Dashboard";
+import Users from "./pages/admin/Users";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -85,6 +86,7 @@ export default [
         element: <Admin />,
         children: [
           { index: true, element: <Dashboard_ /> },
+          { path: "users", element: <Users /> },
         ],
       },
       {
