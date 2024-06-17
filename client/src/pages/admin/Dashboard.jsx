@@ -7,6 +7,7 @@ import ChevronIcon from "../../icons/ChevronIcon";
 import CashIcon from "../../icons/CashIcon";
 import InboxesIcon from "../../icons/InboxesIcon";
 import UserIcon from "../../icons/UserIcon";
+import MapIcon from "../../icons/MapIcon";
 import VerifiedIcon from "../../icons/VerifiedIcon";
 import SquaresIcon from "../../icons/SquaresIcon";
 import BoxIcon from "../../icons/BoxIcon";
@@ -57,6 +58,15 @@ const Dashboard = () => {
           <div className="overflow-hidden">
             <span className="text-nowrap">کاربر ها</span>
             <h6 className="mt-0.5 line-clamp-1 font-vazirmatn-medium text-lg">{isFetchingStatistics ? "در حال بارگذاری" : `${statistics.totalUsers.toLocaleString()} کاربر`}</h6>
+          </div>
+        </div>
+        <div className="flex items-center gap-x-2 overflow-hidden rounded-full bg-primary-900 p-2">
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary-800">
+            <MapIcon className="size-8" />
+          </div>
+          <div className="overflow-hidden">
+            <span className="text-nowrap">آدرس ها</span>
+            <h6 className="mt-0.5 line-clamp-1 font-vazirmatn-medium text-lg">{isFetchingStatistics ? "در حال بارگذاری" : `${statistics.totalAddresses.toLocaleString()} آدرس`}</h6>
           </div>
         </div>
         <div className="flex items-center gap-x-2 overflow-hidden rounded-full bg-primary-900 p-2">
@@ -122,7 +132,7 @@ const Dashboard = () => {
             <h6 className="mt-0.5 line-clamp-1 font-vazirmatn-medium text-lg">{isFetchingStatistics ? "در حال بارگذاری" : `${statistics.totalTickets.toLocaleString()} تیکت`}</h6>
           </div>
         </div>
-        <div className="flex items-center gap-x-2 overflow-hidden rounded-full bg-primary-900 p-2 xl:col-span-2">
+        <div className="flex items-center gap-x-2 overflow-hidden rounded-full bg-primary-900 p-2">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary-800">
             <TagIcon className="size-8" />
           </div>
@@ -131,7 +141,7 @@ const Dashboard = () => {
             <h6 className="mt-0.5 line-clamp-1 font-vazirmatn-medium text-lg">{isFetchingStatistics ? "در حال بارگذاری" : `${statistics.totalOffers.toLocaleString()} پیشنهاد`}</h6>
           </div>
         </div>
-        <div className="flex items-center gap-x-2 overflow-hidden rounded-full bg-primary-900 p-2 md:col-span-3 xl:col-span-2">
+        <div className="flex items-center gap-x-2 overflow-hidden rounded-full bg-primary-900 p-2">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary-800">
             <GiftIcon className="size-8" />
           </div>
