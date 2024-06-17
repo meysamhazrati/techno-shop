@@ -1,4 +1,5 @@
 import userModel from "../models/user.js";
+import addressModel from "../models/address.js";
 import brandModel from "../models/brand.js";
 import categoryModel from "../models/category.js";
 import productModel from "../models/product.js";
@@ -14,6 +15,7 @@ const getAll = async (request, response, next) => {
     const orders = await orderModel.find({ status: ["In progress", "Delivered"] });
 
     const totalUsers = await userModel.countDocuments();
+    const totalAddresses = await addressModel.countDocuments();
     const totalBrands = await brandModel.countDocuments();
     const totalCategories = await categoryModel.countDocuments();
     const totalProducts = await productModel.countDocuments();
@@ -57,6 +59,7 @@ const getAll = async (request, response, next) => {
 
     response.json({
       totalUsers,
+      totalAddresses,
       totalBrands,
       totalCategories,
       totalProducts,
