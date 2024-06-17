@@ -7,6 +7,7 @@ import Modal from "../Modal";
 import Confirm from "../Confirm";
 import HomeIcon from "../../icons/HomeIcon";
 import UserIcon from "../../icons/UserIcon";
+import MapIcon from "../../icons/MapIcon";
 import VerifiedIcon from "../../icons/VerifiedIcon";
 import SquaresIcon from "../../icons/SquaresIcon";
 import BoxIcon from "../../icons/BoxIcon";
@@ -52,6 +53,10 @@ const SideBar = () => {
           <NavLink to="/admin/users" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
             <UserIcon solid={pathname === "/admin/users"} className="size-7" />
             <span>کاربر ها</span>
+          </NavLink>
+          <NavLink to="/admin/addresses" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
+            <MapIcon solid={pathname === "/admin/addresses"} className="size-7" />
+            <span>آدرس ها</span>
           </NavLink>
           <NavLink to="/admin/brands" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
             <VerifiedIcon solid={pathname === "/admin/brands"} className="size-7" />
