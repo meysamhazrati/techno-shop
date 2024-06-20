@@ -42,7 +42,7 @@ const get = async (request, response, next) => {
 
     const user = await model.findById(id, "-password -cart -__v").populate([
       { path: "addresses", select: "-__v", options: { sort: { createdAt: -1 } } },
-      { path: "orders", select: "-products -destination -discountCode -__v", options: { sort: { createdAt: -1 } } },
+      { path: "orders", select: "totalPrice status products.quantity buyer._id createdAt", options: { sort: { createdAt: -1 } } },
       { path: "comments", select: "-__v", options: { sort: { createdAt: -1 } }, populate: { path: "product article", select: "title" } },
       { path: "tickets", select: "-body -__v", match: { ticket: { $exists: false } }, options: { sort: { createdAt: -1 } } },
     ]).lean();
