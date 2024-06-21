@@ -30,6 +30,7 @@ import Admin from "./pages/admin/Admin";
 import Dashboard_ from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
 import User from "./pages/admin/User";
+import Addresses_ from "./pages/admin/Addresses";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -89,6 +90,7 @@ export default [
           { index: true, element: <Dashboard_ /> },
           { path: "users", element: <Users /> },
           { path: "users/:id", element: <User /> },
+          { path: "addresses", element: <Addresses_ /> },
         ],
       },
       {
