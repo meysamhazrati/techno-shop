@@ -31,6 +31,7 @@ import Dashboard_ from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
 import User from "./pages/admin/User";
 import Addresses_ from "./pages/admin/Addresses";
+import Brands_ from "./pages/admin/Brands";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -91,6 +92,7 @@ export default [
           { path: "users", element: <Users /> },
           { path: "users/:id", element: <User /> },
           { path: "addresses", element: <Addresses_ /> },
+          { path: "brands", element: <Brands_ /> },
         ],
       },
       {
