@@ -151,21 +151,23 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      {!isFetchingStatistics && !isStatisticsError && (
+      {!isFetchingStatistics && !isStatisticsError && Object.keys(statistics.yearly).length !== 0 && (
         <div className="mt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="flex items-center gap-x-1 font-vazirmatn-bold text-xl">
               آمار فروش و درآمد در سال
               <span className="text-primary-900">{Object.entries(statistics.yearly).toReversed()[currentSlideIndex][0]}</span>
             </h3>
-            <div className="mr-auto flex items-center gap-x-2 text-primary-900">
-              <button className="swiper-button-prev flex size-11 items-center justify-center rounded-full border border-primary-900 transition-colors enabled:hover:bg-primary-50">
-                <ChevronIcon className="size-5" />
-              </button>
-              <button className="swiper-button-next flex size-11 items-center justify-center rounded-full border border-primary-900 transition-colors enabled:hover:bg-primary-50">
-                <ChevronIcon className="size-5 rotate-180" />
-              </button>
-            </div>
+            {Object.keys(statistics.yearly).length >= 2 && (
+              <div className="mr-auto flex items-center gap-x-2 text-primary-900">
+                <button className="swiper-button-prev flex size-11 items-center justify-center rounded-full border border-primary-900 transition-colors enabled:hover:bg-primary-50">
+                  <ChevronIcon className="size-5" />
+                </button>
+                <button className="swiper-button-next flex size-11 items-center justify-center rounded-full border border-primary-900 transition-colors enabled:hover:bg-primary-50">
+                  <ChevronIcon className="size-5 rotate-180" />
+                </button>
+              </div>
+            )}
           </div>
           <Swiper
             slidesPerView={1}
