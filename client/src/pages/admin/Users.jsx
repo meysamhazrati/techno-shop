@@ -19,9 +19,9 @@ const Users = () => {
         <span className="mr-auto text-zinc-500">{isFetchingUsers || isUsersError ? 0 : total.toLocaleString()} کاربر</span>
       </div>
       {isUsersError ? (
-        <NoResultFound title="کاربری پیدا نشد!" className="mt-6" />
+        <NoResultFound title="کاربری پیدا نشد!" className="mt-4" />
       ) : (
-        <div className="mt-6 overflow-auto rounded-3xl border border-zinc-200">
+        <div className="mt-4 overflow-auto rounded-3xl border border-zinc-200">
           <table className="w-full text-nowrap text-lg">
             <thead className="bg-zinc-200">
               <tr className="[&>*]:h-[72px] [&>*]:px-5 [&>*]:font-vazirmatn-medium [&>*]:font-normal">
