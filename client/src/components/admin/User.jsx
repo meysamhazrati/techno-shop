@@ -47,7 +47,7 @@ const User = ({ _id, firstName, lastName, email, role, avatar, isBanned }) => {
                 updateUser({ firstName: newFirstName.trim(), lastName: newLastName.trim(), email: newEmail.trim(), password: newPassword ? newPassword.trim() : undefined, role: newRole.trim(), avatar: newAvatar }, { onSuccess: () => {
                   setIsEditModalOpen(false);
                   setNewPassword("");
-                }, });
+                } });
               } else {
                 openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
               }
@@ -87,7 +87,7 @@ const User = ({ _id, firstName, lastName, email, role, avatar, isBanned }) => {
         <td>{role === "ADMIN" ? "مدیر" : "کاربر"}</td>
         <td>{isBanned ? "ممنوع" : "آزاد"}</td>
         <td>
-          <div className="flex items-center justify-between gap-x-2 text-base">
+          <div className="flex items-center justify-center gap-x-2 text-base">
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsEditModalOpen(true)}>ویرایش</button>
             {isBanned ? <button className="flex h-9 w-24 items-center justify-center rounded-full bg-yellow-400 text-white transition-colors hover:bg-yellow-300" onClick={() => setIsUnBanModalOpen(true)}>آزاد</button> : <button className="flex h-9 w-24 items-center justify-center rounded-full bg-yellow-400 text-white transition-colors hover:bg-yellow-300" onClick={() => setIsBanModalOpen(true)}>ممنوع</button>}
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-400" onClick={() => setIsRemoveModalOpen(true)}>حذف</button>
