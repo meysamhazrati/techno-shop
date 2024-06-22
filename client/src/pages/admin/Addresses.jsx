@@ -19,7 +19,7 @@ const Addresses = () => {
         <span className="mr-auto text-zinc-500">{isFetchingAddresses || isAddressesError ? 0 : total.toLocaleString()} آدرس</span>
       </div>
       {isAddressesError ? (
-        <NoResultFound title="آدرسی پیدا نشد!" className="mt-6" />
+        <NoResultFound title="آدرسی پیدا نشد!" className="mt-4" />
       ) : (
         <div className="mt-4 overflow-auto rounded-3xl border border-zinc-200">
           <table className="w-full text-nowrap text-lg">
