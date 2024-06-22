@@ -30,33 +30,33 @@ const User = () => {
   return !isUserError && (
     <>
       <div className="flex flex-col gap-3 overflow-auto sm:flex-row sm:items-center">
-        {!isFetchingUser ? <div className="size-16 shrink-0 animate-pulse rounded-full bg-skeleton"></div> : <UserAvatar user={user} className="size-16 text-xl" />}
+        {isFetchingUser ? <div className="size-16 shrink-0 animate-pulse rounded-full bg-skeleton"></div> : <UserAvatar user={user} className="size-16 text-xl" />}
         <div className="flex flex-col gap-y-3 text-nowrap sm:gap-y-1">
           <div className="flex flex-col gap-3 text-lg sm:flex-row sm:items-center">
             <div className="flex items-center gap-x-2">
               <span className="text-zinc-400">نام:</span>
-              <span>{!isFetchingUser ? "در حال بارگذاری" : user.firstName}</span>
+              <span>{isFetchingUser ? "در حال بارگذاری" : user.firstName}</span>
             </div>
             <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
             <div className="flex items-center gap-x-2">
               <span className="text-zinc-400">نام خانوادگی:</span>
-              <span>{!isFetchingUser ? "در حال بارگذاری" : user.lastName}</span>
+              <span>{isFetchingUser ? "در حال بارگذاری" : user.lastName}</span>
             </div>
           </div>
           <div className="flex flex-col gap-3 text-lg sm:flex-row sm:items-center">
             <div className="flex items-center gap-x-2">
               <span className="text-zinc-400">ایمیل:</span>
-              <span>{!isFetchingUser ? "در حال بارگذاری" : user.email}</span>
+              <span>{isFetchingUser ? "در حال بارگذاری" : user.email}</span>
             </div>
             <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
             <div className="flex items-center gap-x-2">
               <span className="text-zinc-400">نقش:</span>
-              <span>{!isFetchingUser ? "در حال بارگذاری" : user.role === "ADMIN" ? "مدیر" : "کاربر"}</span>
+              <span>{isFetchingUser ? "در حال بارگذاری" : user.role === "ADMIN" ? "مدیر" : "کاربر"}</span>
             </div>
             <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
             <div className="flex items-center gap-x-2">
               <span className="text-zinc-400">وضعیت:</span>
-              <span>{!isFetchingUser ? "در حال بارگذاری" : user.isBanned ? "ممنوع" : "آزاد"}</span>
+              <span>{isFetchingUser ? "در حال بارگذاری" : user.isBanned ? "ممنوع" : "آزاد"}</span>
             </div>
           </div>
         </div>
