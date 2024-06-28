@@ -1,20 +1,20 @@
 import { object, string } from "yup";
 
 const register = object({
-  firstName: string().required().min(3).max(70),
-  lastName: string().required().min(4).max(70),
-  email: string().required().min(10).max(100).matches(/^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/),
-  password: string().required().min(8).max(20).matches(/^[\w?!$._-]{8,20}$/),
+  firstName: string().required("نام الزامی است.").min(3, "نام باید حداقل 3 کاراکتر باشد.").max(70, "نام باید حداکثر 70 کاراکتر باشد."),
+  lastName: string().required("نام خانوادگی الزامی است.").min(4, "نام خانوادگی باید حداقل 4 کاراکتر باشد.").max(70, "نام خانوادگی باید حداکثر 70 کاراکتر باشد."),
+  email: string().required("ایمیل الزامی است.").min(10, "ایمیل باید حداقل 10 کاراکتر باشد.").max(100, "ایمیل باید حداکثر 100 کاراکتر باشد.").matches(/^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/, "ایمیل نامعتبر است."),
+  password: string().required("رمز عبور الزامی است.").min(8, "رمز عبور باید حداقل 8 کاراکتر باشد.").max(20, "رمز عبور باید حداکثر 20 کاراکتر باشد.").matches(/^[\w?!$._-]{8,20}$/, "رمز عبور نامعتبر است."),
 });
 
 const login = object({
-  email: string().required().min(10).max(100).matches(/^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/),
-  password: string().required().min(8).max(20).matches(/^[\w?!$._-]{8,20}$/),
+  email: string().required("ایمیل الزامی است.").min(10, "ایمیل باید حداقل 10 کاراکتر باشد.").max(100, "ایمیل باید حداکثر 100 کاراکتر باشد.").matches(/^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/, "ایمیل نامعتبر است."),
+  password: string().required("رمز عبور الزامی است.").min(8, "رمز عبور باید حداقل 8 کاراکتر باشد.").max(20, "رمز عبور باید حداکثر 20 کاراکتر باشد.").matches(/^[\w?!$._-]{8,20}$/, "رمز عبور نامعتبر است."),
 });
 
 const resetPassword = object({
-  email: string().required().min(10).max(100).matches(/^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/),
-  password: string().required().min(8).max(20).matches(/^[\w?!$._-]{8,20}$/),
+  email: string().required("ایمیل الزامی است.").min(10, "ایمیل باید حداقل 10 کاراکتر باشد.").max(100, "ایمیل باید حداکثر 100 کاراکتر باشد.").matches(/^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/, "ایمیل نامعتبر است."),
+  password: string().required("رمز عبور الزامی است.").min(8, "رمز عبور باید حداقل 8 کاراکتر باشد.").max(20, "رمز عبور باید حداکثر 20 کاراکتر باشد.").matches(/^[\w?!$._-]{8,20}$/, "رمز عبور نامعتبر است."),
 });
 
-export { register, login, resetPassword };
+export default { register, login, resetPassword };
