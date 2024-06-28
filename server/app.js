@@ -17,6 +17,7 @@ import ticketRouter from "./routes/ticket.js";
 import offerRouter from "./routes/offer.js";
 import discountCodeRouter from "./routes/discountCode.js";
 import statisticRouter from "./routes/statistic.js";
+import otpRouter from "./routes/otp.js";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/api/tickets", ticketRouter);
 app.use("/api/offers", offerRouter);
 app.use("/api/discount-codes", discountCodeRouter);
 app.use("/api/statistics", statisticRouter);
+app.use("/api/otps", otpRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
