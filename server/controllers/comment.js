@@ -1,24 +1,18 @@
 import model from "../models/comment.js";
 import orderModel from "../models/order.js";
+import validator from "../validators/comment.js";
 
 const create = async (request, response, next) => {
   try {
-    await model.validation(request.body);
-
     const { _id } = request.user;
+    
+    const body = request.body;
+    
+    await validator.create.validate(body);
 
-    const { body, score, product, article } = request.body;
+    await model.create({ ...body, isBuyer: body.product ? Boolean(await orderModel.findOne({ buyer: _id, "products.product._id": body.product })) : undefined, sender: request.user._id });
 
-    await model.create({
-      body,
-      score,
-      isBuyer: product ? Boolean(await orderModel.findOne({ buyer: _id, "products.product._id": product })) : undefined,
-      sender: request.user._id,
-      product,
-      article,
-    });
-
-    response.status(201).json({ message: "The comment has been successfully added." });
+    response.status(201).json({ message: "دیدگاه شما با موفقیت ثبت شد." });
   } catch (error) {
     next(error);
   }
@@ -47,7 +41,35 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No comment found."), { status: 404 });
+    throw Object.assign(new Error("دیدگاهی پیدا نشد."), { status: 404 });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const update = async (request, response, next) => {
+  try {
+    const { id } = request.params;
+    
+    const { _id, role } = request.user;
+
+    const comment = await model.findById(id);
+
+    if (comment) {
+      if (role === "ADMIN" || _id.equals(comment.sender)) {
+        const body = request.body;
+
+        await validator.update.validate(body);
+
+        await model.findByIdAndUpdate(id, body);
+
+        response.json({ message: "دیدگاه مورد نظر با موفقیت ویرایش شد." });
+      } else {
+        throw Object.assign(new Error("شما دسترسی لازم برای ویرایش دیدگاه مورد نظر را ندارید."), { status: 403 });
+      }
+    } else {
+      throw Object.assign(new Error("دیدگاه مورد نظر پیدا نشد."), { status: 404 });
+    }
   } catch (error) {
     next(error);
   }
@@ -61,14 +83,14 @@ const confirm = async (request, response, next) => {
 
     if (comment) {
       if (comment.isConfirmed) {
-        throw Object.assign(new Error("This comment has already been confirmed."), { status: 409 });
+        throw Object.assign(new Error("دیدگاه مورد نظر از قبل تایید شده است."), { status: 409 });
       } else {
         await model.findByIdAndUpdate(id, { isConfirmed: true });
 
-        response.json({ message: "The comment has been successfully confirmed." });
+        response.json({ message: "دیدگاه مورد نظر با موفقیت تایید شد." });
       }
     } else {
-      throw Object.assign(new Error("The comment was not found."), { status: 404 });
+      throw Object.assign(new Error("دیدگاه مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -85,12 +107,12 @@ const reject = async (request, response, next) => {
       if (comment.isConfirmed) {
         await model.findByIdAndUpdate(id, { isConfirmed: false });
 
-        response.json({ message: "The comment has been successfully rejected." });
+        response.json({ message: "دیدگاه مورد نظر با موفقیت رد شد." });
       } else {
-        throw Object.assign(new Error("This comment has already been rejected."), { status: 409 });
+        throw Object.assign(new Error("دیدگاه مورد نظر از قبل رد شده است."), { status: 409 });
       }
     } else {
-      throw Object.assign(new Error("The comment was not found."), { status: 404 });
+      throw Object.assign(new Error("دیدگاه مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -109,16 +131,16 @@ const remove = async (request, response, next) => {
       if (role === "ADMIN" || _id.equals(comment.sender)) {
         await model.findByIdAndDelete(id);
   
-        response.json({ message: "The comment has been successfully removed." });
+        response.json({ message: "دیدگاه مورد نظر با موفقیت حذف شد." });
       } else {
-        throw Object.assign(new Error("You don't have access to remove this comment."), { status: 403 });
+        throw Object.assign(new Error("شما دسترسی لازم برای حذف دیدگاه مورد نظر را ندارید."), { status: 403 });
       }
     } else {
-      throw Object.assign(new Error("The comment was not found."), { status: 404 });
+      throw Object.assign(new Error("دیدگاه مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
   }
 };
 
-export { create, getAll, confirm, reject, remove };
+export { create, getAll, update, confirm, reject, remove };
