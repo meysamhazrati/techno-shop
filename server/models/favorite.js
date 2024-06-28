@@ -1,9 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 
-import validator from "../validators/favorite.js";
-
-const schema = new Schema(
-  {
+const schema = new Schema({
     user: {
       type: Types.ObjectId,
       ref: "User",
@@ -12,10 +9,6 @@ const schema = new Schema(
       type: Types.ObjectId,
       ref: "Product",
     },
-  },
-  { timestamps: true }
-);
-
-schema.statics.validation = (body) => validator.validate(body);
+  }, { timestamps: true });
 
 export default model("Favorite", schema);
