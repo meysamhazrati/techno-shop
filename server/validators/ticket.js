@@ -1,11 +1,11 @@
 import { object, string } from "yup";
 
 const create = object({
-  department: string().required().oneOf(["Management", "Finance", "Order Tracking", "Support", "Feedback", "Other"]),
-  title: string().required().min(2).max(20),
-  body: string().required().min(5).max(300),
+  department: string().required("دپارتمان الزامی است.").oneOf(["مدیریت", "مالی", "پیگیری سفارش", "پشتیبانی", "بازخورد", "سایر"], "دپارتمان باید مدیریت، مالی، پیگیری سفارش، پشتیبانی، بازخورد یا سایر باشد."),
+  title: string().required("عنوان الزامی است.").min(2, "عنوان باید حداقل 2 کاراکتر باشد.").max(20, "عنوان باید حداکثر 20 کاراکتر باشد."),
+  body: string().required("متن الزامی است.").min(5, "متن باید حداقل 5 کاراکتر باشد.").max(300, "متن باید حداکثر 300 کاراکتر باشد."),
 });
 
-const reply = object({ body: string().required().min(5).max(300) });
+const reply = object({ body: string().required("متن الزامی است.").min(5, "متن باید حداقل 5 کاراکتر باشد.").max(300, "متن باید حداکثر 300 کاراکتر باشد.") });
 
-export { create, reply };
+export default { create, reply };
