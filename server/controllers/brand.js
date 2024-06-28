@@ -2,19 +2,20 @@ import { unlink } from "fs";
 
 import model from "../models/brand.js";
 import categoryModel from "../models/category.js";
+import validator from "../validators/brand.js";
 
 const create = async (request, response, next) => {
   try {
     const logo = request.file;
-    await model.createValidation({ ...request.body, logo });
+    const body = request.body;
+    
+    await validator.create.validate({ ...body, logo });
 
-    const { name, englishName } = request.body;
+    await model.create({ ...body, logo: logo.filename });
 
-    await model.create({ name, englishName, logo: logo.filename });
-
-    response.status(201).json({ message: "The brand has been successfully added." });
+    response.status(201).json({ message: "برند مورد نظر با موفقیت ثبت شد." });
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => console.error(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -40,7 +41,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No brand found."), { status: 404 });
+    throw Object.assign(new Error("برندی پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -105,7 +106,7 @@ const get = async (request, response, next) => {
 
       response.json({ ...brand, products, totalProducts, nextProductsPage });
     } else {
-      throw Object.assign(new Error("The brand was not found."), { status: 404 });
+      throw Object.assign(new Error("برند مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -114,24 +115,24 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await model.updateValidation(request.body);
-
     const { id } = request.params;
-
+    
     const logo = request.file;
-    const { name, englishName } = request.body;
+    const body = request.body;
+    
+    await validator.update.validate(body);
 
-    const result = await model.findByIdAndUpdate(id, { name, englishName, logo: logo?.filename });
+    const result = await model.findByIdAndUpdate(id, { ...body, logo: logo?.filename });
 
     if (result) {
-      logo && unlink(`public/images/brands/${result.logo}`, (error) => console.error(error));
+      logo && unlink(`public/images/brands/${result.logo}`, (error) => error && console.error(error));
 
-      response.json({ message: "The brand has been successfully edited." });
+      response.json({ message: "برند مورد نظر با موفقیت ویرایش شد." });
     } else {
-      throw Object.assign(new Error("The brand was not found."), { status: 404 });
+      throw Object.assign(new Error("برند مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => console.error(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -144,11 +145,11 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      unlink(`public/images/brands/${result.logo}`, (error) => console.error(error));
+      unlink(`public/images/brands/${result.logo}`, (error) => error && console.error(error));
 
-      response.json({ message: "The brand has been successfully removed." });
+      response.json({ message: "برند مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The brand was not found."), { status: 404 });
+      throw Object.assign(new Error("برند مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
