@@ -1,15 +1,15 @@
 import { object, string, number, array } from "yup";
 
 const validator = object({
-  length: number().required().min(50).max(200),
-  width: number().required().min(20).max(100),
-  height: number().required().min(20).max(100),
-  weight: number().required().min(50).max(500),
-  buttons: number().required().min(2).max(20),
-  connectionType: string().required().oneOf(["Wired", "Wireless", "Wired and Wireless"]),
-  interfaces: array().required().of(string().oneOf(["USB", "USB Type-C", "USB Dongle", "Bluetooth"])).min(1).max(4),
-  minimumDPI: number().required().min(800).max(30000),
-  maximumDPI: number().required().min(800).max(30000),
+  length: number().required("طول الزامی است.").min(50, "طول باید حداقل 50 میلی‌متر باشد.").max(200, "طول باید حداکثر 200 میلی‌متر باشد."),
+  width: number().required("عرض الزامی است.").min(20, "عرض باید حداقل 20 میلی‌متر باشد.").max(100, "عرض باید حداکثر 100 میلی‌متر باشد."),
+  height: number().required("ارتفاع الزامی است.").min(20, "ارتفاع باید حداقل 20 میلی‌متر باشد.").max(100, "ارتفاع باید حداکثر 100 میلی‌متر باشد."),
+  weight: number().required("وزن الزامی است.").min(50, "وزن باید حداقل 50 گرم باشد.").max(500, "وزن باید حداکثر 500 گرم باشد."),
+  buttons: number().required("تعداد کلید الزامی است.").min(2, "تعداد کلید باید حداقل 2 عدد باشد.").max(20, "تعداد کلید باید حداکثر 20 عدد باشد."),
+  connectionType: string().required("نوع اتصال الزامی است.").oneOf(["با‌سیم", "بی‌سیم", "با‌سیم و بی‌سیم"], "نوع اتصال باید با‌سیم، بی‌سیم یا با‌سیم و بی‌سیم باشد."),
+  interfaces: array().required("رابط ها الزامی هستند.").min(1, "رابط ها باید حداقل 1 عدد باشند.").max(4, "رابط ها باید حداکثر 4 عدد باشند.").of(string().oneOf(["USB", "USB Type-C", "USB Dongle", "Bluetooth"], "رابط باید USB، USB Type-C، USB Dongle یا Bluetooth باشد.")),
+  minimumDPI: number().required("حداقل دقت الزامی است.").min(800, "حداقل دقت باید حداقل 800 باشد.").max(30000, "حداقل دقت باید حداکثر 30000 باشد."),
+  maximumDPI: number().required("حداکثر دقت الزامی است.").min(800, "حداکثر دقت باید حداقل 800 باشد.").max(30000, "حداکثر دقت باید حداکثر 30000 باشد."),
 });
 
 export default validator;
