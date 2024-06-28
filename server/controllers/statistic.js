@@ -12,7 +12,7 @@ import discountCodeModel from "../models/discountCode.js";
 
 const getAll = async (request, response, next) => {
   try {
-    const orders = await orderModel.find({ status: ["In progress", "Delivered"] });
+    const orders = await orderModel.find({ status: ["جاری", "تحویل شده"] });
 
     const totalUsers = await userModel.countDocuments();
     const totalAddresses = await addressModel.countDocuments();
