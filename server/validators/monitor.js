@@ -1,16 +1,16 @@
 import { object, string, number } from "yup";
 
 const validator = object({
-  weight: number().required().min(1000).max(50000),
-  screen: string().required().min(3).max(50),
-  screenSize: number().required().min(10).max(60),
-  resolutionWidth: number().required().min(500).max(10000),
-  resolutionHeight: number().required().min(500).max(10000),
-  minimumResponseTime: number().required().min(1).max(10),
-  maximumResponseTime: number().required().min(1).max(10),
-  panel: string().required().min(2).max(20),
-  backlight: string().required().min(3).max(20),
-  color: number().required().min(1000000).max(1000000000),
+  weight: number().required("وزن الزامی است.").min(1000, "وزن باید حداقل 1000 گرم باشد.").max(50000, "وزن باید حداکثر 50000 گرم باشد."),
+  screen: string().required("نوع صفحه نمایش الزامی است.").min(3, "نوع صفحه نمایش باید حداقل 3 کاراکتر باشد.").max(50, "نوع صفحه نمایش باید حداکثر 50 کاراکتر باشد."),
+  screenSize: number().required("اندازه صفحه نمایش الزامی است.").min(10, "اندازه صفحه نمایش باید حداقل 10 اینچ باشد.").max(60, "اندازه صفحه نمایش باید حداکثر 60 اینچ باشد."),
+  resolutionWidth: number().required("عرض رزولوشن الزامی است.").min(500, "عرض رزولوشن باید حداقل 500 پیکسل باشد.").max(10000, "عرض رزولوشن باید حداکثر 10000 پیکسل باشد."),
+  resolutionHeight: number().required("ارتفاع رزولوشن الزامی است.").min(500, "ارتفاع رزولوشن باید حداقل 500 پیکسل باشد.").max(10000, "ارتفاع رزولوشن باید حداکثر 10000 پیکسل باشد."),
+  minimumResponseTime: number().required("حداقل زمان پاسخ‌گویی الزامی است.").min(1, "حداقل زمان پاسخ‌گویی باید حداقل 1 میلی‌ثانیه باشد.").max(10, "حداقل زمان پاسخ‌گویی باید حداکثر 10 میلی‌ثانیه باشد."),
+  maximumResponseTime: number().required("حداکثر زمان پاسخ‌گویی الزامی است.").min(1, "حداکثر زمان پاسخ‌گویی باید حداقل 1 میلی‌ثانیه باشد.").max(10, "حداکثر زمان پاسخ‌گویی باید حداکثر 10 میلی‌ثانیه باشد."),
+  panel: string().required("پنل الزامی است.").min(2, "پنل باید حداقل 2 کاراکتر باشد.").max(20, "پنل باید حداکثر 20 کاراکتر باشد."),
+  backlight: string().required("نور پس‌زمینه الزامی است.").min(3, "نور پس‌زمینه باید حداقل 3 کاراکتر باشد.").max(20, "نور پس‌زمینه باید حداکثر 20 کاراکتر باشد."),
+  color: number().required("تعداد رنگ الزامی است.").min(1000000, "تعداد رنگ باید حداقل 1000000 عدد باشد.").max(1000000000, "تعداد رنگ باید حداکثر 1000000000 عدد باشد."),
 });
 
 export default validator;
