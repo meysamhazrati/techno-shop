@@ -4,30 +4,25 @@ import colorModel from "../models/color.js";
 import userModel from "../models/user.js";
 import addressModel from "../models/address.js";
 import discountCodeModel from "../models/discountCode.js";
+import validator from "../validators/order.js";
 
 const create = async (request, response, next) => {
   try {
-    await model.validation(request.body);
+    const body = request.body;
+    
+    await validator.validate(body);
 
-    const { totalPrice } = request.body;
-
-    const products = await Promise.all(request.body.products.map(async ({ quantity, product, color }) => ({ quantity, product: await productModel.findById(product), color: await colorModel.findById(color) })));
+    const products = await Promise.all(body.products.map(async ({ quantity, product, color }) => ({ quantity, product: await productModel.findById(product), color: await colorModel.findById(color) })));
     const buyer = await userModel.findById(request.user._id, "-cart");
-    const destination = await addressModel.findById(request.body.destination);
-    const discountCode = await discountCodeModel.findById(request.body.discountCode);
+    const destination = await addressModel.findById(body.destination);
+    const discountCode = await discountCodeModel.findById(body.discountCode);
       
-    await model.create({
-      totalPrice,
-      products,
-      buyer,
-      destination,
-      discountCode: discountCode ?? undefined,
-    });
+    await model.create({ ...body, products, buyer, destination, discountCode: discountCode ?? undefined });
       
     await userModel.findByIdAndUpdate(request.user._id, { $set: { cart: [] } });
-    await Promise.all(request.body.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: quantity, inventory: -quantity } })));
+    await Promise.all(body.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: quantity, inventory: -quantity } })));
 
-    response.status(201).json({ message: "The order has been successfully added." });
+    response.status(201).json({ message: "سفارش شما با موفقیت ثبت شد." });
   } catch (error) {
     next(error);
   }
@@ -37,7 +32,7 @@ const getAll = async (request, response, next) => {
   try {
     const { page = 1, length } = request.query;
 
-    const orders = await model.find({}, "totalPrice status createdAt updatedAt buyer.firstName buyer.lastName").sort({ createdAt: -1 }).lean();
+    const orders = await model.find({}, "totalPrice status products.quantity buyer._id buyer.firstName buyer.lastName createdAt updatedAt").sort({ createdAt: -1 }).lean();
 
     if (orders.length) {
       const currentPage = parseInt(page);
@@ -53,7 +48,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No order found."), { status: 404 });
+    throw Object.assign(new Error("سفارشی پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -76,10 +71,10 @@ const get = async (request, response, next) => {
       if (role === "ADMIN" || _id.equals(order.buyer)) {
         response.json(order);
       } else {
-        throw Object.assign(new Error("You don't have access to this order."), { status: 403 });
+        throw Object.assign(new Error("شما دسترسی لازم به سفارش مورد نظر را ندارید."), { status: 403 });
       }
     } else {
-      throw Object.assign(new Error("The order was not found."), { status: 404 });
+      throw Object.assign(new Error("سفارش مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -93,17 +88,17 @@ const deliver = async (request, response, next) => {
     const order = await model.findById(id);
 
     if (order) {
-      if (order.status === "In progress") {
-        await model.findByIdAndUpdate(id, { status: "Delivered" });
+      if (order.status === "جاری") {
+        await model.findByIdAndUpdate(id, { status: "تحویل شده" });
 
-        response.json({ message: "The order has been successfully delivered." });
-      } else if (order.status === "Delivered") {
-        throw Object.assign(new Error("The order has already been delivered."), { status: 409 });
+        response.json({ message: "سفارش مورد نظر با موفقیت تحویل شد." });
+      } else if (order.status === "تحویل شده") {
+        throw Object.assign(new Error("سفارش مورد نظر از قبل تحویل شده است."), { status: 409 });
       } else {
-        throw Object.assign(new Error(`The order has been ${order.status.toLowerCase()}.`), { status: 409 });
+        throw Object.assign(new Error(`سفارش مورد نظر ${order.status} است.`), { status: 409 });
       }
     } else {
-      throw Object.assign(new Error("The order was not found."), { status: 404 });
+      throw Object.assign(new Error("سفارش مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -120,22 +115,22 @@ const cancel = async (request, response, next) => {
 
     if (order) {
       if (role === "ADMIN" || _id.equals(order.buyer)) {
-        if (order.status === "In progress") {
-          await model.findByIdAndUpdate(id, { status: "Canceled" });
+        if (order.status === "جاری") {
+          await model.findByIdAndUpdate(id, { status: "لغو شده" });
 
           await Promise.all(order.products.map(async ({ quantity, color }) => await colorModel.findByIdAndUpdate(color, { $inc: { sales: -quantity, inventory: quantity } })));
 
-          response.json({ message: "The order has been successfully canceled." });
-        } else if (order.status === "Canceled") {
-          throw Object.assign(new Error("The order has already been canceled."), { status: 409 });
+          response.json({ message: "سفارش مورد نظر با موفقیت لغو شد." });
+        } else if (order.status === "لغو شده") {
+          throw Object.assign(new Error("سفارش مورد نظر از قبل لغو شده است."), { status: 409 });
         } else {
-          throw Object.assign(new Error(`The order has been ${order.status.toLowerCase()}.`), { status: 409 });
+          throw Object.assign(new Error(`سفارش مورد نظر ${order.status} است.`), { status: 409 });
         }
       } else {
-        throw Object.assign(new Error("You don't have access to cancel this order."), { status: 403 });
+        throw Object.assign(new Error("شما دسترسی لازم برای لغو سفارش مورد نظر را ندارید."), { status: 403 });
       }
     } else {
-      throw Object.assign(new Error("The order was not found."), { status: 404 });
+      throw Object.assign(new Error("سفارش مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -152,20 +147,20 @@ const return_ = async (request, response, next) => {
 
     if (order) {
       if (role === "ADMIN" || _id.equals(order.buyer)) {
-        if (order.status === "Delivered") {
-          await model.findByIdAndUpdate(id, { status: "Returned" });
+        if (order.status === "تحویل شده") {
+          await model.findByIdAndUpdate(id, { status: "مرجوع شده" });
 
-          response.json({ message: "The order has been successfully returned." });
-        } else if (order.status === "Returned") {
-          throw Object.assign(new Error("The order has already been returned."), { status: 409 });
+          response.json({ message: "سفارش مورد نظر با موفقیت مرجوع شد." });
+        } else if (order.status === "مرجوع شده") {
+          throw Object.assign(new Error("سفارش مورد نظر از قبل مرجوع شده است."), { status: 409 });
         } else {
-          throw Object.assign(new Error(`The order ${order.status === "In progress" ? "is in progress" : "has been canceled"}.`), { status: 409 });
+          throw Object.assign(new Error(`سفارش مورد نظر ${order.status} است.`), { status: 409 });
         }
       } else {
-        throw Object.assign(new Error("You don't have access to return this order."), { status: 403 });
+        throw Object.assign(new Error("شما دسترسی لازم برای مرجوع سفارش مورد نظر را ندارید."), { status: 403 });
       }
     } else {
-      throw Object.assign(new Error("The order was not found."), { status: 404 });
+      throw Object.assign(new Error("سفارش مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
