@@ -3,7 +3,7 @@ const middleware = (request, response, next) => {
     const isBanned = request.user.isBanned;
 
     if (isBanned) {
-      throw Object.assign(new Error("You have been banned."), { status: 403 });
+      throw Object.assign(new Error("شما مسدود شده‌اید."), { status: 403 });
     } else {
       next();
     }
