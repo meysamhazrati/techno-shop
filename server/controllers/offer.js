@@ -2,25 +2,19 @@ import model from "../models/offer.js";
 import productModel from "../models/product.js";
 import brandModel from "../models/brand.js";
 import categoryModel from "../models/category.js";
+import validator from "../validators/offer.js";
 
 const create = async (request, response, next) => {
   try {
-    await model.createValidation(request.body);
+    const body = request.body;
+    
+    await validator.create.validate(body);
 
-    const { title, englishTitle, description, percent, expiresAt, categories } = request.body;
+    const { _id } = await model.create({ ...body, expiresAt: Date.now() + 1000 * 60 * 60 * body.expiresAt, organizer: request.user._id });
 
-    const { _id } = await model.create({
-      title,
-      englishTitle,
-      description,
-      percent,
-      expiresAt: Date.now() + 1000 * 60 * 60 * expiresAt,
-      organizer: request.user._id,
-    });
+    await productModel.updateMany({ category: body.categories }, { offer: _id });
 
-    await productModel.updateMany({ category: categories }, { offer: _id });
-
-    response.status(201).json({ message: "The offer has been successfully added." });
+    response.status(201).json({ message: "پیشنهاد مورد نظر با موفقیت ثبت شد." });
   } catch (error) {
     next(error);
   }
@@ -46,7 +40,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No offer found."), { status: 404 });
+    throw Object.assign(new Error("پیشنهادی پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -112,7 +106,7 @@ const get = async (request, response, next) => {
 
       response.json({ ...offer, products, totalProducts, nextProductsPage });
     } else {
-      throw Object.assign(new Error("The offer was not found."), { status: 404 });
+      throw Object.assign(new Error("پیشنهاد مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -121,24 +115,18 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await model.updateValidation(request.body);
-
     const { id } = request.params;
+    
+    const body = request.body;
+    
+    await validator.update.validate(body);
 
-    const { title, englishTitle, description, percent, expiresAt } = request.body;
-
-    const result = await model.findByIdAndUpdate(id, {
-      title,
-      englishTitle,
-      description,
-      percent,
-      expiresAt: Date.now() + 1000 * 60 * 60 * expiresAt,
-    });
+    const result = await model.findByIdAndUpdate(id, { ...body, expiresAt: Date.now() + 1000 * 60 * 60 * body.expiresAt });
 
     if (result) {
-      response.json({ message: "The offer has been successfully edited." });
+      response.json({ message: "پیشنهاد مورد نظر با موفقیت ویرایش شد." });
     } else {
-      throw Object.assign(new Error("The offer was not found."), { status: 404 });
+      throw Object.assign(new Error("پیشنهاد مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -152,11 +140,11 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      await productModel.findOneAndUpdate({ offer: id }, { $unset: { offer: true } });
+      await productModel.updateMany({ offer: id }, { $unset: { offer: true } });
 
-      response.json({ message: "The offer has been successfully removed." });
+      response.json({ message: "پیشنهاد مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The offer was not found."), { status: 404 });
+      throw Object.assign(new Error("پیشنهاد مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
