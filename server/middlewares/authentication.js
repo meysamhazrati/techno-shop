@@ -15,13 +15,11 @@ const middleware = async (request, response, next) => {
       if (user) {
         request.user = user;
 
-        next();
-      } else {
-        throw Object.assign(new Error("The user was not found."), { status: 404 });
+        return next();
       }
-    } else {
-      throw Object.assign(new Error("You can't access this route."), { status: 403 });
     }
+
+    throw Object.assign(new Error("شما دسترسی لازم به مسیر مورد نظر را ندارید."), { status: 403 });
   } catch (error) {
     next(error);
   }
