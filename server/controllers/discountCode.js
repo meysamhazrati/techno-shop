@@ -1,22 +1,15 @@
 import model from "../models/discountCode.js";
+import validator from "../validators/discountCode.js"
 
 const create = async (request, response, next) => {
   try {
-    await model.createValidation(request.body);
+    const body = request.body;
+    
+    await validator.create.validate(body);
 
-    const { code, percent, minimumPrice, maximumUsage, expiresAt, categories } = request.body;
+    await model.create({ ...body, expiresAt: Date.now() + 1000 * 60 * 60 * body.expiresAt, creator: request.user._id });
 
-    await model.create({
-      code,
-      percent,
-      minimumPrice,
-      maximumUsage,
-      expiresAt: Date.now() + 1000 * 60 * 60 * expiresAt,
-      creator: request.user._id,
-      categories,
-    });
-
-    response.status(201).json({ message: "The discount code has been successfully added." });
+    response.status(201).json({ message: "کد تخفیف مورد نظر با موفقیت ثبت شد." });
   } catch (error) {
     next(error);
   }
@@ -42,7 +35,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No discount code found."), { status: 404 });
+    throw Object.assign(new Error("کد تخفیفی پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -50,38 +43,38 @@ const getAll = async (request, response, next) => {
 
 const use = async (request, response, next) => {
   try {
-    await model.useValidation(request.body);
-
     const { code } = request.params;
-
-    const { price, categories } = request.body;
+    
+    const body = request.body;
+    
+    await validator.use.validate(body);
 
     const discountCode = await model.findOne({ code });
 
     if (discountCode) {
-      const isIncludes = categories.every((category) => discountCode.categories.includes(category));
+      const isIncludes = body.categories.every((category) => discountCode.categories.includes(category));
 
       if (isIncludes) {
-        if (price >= discountCode.minimumPrice) {
+        if (body.price >= discountCode.minimumPrice) {
           if (discountCode.usages < discountCode.maximumUsage) {
             if (discountCode.expiresAt > new Date()) {
               await model.findByIdAndUpdate(discountCode._id, { $inc: { usages: 1 } });
 
-              response.json({ message: "The discount code has been successfully used.", discountCode });
+              response.json({ message: "کد تخفیف مورد نظر با موفقیت اعمال شد.", discountCode });
             } else {
-              throw Object.assign(new Error("The entered discount code has expired."), { status: 410 });
+              throw Object.assign(new Error("کد تخفیف مورد نظر منقضی شده است."), { status: 410 });
             }
           } else {
-              throw Object.assign(new Error("The maximum usage limit for this discount code has been reached."), { status: 403 });
+              throw Object.assign(new Error("حداکثر محدودیت استفاده از کد تخفیف مورد نظر به اتمام رسیده است."), { status: 403 });
           }
         } else {
-          throw Object.assign(new Error("The total price of the product(s) is less than the minimum required price for using this discount code."), { status: 409 });
+          throw Object.assign(new Error("مبلغ کل محصول(ها) کمتر از حداقل مبلغ مورد نیاز برای استفاده از کد تخفیف مورد نظر است."), { status: 409 });
         }
       } else {
-        throw Object.assign(new Error("The entered discount code doesn't include this product(s)."), { status: 409 });
+        throw Object.assign(new Error("کد تخفیف مورد نظر شامل این محصول(ها) نمی‌باشد."), { status: 409 });
       }
     } else {
-      throw Object.assign(new Error("The discount code was not found."), { status: 404 });
+      throw Object.assign(new Error("کد تخفیف مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -95,9 +88,9 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      response.json({ message: "The discount code has been successfully removed." });
+      response.json({ message: "کد تخفیف مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The discount code was not found."), { status: 404 });
+      throw Object.assign(new Error("کد تخفیف مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
