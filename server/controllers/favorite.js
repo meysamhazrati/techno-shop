@@ -1,26 +1,27 @@
 import model from "../models/favorite.js";
 import productModel from "../models/product.js";
+import validator from "../validators/favorite.js";
 
 const create = async (request, response, next) => {
   try {
-    await model.validation(request.body);
+    const body = request.body;
+    
+    await validator.validate(body);
 
-    const { product } = request.body;
+    const product = await productModel.findById(body.product);
 
-    const product_ = await productModel.findById(product);
-
-    if (product_) {
-      const isExists = await model.findOne({ user: request.user._id, product });
+    if (product) {
+      const isExists = await model.findOne({ user: request.user._id, product: body.product });
 
       if (isExists) {
-        throw Object.assign(new Error("This favorite has already been added."), { status: 409 });
+        throw Object.assign(new Error("علاقه‌مندی مورد نظر از قبل اضافه شده است."), { status: 409 });
       } else {
-        await model.create({ user: request.user._id, product });
+        await model.create({ user: request.user._id, product: body.product });
 
-        response.status(201).json({ message: "The favorite has been successfully added." });
+        response.status(201).json({ message: "علاقه‌مندی شما با موفقیت اضافه شد." });
       }
     } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
+      throw Object.assign(new Error("محصول مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -34,9 +35,9 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      response.json({ message: "The favorite has been successfully removed." });
+      response.json({ message: "علاقه‌مندی مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The favorite was not found."), { status: 404 });
+      throw Object.assign(new Error("علاقه‌مندی مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
