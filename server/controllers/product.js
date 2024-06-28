@@ -1,4 +1,3 @@
-import { model as model_ } from "mongoose";
 import { unlink } from "fs";
 
 import model from "../models/product.js";
@@ -17,29 +16,114 @@ import keyboardModel from "../models/keyboard.js";
 import headphoneModel from "../models/headphone.js";
 import smartWatchModel from "../models/smartWatch.js";
 import consoleModel from "../models/console.js";
+import validator from "../validators/product.js";
+import mobileValidator from "../validators/mobile.js";
+import tabletValidator from "../validators/tablet.js";
+import laptopValidator from "../validators/laptop.js";
+import monitorValidator from "../validators/monitor.js";
+import caseValidator from "../validators/case.js";
+import mouseValidator from "../validators/mouse.js";
+import keyboardValidator from "../validators/keyboard.js";
+import headphoneValidator from "../validators/headphone.js";
+import smartWatchValidator from "../validators/smartWatch.js";
+import consoleValidator from "../validators/console.js";
 
 const create = async (request, response, next) => {
   try {
-    const covers = request.files;
-    await model.createValidation({ ...request.body, covers });
-
     const { type } = request.query;
-
+    
     if (type) {
-      const currentModel = model_(type);
+      const covers = request.files;
+      const body = request.body;
+  
+      await validator.create.validate({ ...body, covers });
+      
+      let _id = null;
 
-      await currentModel.validation(request.body);
+      switch (type) {
+        case "Mobile": {
+          await mobileValidator.validate(body);
+    
+          ({ _id } = await mobileModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+          
+          break;
+        }
+        case "Tablet": {
+          await tabletValidator.validate(body);
+    
+          ({ _id } = await tabletModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
 
-      const { _id } = await currentModel.create({ ...request.body, covers: covers.map((cover) => cover.filename) });
+          break;
+        }
+        case "Laptop": {
+          await laptopValidator.validate(body);
+    
+          ({ _id } = await laptopModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
 
-      await Promise.all(request.body.colors.map(async (color) => await colorModel.create({ ...color, product: _id })));
+          break;
+        }
+        case "Monitor": {
+          await monitorValidator.validate(body);
+    
+          ({ _id } = await monitorModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
 
-      response.status(201).json({ message: "The product has been successfully added." });
+          break;
+        }
+        case "Case": {
+          await caseValidator.validate(body);
+    
+          ({ _id } = await caseModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+
+          break;
+        }
+        case "Mouse": {
+          await mouseValidator.validate(body);
+    
+          ({ _id } = await mouseModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+
+          break;
+        }
+        case "Keyboard": {
+          await keyboardValidator.validate(body);
+    
+          ({ _id } = await keyboardModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+
+          break;
+        }
+        case "Headphone": {
+          await headphoneValidator.validate(body);
+    
+          ({ _id } = await headphoneModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+
+          break;
+        }
+        case "SmartWatch": {
+          await smartWatchValidator.validate(body);
+    
+          ({ _id } = await smartWatchModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+
+          break;
+        }
+        case "Console": {
+          await consoleValidator.validate(body);
+    
+          ({ _id } = await consoleModel.create({ ...body, covers: covers.map((cover) => cover.filename) }));
+
+          break;
+        }
+        default: {
+          throw Object.assign(new Error("نوع محصول نامعتبر است."), { status: 400 });
+        }
+      }
+
+      await Promise.all(body.colors.map(async (color) => await colorModel.create({ ...color, product: _id })));
+
+      response.status(201).json({ message: "محصول مورد نظر با موفقیت ثبت شد." });
     } else {
-      throw Object.assign(new Error("The type query is required."), { status: 400 });
+      throw Object.assign(new Error("نوع محصول الزامی است."), { status: 400 });
     }
   } catch (error) {
-    request.files && request.files.forEach((file) => unlink(file.path, (error) => console.error(error)));
+    request.files && request.files.forEach((file) => unlink(file.path, (error) => error && console.error(error)));
 
     next(error);
   }
@@ -101,7 +185,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No product found."), { status: 404 });
+    throw Object.assign(new Error("محصولی پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -129,7 +213,7 @@ const get = async (request, response, next) => {
 
       response.json({ ...product, score: parseFloat((product.comments.reduce((previous, { score }) => previous + score, 5) / (product.comments.length + 1) || 5).toFixed(1)), comments: product.comments.slice(commentsStartIndex, commentsEndIndex), totalComments: product.comments.length, nextCommentsPage: commentsEndIndex < product.comments.length ? currentCommentsPage + 1 : null });
     } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
+      throw Object.assign(new Error("محصول مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -138,29 +222,103 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await model.updateValidation(request.body);
-
     const { id } = request.params;
     const { type } = request.query;
-
+    
     if (type) {
-      const currentModel = model_(type);
+      const body = request.body;
 
-      await currentModel.validation(request.body);
+      await validator.update.validate(body);
 
-      const result = await currentModel.findByIdAndUpdate(id, { ...request.body });
+      let result = null;
+      
+      switch (type) {
+        case "Mobile": {
+          await mobileValidator.validate(body);
+    
+          result = await mobileModel.findByIdAndUpdate(id, body);
+          
+          break;
+        }
+        case "Tablet": {
+          await tabletValidator.validate(body);
+    
+          result = await tabletModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Laptop": {
+          await laptopValidator.validate(body);
+    
+          result = await laptopModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Monitor": {
+          await monitorValidator.validate(body);
+    
+          result = await monitorModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Case": {
+          await caseValidator.validate(body);
+    
+          result = await caseModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Mouse": {
+          await mouseValidator.validate(body);
+    
+          result = await mouseModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Keyboard": {
+          await keyboardValidator.validate(body);
+    
+          result = await keyboardModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Headphone": {
+          await headphoneValidator.validate(body);
+    
+          result = await headphoneModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "SmartWatch": {
+          await smartWatchValidator.validate(body);
+    
+          result = await smartWatchModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        case "Console": {
+          await consoleValidator.validate(body);
+    
+          result = await consoleModel.findByIdAndUpdate(id, body);
+
+          break;
+        }
+        default: {
+          throw Object.assign(new Error("نوع محصول نامعتبر است."), { status: 400 });
+        }
+      }
 
       if (result) {
-        const colors = await Promise.all(request.body.colors.map(async ({ price, sales = 0, inventory, name, code }) => await colorModel.findOneAndUpdate({ $or: [{ name }, { code }], product: id }, { price, sales, inventory, name, code }, { upsert: true, new: true })));
+        const colors = await Promise.all(body.colors.map(async (color) => await colorModel.findOneAndUpdate({ $or: [{ name: color.name }, { code: color.code }], product: id }, color, { upsert: true, new: true })));
 
         await colorModel.deleteMany({ _id: { $nin: colors.map(({ _id }) => _id) }, product: id });
 
-        response.json({ message: "The product has been successfully edited." });
+        response.json({ message: "محصول مورد نظر با موفقیت ویرایش شد." });
       } else {
-        throw Object.assign(new Error("The product was not found."), { status: 404 });
+        throw Object.assign(new Error("محصول مورد نظر پیدا نشد."), { status: 404 });
       }
     } else {
-      throw Object.assign(new Error("The type query is required."), { status: 400 });
+      throw Object.assign(new Error("نوع محصول الزامی است."), { status: 400 });
     }
   } catch (error) {
     next(error);
@@ -174,15 +332,15 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      result.covers.forEach((cover) => unlink(`public/images/products/${cover}`, (error) => console.error(error)));
+      result.covers.forEach((cover) => unlink(`public/images/products/${cover}`, (error) => error && console.error(error)));
 
       await favoriteModel.deleteMany({ product: id });
       await colorModel.deleteMany({ product: id });
       await commentModel.deleteMany({ product: id });
 
-      response.json({ message: "The product has been successfully removed." });
+      response.json({ message: "محصول مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
+      throw Object.assign(new Error("محصول مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
