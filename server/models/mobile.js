@@ -1,10 +1,8 @@
 import { Schema } from "mongoose";
 
 import productModel from "./product.js";
-import validator from "../validators/mobile.js";
 
-const schema = new Schema(
-  {
+const schema = new Schema({
     length: {
       type: Number,
       required: true,
@@ -60,7 +58,7 @@ const schema = new Schema(
     memoryCard: {
       type: String,
       required: true,
-      enum: ["Separate", "Shared", "No memory card"],
+      enum: ["مجزا", "مشترک با سیم‌کارت", "فاقد پشتیبانی"],
     },
     screen: {
       type: String,
@@ -162,10 +160,6 @@ const schema = new Schema(
       type: Boolean,
       required: true,
     },
-  },
-  { timestamps: true }
-);
-
-schema.statics.validation = (body) => validator.validate(body);
+  }, { timestamps: true });
 
 export default productModel.discriminator("Mobile", schema);
