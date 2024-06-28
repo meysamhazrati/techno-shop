@@ -9,6 +9,7 @@ import favoriteModel from "../models/favorite.js";
 import commentModel from "../models/comment.js";
 import articleModel from "../models/article.js";
 import ticketModel from "../models/ticket.js";
+import validator from "../validators/user.js";
 
 const getAll = async (request, response, next) => {
   try {
@@ -30,7 +31,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No user found."), { status: 404 });
+    throw Object.assign(new Error("کاربری پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -50,7 +51,7 @@ const get = async (request, response, next) => {
     if (user) {
       response.json(user);
     } else {
-      throw Object.assign(new Error("The user was not found."), { status: 404 });
+      throw Object.assign(new Error("کاربر مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -59,40 +60,34 @@ const get = async (request, response, next) => {
 
 const edit = async (request, response, next) => {
   try {
-    await model.editValidation(request.body);
-
-    const { user } = request;
-    const { _id: id } = user;
+    const { _id } = request.user;
 
     const avatar = request.file;
-    const { firstName, lastName, currentPassword, newPassword } = request.body;
+    const body = request.body;
 
+    await validator.edit.validate(body);
+    
     let hashedPassword;
 
-    if (currentPassword && newPassword) {
-      const { password } = await model.findById(id);
+    if (body.currentPassword && body.newPassword) {
+      const { password } = await model.findById(_id);
 
-      const isPasswordValid = await compare(currentPassword, password);
+      const isPasswordValid = await compare(body.currentPassword, password);
 
       if (isPasswordValid) {
-        hashedPassword = await hash(newPassword, 12);
+        hashedPassword = await hash(body.newPassword, 12);
       } else {
-        throw Object.assign(new Error("The password is incorrect."), { status: 401 });
+        throw Object.assign(new Error("رمز عبور فعلی وارد شده نامعتبر است."), { status: 401 });
       }
     }
 
-    await model.findByIdAndUpdate(id, {
-      firstName,
-      lastName,
-      password: hashedPassword,
-      avatar: avatar?.filename,
-    });
+    const result = await model.findByIdAndUpdate(_id, { ...body, avatar: avatar?.filename, password: hashedPassword });
 
-    avatar && unlink(`public/images/users/${user.avatar}`, (error) => console.error(error));
+    avatar && unlink(`public/images/users/${result.avatar}`, (error) => error && console.error(error));
 
-    response.json({ message: "Your information has been successfully edited." });
+    response.json({ message: "اطلاعات شما با موفقیت ویرایش شد." });
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => console.error(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -100,39 +95,32 @@ const edit = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await model.updateValidation(request.body);
-
     const { id } = request.params;
-
+    
     const avatar = request.file;
-    const { firstName, lastName, email, password, role } = request.body;
+    const body = request.body;
+    
+    await validator.update.validate(body);
 
-    const isExists = await model.findOne({ email, _id: { $ne: id } });
+    const isExists = await model.findOne({ _id: { $ne: id }, email: body.email });
 
     if (isExists) {
-      throw Object.assign(new Error("This email already exists."), { status: 409 });
+      throw Object.assign(new Error("ایمیل وارد شده از قبل وجود دارد."), { status: 409 });
     } else {
-      const hashedPassword = password ? await hash(password, 12) : undefined;
+      const hashedPassword = body.password ? await hash(body.password, 12) : undefined;
 
-      const result = await model.findByIdAndUpdate(id, {
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        role,
-        avatar: avatar?.filename,
-      });
+      const result = await model.findByIdAndUpdate(id, { ...body, avatar: avatar?.filename, password: hashedPassword });
 
       if (result) {
-        avatar && unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
+        avatar && unlink(`public/images/users/${result.avatar}`, (error) => error && console.error(error));
 
-        response.json({ message: "The user has been successfully edited." });
+        response.json({ message: "کاربر مورد نظر با موفقیت ویرایش شد." });
       } else {
-        throw Object.assign(new Error("The user was not found."), { status: 404 });
+        throw Object.assign(new Error("کاربر مورد نظر پیدا نشد."), { status: 404 });
       }
     }
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => console.error(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -144,31 +132,33 @@ const addToCart = async (request, response, next) => {
 
     const { _id, cart } = request.user;
 
-    const { color } = request.body;
+    const body = request.body;
+
+    await validator.cart.validate(body);
 
     const product = await productModel.findById(id);
-    const productColor = await colorModel.findOne({ _id: color, product: id });
+    const color = await colorModel.findOne({ _id: body.color, product: id });
 
-    if (product && productColor) {
-      const isExists = cart.find(({ product, color }) => product.equals(id) && color.equals(productColor._id));
+    if (product && color) {
+      const isExists = cart.find(({ product, color: color_ }) => product.equals(id) && color_.equals(color._id));
 
       if (isExists) {
-        if (productColor.inventory > isExists.quantity) {
+        if (color.inventory > isExists.quantity) {
           await model.findOneAndUpdate({ _id, "cart._id": isExists._id }, { $inc: { "cart.$.quantity": 1 } });
 
-          return response.json({ message: "The quantity of this product in your cart has been successfully increased." });
+          return response.json({ message: "تعداد محصول مورد نظر با موفقیت در سبد خرید شما افزایش پیدا کرد." });
         }
       } else {
-        if (productColor.inventory >= 1) {
-          await model.findByIdAndUpdate(_id, { $push: { cart: { color: productColor, product: id } } });
+        if (color.inventory >= 1) {
+          await model.findByIdAndUpdate(_id, { $push: { cart: { color: color, product: id } } });
 
-          return response.json({ message: "The product has been successfully added to your cart." });
+          return response.json({ message: "محصول مورد نظر با موفقیت به سبد خرید شما اضافه شد." });
         }
       }
 
-      throw Object.assign(new Error("The product inventory is insufficient."), { status: 409 });
+      throw Object.assign(new Error("موجودی محصول مورد نظر کافی نمی‌باشد."), { status: 409 });
     } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
+      throw Object.assign(new Error("محصول مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -181,29 +171,31 @@ const removeFromCart = async (request, response, next) => {
 
     const { _id, cart } = request.user;
 
-    const { color } = request.body;
+    const body = request.body;
+    
+    await validator.cart.validate(body);
 
     const product = await productModel.findById(id);
-    const productColor = await colorModel.findOne({ _id: color, product: id });
+    const color = await colorModel.findOne({ _id: body.color, product: id });
 
-    if (product && productColor) {
-      const isExists = cart.find(({ product, color }) => product.equals(id) && color.equals(productColor._id));
+    if (product && color) {
+      const isExists = cart.find(({ product, color: color_ }) => product.equals(id) && color_.equals(color._id));
 
       if (isExists) {
         if (isExists.quantity > 1) {
           await model.findOneAndUpdate({ _id, "cart._id": isExists._id }, { $inc: { "cart.$.quantity": -1 } });
 
-          return response.json({ message: "The quantity of this product in your cart has been successfully decreased." });
+          return response.json({ message: "تعداد محصول مورد نظر با موفقیت در سبد خرید شما کاهش پیدا کرد." });
         } else {
           await model.findByIdAndUpdate(_id, { $pull: { cart: { _id: isExists._id } } });
 
-          return response.json({ message: "The product has been successfully removed from your cart." });
+          return response.json({ message: "محصول مورد نظر با موفقیت از سبد خرید شما حذف شد." });
         }
       } else {
-        throw Object.assign(new Error("This product doesn't exist in your cart."), { status: 409 });
+        throw Object.assign(new Error("محصول مورد نظر در سبد خرید شما وجود ندارد."), { status: 409 });
       }
     } else {
-      throw Object.assign(new Error("The product was not found."), { status: 404 });
+      throw Object.assign(new Error("محصول مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -217,9 +209,9 @@ const emptyCart = async (request, response, next) => {
     if (cart.length) {
       await model.findByIdAndUpdate(_id, { $set: { cart: [] } });
 
-      response.json({ message: "Your cart has been successfully emptied." });
+      response.json({ message: "سبد خرید شما با موفقیت خالی شد." });
     } else {
-      throw Object.assign(new Error("Your cart is already empty."), { status: 409, });
+      throw Object.assign(new Error("سبد خرید شما از قبل خالی است."), { status: 409, });
     }
   } catch (error) {
     next(error);
@@ -234,14 +226,14 @@ const ban = async (request, response, next) => {
 
     if (user) {
       if (user.isBanned) {
-        throw Object.assign(new Error("This user has already been banned."), { status: 409 });
+        throw Object.assign(new Error("کاربر مورد نظر از قبل ممنوع شده است."), { status: 409 });
       } else {
         await model.findByIdAndUpdate(id, { isBanned: true });
 
-        response.json({ message: "The user has been successfully banned." });
+        response.json({ message: "کاربر مورد نظر با موفقیت ممنوع شد." });
       }
     } else {
-      throw Object.assign(new Error("The user was not found."), { status: 404 });
+      throw Object.assign(new Error("کاربر مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -258,12 +250,12 @@ const unBan = async (request, response, next) => {
       if (user.isBanned) {
         await model.findByIdAndUpdate(id, { isBanned: false });
 
-        response.json({ message: "The user has been successfully unbanned." });
+        response.json({ message: "کاربر مورد نظر با موفقیت آزاد شد." });
       } else {
-        throw Object.assign(new Error("This user has not been banned."), { status: 409 });
+        throw Object.assign(new Error("کاربر مورد نظر ممنوع نشده است."), { status: 409 });
       }
     } else {
-      throw Object.assign(new Error("The user was not found."), { status: 404 });
+      throw Object.assign(new Error("کاربر مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -277,7 +269,7 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      unlink(`public/images/users/${result.avatar}`, (error) => console.error(error));
+      unlink(`public/images/users/${result.avatar}`, (error) => error && console.error(error));
 
       await addressModel.deleteMany({ recipient: id });
       await favoriteModel.deleteMany({ user: id });
@@ -285,9 +277,9 @@ const remove = async (request, response, next) => {
       await articleModel.deleteMany({ author: id });
       await ticketModel.deleteMany({ sender: id });
 
-      response.json({ message: "The user has been successfully removed." });
+      response.json({ message: "کاربر مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The user was not found."), { status: 404 });
+      throw Object.assign(new Error("کاربر مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
