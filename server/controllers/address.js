@@ -1,20 +1,15 @@
 import model from "../models/address.js";
+import validator from "../validators/address.js";
 
 const create = async (request, response, next) => {
   try {
-    await model.validation(request.body);
+    const body  = request.body;
 
-    const { province, city, postalCode, body } = request.body;
+    await validator.validate(body);
 
-    await model.create({
-      province,
-      city,
-      postalCode,
-      body,
-      recipient: request.user._id,
-    });
+    await model.create({ ...body, recipient: request.user._id });
 
-    response.status(201).json({ message: "The address has been successfully added." });
+    response.status(201).json({ message: "آدرس شما با موفقیت ثبت شد." });
   } catch (error) {
     next(error);
   }
@@ -40,7 +35,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No address found."), { status: 404 });
+    throw Object.assign(new Error("آدرسی پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -56,23 +51,18 @@ const update = async (request, response, next) => {
 
     if (address) {
       if (role === "ADMIN" || _id.equals(address.recipient)) {
-        await model.validation(request.body);
+        const body = request.body;
+        
+        await validator.validate(body);
 
-        const { province, city, postalCode, body } = request.body;
+        await model.findByIdAndUpdate(id, body);
 
-        await model.findByIdAndUpdate(id, {
-          province,
-          city,
-          postalCode,
-          body,
-        });
-
-        response.json({ message: "The address has been successfully edited." });
+        response.json({ message: "آدرس مورد نظر با موفقیت ویرایش شد." });
       } else {
-        throw Object.assign(new Error("You don't have access to edit this address."), { status: 403 });
+        throw Object.assign(new Error("شما دسترسی لازم برای ویرایش آدرس مورد نظر را ندارید."), { status: 403 });
       }
     } else {
-      throw Object.assign(new Error("The address was not found."), { status: 404 });
+      throw Object.assign(new Error("آدرس مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -91,12 +81,12 @@ const remove = async (request, response, next) => {
       if (role === "ADMIN" || _id.equals(address.recipient)) {
         await model.findByIdAndDelete(id);
 
-        response.json({ message: "The address has been successfully removed." });
+        response.json({ message: "آدرس مورد نظر با موفقیت حذف شد." });
       } else {
-        throw Object.assign(new Error("You don't have access to remove this address."), { status: 403 });
+        throw Object.assign(new Error("شما دسترسی لازم برای حذف آدرس مورد نظر را ندارید."), { status: 403 });
       }
     } else {
-      throw Object.assign(new Error("The address was not found."), { status: 404 });
+      throw Object.assign(new Error("آدرس مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
