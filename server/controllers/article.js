@@ -3,26 +3,20 @@ import { unlink } from "fs";
 import model from "../models/article.js";
 import categoryModel from "../models/category.js";
 import commentModel from "../models/comment.js";
+import validator from "../validators/article.js"
 
 const create = async (request, response, next) => {
   try {
     const cover = request.file;
-    await model.createValidation({ ...request.body, cover });
+    const body = request.body;
+    
+    await validator.create.validate({ ...body, cover });
 
-    const { title, body, isPublished, category } = request.body;
+    await model.create({ ...body, cover: cover.filename, author: request.user._id });
 
-    await model.create({
-      title,
-      cover: cover.filename,
-      body,
-      isPublished,
-      author: request.user._id,
-      category,
-    });
-
-    response.status(201).json({ message: `The article has been successfully added and ${JSON.parse(isPublished) ? "published" : "drafted"}.` });
+    response.status(201).json({ message: `مقاله مورد نظر با موفقیت ثبت و ${JSON.parse(body.isPublished) ? "منتشر" : "پیش‌نویس"} شد.` });
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => console.error(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -71,7 +65,7 @@ const getAll = async (request, response, next) => {
       }
     }
 
-    throw Object.assign(new Error("No article found."), { status: 404 });
+    throw Object.assign(new Error("مقاله‌ای پیدا نشد."), { status: 404 });
   } catch (error) {
     next(error);
   }
@@ -97,7 +91,7 @@ const get = async (request, response, next) => {
 
       response.json({ ...article, score: parseFloat((article.comments.reduce((previous, { score }) => previous + score, 5) / (article.comments.length + 1) || 5).toFixed(1)), comments: article.comments.slice(commentsStartIndex, commentsEndIndex), totalComments: article.comments.length, nextCommentsPage: commentsEndIndex < article.comments.length ? currentCommentsPage + 1 : null });
     } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
+      throw Object.assign(new Error("مقاله مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -106,28 +100,24 @@ const get = async (request, response, next) => {
 
 const update = async (request, response, next) => {
   try {
-    await model.updateValidation(request.body);
-
     const { id } = request.params;
-
+    
     const cover = request.file;
-    const { title, body } = request.body;
+    const body = request.body;
+    
+    await validator.update.validate(body);
 
-    const result = await model.findByIdAndUpdate(id, {
-      title,
-      cover: cover?.filename,
-      body,
-    });
+    const result = await model.findByIdAndUpdate(id, { ...body, cover: cover?.filename });
 
     if (result) {
-      cover && unlink(`public/images/articles/${result.cover}`, (error) => console.error(error));
+      cover && unlink(`public/images/articles/${result.cover}`, (error) => error && console.error(error));
 
-      response.json({ message: "The article has been successfully edited." });
+      response.json({ message: "مقاله مورد نظر با موفقیت ویرایش شد." });
     } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
+      throw Object.assign(new Error("مقاله مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
-    request.file && unlink(request.file.path, (error) => console.error(error));
+    request.file && unlink(request.file.path, (error) => error && console.error(error));
 
     next(error);
   }
@@ -141,14 +131,14 @@ const publish = async (request, response, next) => {
 
     if (article) {
       if (article.isPublished) {
-        throw Object.assign(new Error("This article has already been published."), { status: 409 });
+        throw Object.assign(new Error("مقاله مورد نظر از قبل منتشر شده است."), { status: 409 });
       } else {
         await model.findByIdAndUpdate(id, { isPublished: true });
 
-        response.json({ message: "The article has been successfully published." });
+        response.json({ message: "مقاله مورد نظر با موفقیت منتشر شد." });
       }
     } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
+      throw Object.assign(new Error("مقاله مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -165,12 +155,12 @@ const draft = async (request, response, next) => {
       if (article.isPublished) {
         await model.findByIdAndUpdate(id, { isPublished: false });
 
-        response.json({ message: "The article has been successfully drafted." });
+        response.json({ message: "مقاله مورد نظر با موفقیت پیش‌نویس شد." });
       } else {
-        throw Object.assign(new Error("This article has not been published."), { status: 409 });
+        throw Object.assign(new Error("مقاله مورد نظر منتشر نشده است."), { status: 409 });
       }
     } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
+      throw Object.assign(new Error("مقاله مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
@@ -184,13 +174,13 @@ const remove = async (request, response, next) => {
     const result = await model.findByIdAndDelete(id);
 
     if (result) {
-      unlink(`public/images/articles/${result.cover}`, (error) => console.error(error));
+      unlink(`public/images/articles/${result.cover}`, (error) => error && console.error(error));
 
       await commentModel.deleteMany({ article: id });
 
-      response.json({ message: "The article has been successfully removed." });
+      response.json({ message: "مقاله مورد نظر با موفقیت حذف شد." });
     } else {
-      throw Object.assign(new Error("The article was not found."), { status: 404 });
+      throw Object.assign(new Error("مقاله مورد نظر پیدا نشد."), { status: 404 });
     }
   } catch (error) {
     next(error);
