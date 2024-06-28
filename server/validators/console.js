@@ -1,19 +1,21 @@
 import { object, string, number } from "yup";
 
 const validator = object({
-  length: number().required().min(100).max(300),
-  width: number().required().min(20).max(100),
-  height: number().required().min(200).max(500),
-  weight: number().required().min(2000).max(7000),
-  drive: string().required().oneOf(["CD", "DVD", "Blue-ray", "No drive"]),
-  CPU: string().required().oneOf(["AMD"]),
-  CPUSeries: string().required().min(1).max(50),
-  CPUGeneration: string().required().min(1).max(50),
-  CPUCore: number().required().min(8).max(8),
-  GPU: string().required().oneOf(["AMD"]),
-  GPUModel: string().required().min(5).max(50),
-  storage: number().required().oneOf([512, 825, 1000]),
-  RAM: number().required().min(8).max(16),
+  length: number().required("طول الزامی است.").min(100, "طول باید حداقل 100 میلی‌متر باشد.").max(300, "طول باید حداکثر 300 میلی‌متر باشد."),
+  width: number().required("عرض الزامی است.").min(20, "عرض باید حداقل 20 میلی‌متر باشد.").max(100, "عرض باید حداکثر 100 میلی‌متر باشد."),
+  height: number().required("ارتفاع الزامی است.").min(200, "ارتفاع باید حداقل 200 میلی‌متر باشد.").max(500, "ارتفاع باید حداکثر 500 میلی‌متر باشد."),
+  weight: number().required("وزن الزامی است.").min(2000, "وزن باید حداقل 2000 گرم باشد.").max(7000, "وزن باید حداکثر 7000 گرم باشد."),
+  drive: string().required("نوع درایو الزامی است.").oneOf(["CD", "DVD", "Blue-ray", "فاقد درایو"], "نوع درایو باید CD، DVD، Blue-ray یا فاقد درایو باشد."),
+  CPU: string().required("سازنده پردازنده الزامی است.").oneOf(["AMD"], "سازنده پردازنده باید AMD باشد."),
+  CPUSeries: string().required("سری پردازنده الزامی است.").min(1, "سری پردازنده باید حداقل 1 کاراکتر باشد.").max(50, "سری پردازنده باید حداکثر 50 کاراکتر باشد."),
+  CPUGeneration: string().required("نسل پردازنده الزامی است.").min(1, "نسل پردازنده باید حداقل 1 کاراکتر باشد.").max(50, "نسل پردازنده باید حداکثر 50 کاراکتر باشد."),
+  CPUFrequency: number().required("فرکانس پردازنده الزامی است.").min(1, "فرکانس پردازنده باید حداقل 1 گیگاهرتز باشد.").max(10, "فرکانس پردازنده باید حداکثر 10 گیگاهرتز باشد."),
+  CPUCore: number().required("تعداد هسته پردازنده الزامی است.").oneOf([8], "تعداد هسته پردازنده باید 8 عدد باشد."),
+  GPU: string().required("سازنده پردازنده گرافیکی الزامی است.").oneOf(["AMD"], "سازنده پردازنده گرافیکی باید AMD باشد."),
+  GPUModel: string().required("مدل پردازنده گرافیکی الزامی است.").min(5, "مدل پردازنده گرافیکی باید حداقل 5 کاراکتر باشد.").max(50, "مدل پردازنده گرافیکی باید حداکثر 50 کاراکتر باشد."),
+  GPURAM: number().required("رم پردازنده گرافیکی الزامی است.").min(8, "رم پردازنده گرافیکی باید حداقل 8 گیگابایت باشد.").max(16, "رم پردازنده گرافیکی باید حداکثر 16 گیگابایت باشد."),
+  storage: number().required("ظرفیت الزامی است.").oneOf([512, 825, 1000], "ظرفیت باید 512، 825 یا 1000 گیگابایت باشد."),
+  RAM: number().required("رم الزامی است.").min(8, "رم باید حداقل 8 گیگابایت باشد.").max(16, "رم باید حداکثر 16 گیگابایت باشد."),
 });
 
 export default validator;
