@@ -10,12 +10,12 @@ const useRemoveTicket = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => remove(id),
-    onSuccess: () => {
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["tickets"] });
 
-      openToast("success", null, "تیکت مورد نظر با موفقیت حذف شد.")
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "تیکت مورد نظر پیدا نشد." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingRemoveTicket: isPending, removeTicket: mutate };

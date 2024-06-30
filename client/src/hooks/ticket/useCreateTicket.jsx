@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { create } from "../../axios/controllers/ticket";
+import validator from "../../validators/ticket";
 
 const useCreateTicket = () => {
   const client = useQueryClient();
@@ -9,13 +10,14 @@ const useCreateTicket = () => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ department, title, body }) => create({ department, title, body }),
-    onSuccess: () => {
+    mutationFn: (body) => create(body),
+    onMutate: async (body) => await validator.create.validate(body),
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["me"] });
 
-      openToast("success", null, "تیکت شما با موفقیت ثبت شد.");
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 403 ? "شما دسترسی لازم ندارید." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingCreateTicket: isPending, createTicket: mutate };

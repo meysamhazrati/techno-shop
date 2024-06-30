@@ -2,14 +2,16 @@ import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { reply } from "../../axios/controllers/ticket";
+import validator from "../../validators/ticket";
 
 const useReplyTicket = (id) => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ body }) => reply(id, { body }),
-    onSuccess: () => openToast("success", null, "پاسخ شما با موفقیت ارسال شد."),
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "تیکت مورد نظر پیدا نشد." : null),
+    mutationFn: (body) => reply(id, body),
+    onMutate: async (body) => await validator.reply.validate(body),
+    onSuccess: ({ message }) => openToast("success", null, message),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingReplyTicket: isPending, replyTicket: mutate };

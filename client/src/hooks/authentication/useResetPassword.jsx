@@ -3,20 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { resetPassword } from "../../axios/controllers/authentication";
+import validator from "../../validators/authentication";
 
 const useResetPassword = () => {
   const navigate = useNavigate();
-  
+
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ email, password }) => resetPassword({ email, password }),
-    onSuccess: () => {
+    mutationFn: (body) => resetPassword(body),
+    onMutate: async (body) => await validator.resetPassword.validate(body),
+    onSuccess: ({ message }) => {
       navigate("/me/profile");
-      
-      openToast("success", null, "رمز عبور شما با موفقیت بازنشانی شد.");
+
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 401 ? "ایمیل وارد شده تایید نشده است." : response.status === 409 ? "این رمز عبور قبلا استفاده شده است." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingResetPassword: isPending, resetPassword: mutate };

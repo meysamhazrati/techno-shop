@@ -10,12 +10,12 @@ const useDeliverOrder = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => deliver(id),
-    onSuccess: () => {
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["orders"] });
 
-      openToast("success", null, "سفارش مورد نظر با موفقیت تحویل شد.");
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "سفارش مورد نظر پیدا نشد" : response.status === 409 ? "این سفارش از قبل تحویل، لغو یا مرجوع شده است." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingDeliverOrder: isPending, deliverOrder: mutate };

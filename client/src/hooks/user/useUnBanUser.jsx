@@ -10,12 +10,12 @@ const useUnBanUser = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => unBan(id),
-    onSuccess: () => {
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["users"] });
 
-      openToast("success", null, "کاربر مورد نظر با موفقیت آزاد شد.")
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "کاربر مورد نظر پیدا نشد" : response.status === 409 ? "این کاربر ممنوع نشده است." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingUnBanUser: isPending, unBanUser: mutate };

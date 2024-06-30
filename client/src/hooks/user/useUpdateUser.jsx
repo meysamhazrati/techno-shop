@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { update } from "../../axios/controllers/user";
+import validator from "../../validators/user";
 
 const useUpdateUser = (id) => {
   const client = useQueryClient();
@@ -9,13 +10,14 @@ const useUpdateUser = (id) => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ firstName, lastName, email, password, role, avatar }) => update(id, { firstName, lastName, email, password, role, avatar }),
-    onSuccess: () => {
+    mutationFn: (body) => update(id, body),
+    onMutate: async (body) => await validator.update.validate(body),
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["users"] });
 
-      openToast("success", null, "کاربر مورد نظر با موفقیت ویرایش شد.")
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "کاربر مورد نظر پیدا نشد." : response.status === 409 ? "ایمیل وارد شده از قبل وجود دارد." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingUpdateUser: isPending, updateUser: mutate };

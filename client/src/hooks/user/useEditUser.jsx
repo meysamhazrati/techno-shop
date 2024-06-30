@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { edit } from "../../axios/controllers/user";
+import validator from "../../validators/user";
 
 const useEditUser = () => {
   const client = useQueryClient();
@@ -9,13 +10,14 @@ const useEditUser = () => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ firstName, lastName, currentPassword, newPassword, avatar }) => edit({ firstName, lastName, currentPassword, newPassword, avatar }),
-    onSuccess: () => {
+    mutationFn: (body) => edit(body),
+    onMutate: async (body) => await validator.edit.validate(body),
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["me"] });
-      
-      openToast("success", null, "اطلاعات شما با موفقیت ویرایش شد.");
+
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 401 ? "رمز عبور فعلی وارد شده معتبر نمی‌باشد." : response.status === 403 ? "شما دسترسی لازم ندارید." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingEditUser: isPending, editUser: mutate };

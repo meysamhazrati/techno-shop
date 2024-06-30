@@ -8,8 +8,8 @@ const useRemoveComment = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => remove(id),
-    onSuccess: () => openToast("success", null, "دیدگاه مورد نظر با موفقیت حذف شد."),
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "دیدگاه مورد نظر پیدا نشد." : null),
+    onSuccess: ({ message }) => openToast("success", null, message),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingRemoveComment: isPending, removeComment: mutate };

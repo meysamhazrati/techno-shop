@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { create } from "../../axios/controllers/favorite";
+import validator from "../../validators/favorite";
 
 const useCreateFavorite = () => {
   const client = useQueryClient();
@@ -9,13 +10,14 @@ const useCreateFavorite = () => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ product }) => create({ product }),
-    onSuccess: () => {
+    mutationFn: (body) => create(body),
+    onMutate: async (body) => await validator.validate(body),
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["me"] });
 
-      openToast("success", null, "علاقه‌مندی شما با موفقیت اضافه شد.");
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "محصول مورد نظر پیدا نشد." : response.status === 409 ? "این علاقه‌مندی از قبل اضافه شده است." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingCreateFavorite: isPending, createFavorite: mutate };

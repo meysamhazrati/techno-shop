@@ -6,21 +6,21 @@ import { logout } from "../../axios/controllers/authentication";
 
 const useLogout = () => {
   const client = useQueryClient();
-  
+
   const navigate = useNavigate();
 
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
     mutationFn: logout,
-    onSuccess: () => {
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["me"] });
 
       navigate("/");
-      
-      openToast("success", null, "با موفقیت از حساب کاربری خود خارج شدید.");
+
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingLogout: isPending, logout: mutate };

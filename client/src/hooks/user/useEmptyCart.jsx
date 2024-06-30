@@ -10,12 +10,12 @@ const useEmptyCart = () => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: emptyCart,
-    onSuccess: () => {
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["me"] });
-      
-      openToast("success", null, "سبد خرید شما با موفقیت خالی شد.");
+
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 409 ? "سبد خرید شما در حال حاضر خالی است." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingEmptyCart: isPending, emptyCart: mutate };

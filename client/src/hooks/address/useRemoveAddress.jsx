@@ -8,8 +8,8 @@ const useRemoveAddress = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => remove(id),
-    onSuccess: () => openToast("success", null, "آدرس مورد نظر با موفقیت حذف شد."),
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "آدرس مورد نظر پیدا نشد." : null),
+    onSuccess: ({ message }) => openToast("success", null, message),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingRemoveAddress: isPending, removeAddress: mutate };

@@ -2,14 +2,16 @@ import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ToastContext } from "../../contexts/Toast";
 import { create } from "../../axios/controllers/comment";
+import validator from "../../validators/comment";
 
 const useCreateComment = () => {
   const { openToast } = useContext(ToastContext);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: ({ body, score, product, article }) => create({ body, score, product, article }),
-    onSuccess: () => openToast("success", null, "دیدگاه شما با موفقیت ثبت شد."),
-    onError: ({ response }) => openToast("error", null, response.status === 400 ? "اطلاعات وارد شده معتبر نمی‌باشند." : response.status === 403 ? "شما دسترسی لازم ندارید." : null),
+    mutationFn: (body) => create(body),
+    onMutate: async (body) => await validator.create.validate(body),
+    onSuccess: ({ message }) => openToast("success", null, message),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingCreateComment: isPending, createComment: mutate };

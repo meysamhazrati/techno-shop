@@ -10,12 +10,12 @@ const useConfirmComment = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => confirm(id),
-    onSuccess: () => {
+    onSuccess: ({ message }) => {
       client.invalidateQueries({ queryKey: ["comments"] });
 
-      openToast("success", null, "دیدگاه مورد نظر با موفقیت تایید شد.");
+      openToast("success", null, message);
     },
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "دیدگاه مورد نظر پیدا نشد." : response.status === 409 ? "این دیدگاه از قبل تایید شده است." : null),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingConfirmComment: isPending, confirmComment: mutate };

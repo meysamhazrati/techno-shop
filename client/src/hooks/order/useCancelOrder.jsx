@@ -8,8 +8,8 @@ const useCancelOrder = (id) => {
 
   const { isPending, mutate } = useMutation({
     mutationFn: () => cancel(id),
-    onSuccess: () => openToast("success", null, "سفارش مورد نظر با موفقیت لغو شد."),
-    onError: ({ response }) => openToast("error", null, response.status === 403 ? "شما دسترسی لازم ندارید." : response.status === 404 ? "سفارش مورد نظر پیدا نشد" : response.status === 409 ? "این سفارش از قبل تحویل، لغو یا مرجوع شده است." : null),
+    onSuccess: ({ message }) => openToast("success", null, message),
+    onError: ({ message }) => openToast("error", null, message),
   });
 
   return { isPendingCancelOrder: isPending, cancelOrder: mutate };
