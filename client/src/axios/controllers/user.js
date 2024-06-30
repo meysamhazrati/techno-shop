@@ -4,13 +4,13 @@ const getAll = async (page, length) => await axios.get("/users", { params: { pag
 
 const get = async (id) => await axios.get(`/users/${id}`);
 
-const edit = async ({ firstName, lastName, currentPassword, newPassword, avatar }) => await axios.putForm("/users", { firstName, lastName, currentPassword, newPassword, avatar });
+const edit = async (body) => await axios.putForm("/users", body);
 
-const update = async (id, { firstName, lastName, email, password, role, avatar }) => await axios.putForm(`/users/${id}`, { firstName, lastName, email, password, role, avatar });
+const update = async (id, body) => await axios.putForm(`/users/${id}`, body);
 
-const addToCart = async (id, { color }) => await axios.put(`/users/cart/add/${id}`, { color });
+const addToCart = async (id, body) => await axios.put(`/users/cart/add/${id}`, body);
 
-const removeFromCart = async (id, { color }) => await axios.put(`/users/cart/remove/${id}`, { color });
+const removeFromCart = async (id, body) => await axios.put(`/users/cart/remove/${id}`, body);
 
 const emptyCart = async () => await axios.put("/users/cart/empty");
 

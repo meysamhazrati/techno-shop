@@ -1,12 +1,12 @@
 import axios from "../config";
 
-const create = async ({ title, cover, body, isPublished, category }) => await axios.postForm("/articles", { title, cover, body, isPublished, category });
+const create = async (body) => await axios.postForm("/articles", body);
 
 const getAll = async (categories, onlyPublished, sort, page, length) => await axios.get("/articles", { params: { categories, "only-published": onlyPublished, sort, page, length } });
 
 const get = async (id, commentsPage, commentsLength) => await axios.get(`/articles/${id}`, { params: { "comments-page": commentsPage, "comments-length": commentsLength } });
 
-const update = async (id, { title, cover, body }) => await axios.putForm(`/articles/${id}`, { title, cover, body });
+const update = async (id, body) => await axios.putForm(`/articles/${id}`, body);
 
 const publish = async (id) => await axios.put(`/articles/publish/${id}`);
 

@@ -1,8 +1,8 @@
 import axios from "../config";
 
-const create = async ({ department, title, body }) => await axios.post("/tickets", { department, title, body });
+const create = async (body) => await axios.post("/tickets", body);
 
-const reply = async (id, { body }) => await axios.post(`/tickets/reply/${id}`, { body });
+const reply = async (id, body) => await axios.post(`/tickets/reply/${id}`, body);
 
 const getAll = async (page, length) => await axios.get("/tickets", { params: { page, length } });
 

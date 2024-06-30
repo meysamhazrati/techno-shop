@@ -1,6 +1,6 @@
 import axios from "../config";
 
-const create = async ({ totalPrice, products, destination, discountCode }) => await axios.post("/orders", { totalPrice, products, destination, discountCode });
+const create = async (body) => await axios.post("/orders", body);
 
 const getAll = async (page, length) => await axios.get("/orders", { params: { page, length } });
 
