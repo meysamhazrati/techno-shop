@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios_ from "axios";
 
-export default axios.create({
+const axios = axios_.create({
   baseURL: `${process.env.SERVER_URI}/api`,
   headers: {
     post: {
@@ -12,3 +12,7 @@ export default axios.create({
   },
   withCredentials: true,
 });
+
+axios.interceptors.response.use(({ status, data: { message, ...data } }) => Promise.resolve({ status, message, data }), ({ response }) => Promise.reject({ status: response.status, message: response.data.message }));
+
+export default axios;
