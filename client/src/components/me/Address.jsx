@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ToastContext } from "../../contexts/Toast";
 import useUpdateAddress from "../../hooks/address/useUpdateAddress";
 import useRemoveAddress from "../../hooks/address/useRemoveAddress";
 import Modal from "../Modal";
@@ -19,35 +18,8 @@ const Address = ({ _id, province, city, postalCode, body }) => {
 
   const client = useQueryClient();
 
-  const { openToast } = useContext(ToastContext);
-
   const { isPendingUpdateAddress, updateAddress } = useUpdateAddress(_id);
   const { isPendingRemoveAddress, removeAddress } = useRemoveAddress(_id);
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (newProvince.trim().length >= 2 && newProvince.trim().length <= 20) {
-      if (newCity.trim().length >= 2 && newCity.trim().length <= 20) {
-        if (/\d{10}/.test(newPostalCode.trim())) {
-          if (newBody.trim().length >= 10 && newBody.trim().length <= 100) {
-            updateAddress({ province: newProvince.trim(), city: newCity.trim(), postalCode: newPostalCode.trim(), body: newBody.trim() }, { onSuccess: () => {
-              client.invalidateQueries({ queryKey: ["me"] });
-              setIsEditModalOpen(false);
-            } });
-          } else {
-            openToast("error", null, "آدرس باید بین 10 تا 100 حروف باشد.");
-          }
-        } else {
-          openToast("error", null, "کدپستی معتبر نمی‌باشد.");
-        }
-      } else {
-        openToast("error", null, "شهر باید بین 2 تا 20 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "استان باید بین 2 تا 20 حروف باشد.");
-    }
-  }
 
   return (
     <>
@@ -80,7 +52,14 @@ const Address = ({ _id, province, city, postalCode, body }) => {
       </div>
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش آدرس</h6>
-        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={submit}>
+        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
+          event.preventDefault();
+
+          updateAddress({ province: newProvince.trim(), city: newCity.trim(), postalCode: newPostalCode.trim(), body: newBody.trim() }, { onSuccess: () => {
+            client.invalidateQueries({ queryKey: ["me"] });
+            setIsEditModalOpen(false);
+          } });
+        }}>
           <input
             type="text"
             value={newProvince}
@@ -104,9 +83,8 @@ const Address = ({ _id, province, city, postalCode, body }) => {
             onInput={({ target }) => /^\d{0,10}$/.test(target.value) && setNewPostalCode(target.value)}
           />
           <textarea
-            type="text"
             value={newBody}
-            placeholder="آدرس"
+            placeholder="متن"
             className="max-h-48 min-h-32 rounded-3xl border border-zinc-200 p-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => setNewBody(target.value)}
            />
