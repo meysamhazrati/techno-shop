@@ -1,6 +1,5 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ToastContext } from "../../contexts/Toast";
 import useMe from "../../hooks/authentication/useMe";
 import useEditUser from "../../hooks/user/useEditUser";
 import UserAvatar from "../../components/UserAvatar";
@@ -18,8 +17,6 @@ const Profile = () => {
   const image = useRef();
   const file = useRef();
 
-  const { openToast } = useContext(ToastContext);
-
   const { me } = useMe();
   const { isPendingEditUser, editUser } = useEditUser();
 
@@ -33,34 +30,16 @@ const Profile = () => {
     setEmail(me.email);
   }, [me]);
 
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (firstName.trim().length >= 3 && firstName.trim().length <= 70) {
-      if (lastName.trim().length >= 4 && lastName.trim().length <= 70) {
-        if ((currentPassword || newPassword) ? (/^[\w?!$._-]{8,20}$/.test(currentPassword?.trim()) && /^[\w?!$._-]{8,20}$/.test(newPassword?.trim())) : true) {
-          if (avatar ? (avatar.type === "image/png" || avatar.type === "image/jpg" || avatar.type === "image/jpeg") : true) {
-            editUser({ firstName: firstName.trim(), lastName: lastName.trim(), currentPassword: currentPassword ? currentPassword.trim() : undefined, newPassword: newPassword ? newPassword.trim() : undefined, avatar }, { onSuccess: () => {
-              setCurrentPassword("");
-              setNewPassword("");
-            }, });
-          } else {
-            openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
-          }
-        } else {
-          openToast("error", null, "رمز عبور باید بین 8 تا 20 کاراکتر باشد.");
-        }
-      } else {
-        openToast("error", null, "نام خانوادگی باید بین 4 تا 70 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "نام باید بین 3 تا 70 حروف باشد.");
-    }
-  };
-
   return (
     <>
-      <form onSubmit={submit}>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+
+        editUser({ firstName: firstName.trim(), lastName: lastName.trim(), currentPassword: currentPassword ? currentPassword.trim() : undefined, newPassword: newPassword ? newPassword.trim() : undefined, avatar }, { onSuccess: () => {
+          setCurrentPassword("");
+          setNewPassword("");
+        } });
+      }}>
         <div className="flex flex-col items-center gap-6 sm:flex-row">
           <div className="relative size-52 shrink-0">
             {file.current?.files.length ? <img ref={image} alt="User Avatar" className="size-full rounded-full object-cover" /> : <UserAvatar user={me} className="size-full text-5xl" />}
