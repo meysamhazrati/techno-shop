@@ -56,18 +56,18 @@ const Order = () => {
       <div className="mt-6 flex flex-col gap-3 overflow-auto text-nowrap border-t border-zinc-200 pt-6 text-lg sm:flex-row sm:items-center">
         <div className="flex items-center gap-x-2">
           <span className="text-zinc-400">وضعیت:</span>
-          <span>{isFetchingOrder ? "در حال بارگذاری" : order.status === "Delivered" ? "تحویل شده" : order.status === "Canceled" ? "لغو شده" : order.status === "Returned" ? "مرجوع شده" : "جاری"}</span>
+          <span>{isFetchingOrder ? "در حال بارگذاری" : order.status}</span>
         </div>
         <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
         <div className="flex items-center gap-x-2">
           <span className="text-zinc-400">تاریخ ثبت:</span>
           <span>{isFetchingOrder ? "در حال بارگذاری" : new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(order.createdAt))}</span>
         </div>
-        {!isFetchingOrder && order.status !== "In progress" && (
+        {!isFetchingOrder && order.status !== "جاری" && (
           <>
             <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
             <div className="flex items-center gap-x-2">
-              <span className="text-zinc-400">تاریخ {order.status === "Delivered"? "تحویل": order.status === "Canceled"? "لغو": "مرجوع"}:</span>
+              <span className="text-zinc-400">تاریخ {order.status === "تحویل شده" ? "تحویل" : order.status === "لغو شده" ? "لغو" : "مرجوع"}:</span>
               <span>{new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(order.updatedAt))}</span>
             </div>
           </>
@@ -129,10 +129,10 @@ const Order = () => {
           </div>
         ))}
       </div>
-      {!isFetchingOrder && order.status !== "Canceled" && order.status !== "Returned" && (
+      {!isFetchingOrder && order.status !== "لغو شده" && order.status !== "مرجوع شده" && (
         <div className="mt-6 flex items-center gap-x-3 text-lg">
-          {order.status === "In progress" && <button className="flex h-14 w-full items-center justify-center rounded-full bg-red-500 text-white sm:w-40" onClick={() => setIsCancelModalOpen(true)}>لغو</button>}
-          {order.status === "Delivered" && <button className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-200 text-zinc-700 sm:w-40" onClick={() => setIsReturnModalOpen(true)}>مرجوع</button>}
+          {order.status === "جاری" && <button className="flex h-14 w-full items-center justify-center rounded-full bg-red-500 text-white sm:w-40" onClick={() => setIsCancelModalOpen(true)}>لغو</button>}
+          {order.status === "تحویل شده" && <button className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-200 text-zinc-700 sm:w-40" onClick={() => setIsReturnModalOpen(true)}>مرجوع</button>}
         </div>
       )}
       <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)}>
