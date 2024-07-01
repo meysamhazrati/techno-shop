@@ -22,7 +22,7 @@ const Ticket = ({ _id, title, department, isOpen, sender, createdAt }) => {
     <>
       <tr className="border-t border-zinc-200 [&>*]:h-[72px] [&>*]:px-5">
         <td>{title}</td>
-        <td>{department === "Management" ? "مدیریت" : department === "Finance" ? "مالی" : department === "Order Tracking" ? "پیگیری سفارش" : department === "Support" ? "پشتیبانی" : department === "Feedback" ? "بازخورد" : "سایر"}</td>
+        <td>{department}</td>
         <td>{isOpen ? "باز" : "بسته شده"}</td>
         {sender.firstName && sender.lastName && (
           <td>
