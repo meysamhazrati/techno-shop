@@ -1,5 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useRef, useEffect } from "react";
 import useCategories from "../../hooks/category/useCategories";
 import useCreateCategory from "../../hooks/category/useCreateCategory";
 import InfiniteScroll from "../../components/InfiniteScroll";
@@ -16,8 +15,6 @@ const Categories = () => {
   const image = useRef();
   const file = useRef();
 
-  const { openToast } = useContext(ToastContext);
-
   const { isFetchingCategories, isCategoriesError, categories, total, hasCategoriesNextPage, fetchCategoriesNextPage } = useCategories(20);
   const { isPendingCreateCategory, createCategory } = useCreateCategory();
 
@@ -25,34 +22,20 @@ const Categories = () => {
     document.title = "تکنوشاپ - مدیریت - دسته‌بندی‌ ها";
   }, []);
 
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (title.trim().length >= 3 && title.trim().length <= 50) {
-      if (englishTitle.trim().length >= 3 && englishTitle.trim().length <= 50) {
-        if (logo ? logo.type === "image/png" || logo.type === "image/jpg" || logo.type === "image/jpeg" : true) {
-          createCategory({ title: title.trim(), englishTitle: englishTitle.trim(), logo }, { onSuccess: () => {
-            setTitle("");
-            setEnglishTitle("");
-            setLogo(null);
-            image.current.src = "";
-            file.current.value = null;
-          } });
-        } else {
-          openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
-        }
-      } else {
-        openToast("error", null, "عنوان انگلیسی باید بین 3 تا 50 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "عنوان باید بین 3 تا 50 حروف باشد.");
-    }
-  };
-
   return (
     <>
       <h6 className="font-vazirmatn-bold text-xl">ثبت دسته‌بندی‌ جدید</h6>
-      <form className="mt-4 text-lg" onSubmit={submit}>
+      <form className="mt-4 text-lg" onSubmit={(event) => {
+        event.preventDefault();
+
+        createCategory({ title: title.trim(), englishTitle: englishTitle.trim(), logo }, { onSuccess: () => {
+          setTitle("");
+          setEnglishTitle("");
+          setLogo(null);
+          image.current.src = "";
+          file.current.value = null;
+        } });
+      }}>
         <div className="flex items-center gap-x-4">
           <div className="size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
             {file.current?.files.length ? <img ref={image} alt="Category Logo" loading="lazy" className="size-full rounded-full object-cover" /> : <div className="flex size-full items-center justify-center rounded-full border border-zinc-200 text-zinc-400">لوگو</div>}
@@ -115,7 +98,7 @@ const Categories = () => {
             <InfiniteScroll hasNextPage={hasCategoriesNextPage} fetchNextPage={fetchCategoriesNextPage}>
               <tbody>
                 {categories?.map((category) => <Category key={category._id} {...category} />)}
-                {isFetchingCategories && Array(20).fill(0).map((category, index) => <CategorySkeleton key={index} />)}
+                {isFetchingCategories && Array(20).fill().map((category, index) => <CategorySkeleton key={index} />)}
               </tbody>
             </InfiniteScroll>
           </table>
