@@ -23,6 +23,7 @@ const CommentSkeleton = ({ senderField }) => {
           <div className="h-9 w-24 animate-pulse rounded-full bg-skeleton"></div>
           <div className="h-9 w-24 animate-pulse rounded-full bg-skeleton"></div>
           <div className="h-9 w-24 animate-pulse rounded-full bg-skeleton"></div>
+          <div className="h-9 w-24 animate-pulse rounded-full bg-skeleton"></div>
         </div>
       </td>
     </tr>
