@@ -1,6 +1,5 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ToastContext } from "../../contexts/Toast";
 import useUpdateUser from "../../hooks/user/useUpdateUser";
 import useBanUser from "../../hooks/user/useBanUser";
 import useUnBanUser from "../../hooks/user/useUnBanUser";
@@ -19,7 +18,6 @@ const User = ({ _id, firstName, lastName, email, role, avatar, isBanned }) => {
   const [newPassword, setNewPassword] = useState("");
   const [newRole, setNewRole] = useState(role);
   const [newAvatar, setNewAvatar] = useState(null);
-  const [roles, setRoles] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isBanModalOpen, setIsBanModalOpen] = useState(false);
   const [isUnBanModalOpen, setIsUnBanModalOpen] = useState(false);
@@ -28,52 +26,10 @@ const User = ({ _id, firstName, lastName, email, role, avatar, isBanned }) => {
   const image = useRef();
   const file = useRef();
 
-  const { openToast } = useContext(ToastContext);
-
   const { isPendingUpdateUser, updateUser } = useUpdateUser(_id);
   const { isPendingBanUser, banUser } = useBanUser(_id);
   const { isPendingUnBanUser, unBanUser } = useUnBanUser(_id);
   const { isPendingRemoveUser, removeUser } = useRemoveUser(_id);
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (newFirstName.trim().length >= 3 && newFirstName.trim().length <= 70) {
-      if (newLastName.trim().length >= 4 && newLastName.trim().length <= 70) {
-        if (newEmail.trim().length >= 10 && newEmail.trim().length <= 100 && /^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/.test(newEmail.trim())) {
-          if (newPassword ? /^[\w?!$._-]{8,20}$/.test(newPassword.trim()) : true) {
-            if (roles.map(({ value }) => value).some((role) => role === newRole.trim())) {
-              if (newAvatar ? (newAvatar.type === "image/png" || newAvatar.type === "image/jpg" || newAvatar.type === "image/jpeg") : true) {
-                updateUser({ firstName: newFirstName.trim(), lastName: newLastName.trim(), email: newEmail.trim(), password: newPassword ? newPassword.trim() : undefined, role: newRole.trim(), avatar: newAvatar }, { onSuccess: () => {
-                  setIsEditModalOpen(false);
-                  setNewPassword("");
-                } });
-              } else {
-                openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
-              }
-            } else {
-              openToast("error", null, "نقش وارد شده معتبر نمی‌باشد.");
-            }
-          } else {
-            openToast("error", null, "رمز عبور باید بین 8 تا 20 کاراکتر باشد.");
-          }
-        } else {
-          openToast("error", null, "ایمیل وارد شده نامعتبر است.");
-        }
-      } else {
-        openToast("error", null, "نام خانوادگی باید بین 4 تا 70 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "نام باید بین 3 تا 70 حروف باشد.");
-    }
-  };
-
-  useEffect(() => {
-    setRoles([
-      { title: "کاربر", value: "USER" },
-      { title: "مدیر", value: "ADMIN" },
-    ]);
-  }, []);
 
   return (
     <>
@@ -97,7 +53,14 @@ const User = ({ _id, firstName, lastName, email, role, avatar, isBanned }) => {
       </tr>
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش کاربر</h6>
-        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={submit}>
+        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
+          event.preventDefault();
+
+          updateUser({ firstName: newFirstName.trim(), lastName: newLastName.trim(), email: newEmail.trim(), password: newPassword ? newPassword.trim() : undefined, role: newRole.trim(), avatar: newAvatar }, { onSuccess: () => {
+            setIsEditModalOpen(false);
+            setNewPassword("");
+          } });
+        }}>
           <div className="relative mx-auto !size-32 shrink-0">
             {file.current?.files.length ? <img ref={image} alt="User Avatar" className="size-full rounded-full object-cover" /> : <UserAvatar user={{ firstName, lastName, avatar }} className="size-full text-3xl" />}
             <input
@@ -150,7 +113,15 @@ const User = ({ _id, firstName, lastName, email, role, avatar, isBanned }) => {
             className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
             onInput={({ target }) => setNewPassword(target.value)}
           />
-          <SelectBox title={"نقش"} options={roles} currentValue={newRole} setValue={setNewRole} />
+          <SelectBox
+            title={"نقش"}
+            options={[
+              { title: "کاربر", value: "USER" },
+              { title: "مدیر", value: "ADMIN" },
+            ]}
+            currentValue={newRole}
+            setValue={setNewRole}
+          />
           <button disabled={isPendingUpdateUser} className="flex h-14 w-full items-center justify-center text-nowrap rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
             {isPendingUpdateUser ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ویرایش"}
           </button>
