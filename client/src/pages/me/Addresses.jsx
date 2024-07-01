@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useEffect } from "react";
 import useMe from "../../hooks/authentication/useMe";
 import useCreateAddress from "../../hooks/address/useCreateAddress";
 import Address from "../../components/me/Address";
@@ -12,8 +11,6 @@ const Addresses = () => {
   const [postalCode, setPostalCode] = useState("");
   const [body, setBody] = useState("");
 
-  const { openToast } = useContext(ToastContext);
-
   const { me } = useMe();
   const { isPendingCreateAddress, createAddress } = useCreateAddress();
 
@@ -21,37 +18,19 @@ const Addresses = () => {
     document.title = "تکنوشاپ - من - آدرس ها";
   }, []);
 
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (province.trim().length >= 2 && province.trim().length <= 20) {
-      if (city.trim().length >= 2 && city.trim().length <= 20) {
-        if (/\d{10}/.test(postalCode.trim())) {
-          if (body.trim().length >= 10 && body.trim().length <= 100) {
-            createAddress({ province: province.trim(), city: city.trim(), postalCode: postalCode.trim(), body: body.trim() }, { onSuccess: () => {
-              setProvince("");
-              setCity("");
-              setPostalCode("");
-              setBody("");
-            } });
-          } else {
-            openToast("error", null, "آدرس باید بین 10 تا 100 حروف باشد.");
-          }
-        } else {
-          openToast("error", null, "کدپستی معتبر نمی‌باشد.");
-        }
-      } else {
-        openToast("error", null, "شهر باید بین 2 تا 20 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "استان باید بین 2 تا 20 حروف باشد.");
-    }
-  }
-
   return (
     <>
       <h6 className="font-vazirmatn-bold text-xl">ثبت آدرس جدید</h6>
-      <form className="mt-4 text-lg" onSubmit={submit}>
+      <form className="mt-4 text-lg" onSubmit={(event) => {
+        event.preventDefault();
+
+        createAddress({ province: province.trim(), city: city.trim(), postalCode: postalCode.trim(), body: body.trim() }, { onSuccess: () => {
+          setProvince("");
+          setCity("");
+          setPostalCode("");
+          setBody("");
+        } });
+      }} >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <input
             type="text"
@@ -77,9 +56,8 @@ const Addresses = () => {
           />
         </div>
         <textarea
-          type="text"
           value={body}
-          placeholder="آدرس"
+          placeholder="متن"
           className="mt-4 max-h-48 min-h-32 w-full rounded-3xl border border-zinc-200 p-4 text-lg outline-none placeholder:text-zinc-400"
           onInput={({ target }) => setBody(target.value)}
         />
