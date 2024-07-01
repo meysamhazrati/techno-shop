@@ -1,7 +1,6 @@
-import { useState, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
-import useSendOTP from "../../hooks/authentication/useSendOTP";
-import useVerifyOTP from "../../hooks/authentication/useVerifyOTP";
+import { useState, useEffect } from "react";
+import useSendOTP from "../../hooks/otp/useSendOTP";
+import useVerifyOTP from "../../hooks/otp/useVerifyOTP";
 import Timer from "../Timer";
 import Loader from "../Loader";
 import ChevronIcon from "../../icons/ChevronIcon";
@@ -9,8 +8,6 @@ import ChevronIcon from "../../icons/ChevronIcon";
 const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
   const [code, setCode] = useState("");
   const [canSendOTPAgain, setCanSendOTPAgain] = useState(false);
-
-  const { openToast } = useContext(ToastContext);
 
   const { isPendingSendOTP, sendOTP } = useSendOTP(type);
   const { isPendingVerifyOTP, verifyOTP } = useVerifyOTP();
@@ -20,16 +17,6 @@ const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
 
     return () => clearInterval(timer);
   }, [canSendOTPAgain, sentAt]);
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (/^\d{7}$/.test(code.trim())) {
-      verifyOTP({ email: email.trim(), code: code.trim() }, { onSuccess: () => setCurrentComponent(type), onError: ({ response }) => response.status === 429 && setCurrentComponent("send-otp") });
-    } else {
-      openToast("error", null, "کد تایید وارد شده نامعتبر است.");
-    }
-  };
 
   return (
     <>
@@ -42,7 +29,11 @@ const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
         </div>
         <span className="mt-3 block text-lg text-zinc-500">کد تایید به {email} ارسال شد.</span>
       </div>
-      <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={submit}>
+      <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
+        event.preventDefault();
+
+        verifyOTP({ email: email.trim(), code: code.trim() }, { onSuccess: () => setCurrentComponent(type), onError: ({ status }) => status === 429 && setCurrentComponent("send-otp") });
+      }}>
         <input
           type="text"
           inputMode="number"
@@ -61,7 +52,7 @@ const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
         onClick={() => sendOTP({ email: email.trim() }, { onSuccess: () => {
           setSentAt(Date.now());
           setCanSendOTPAgain(false);
-        }, onError: ({ response }) => response.status === 403 && setCurrentComponent("send-otp") })}
+        }, onError: ({ status }) => status === 403 && setCurrentComponent("send-otp") })}
       >
         {isPendingSendOTP ? "در حال ارسال" : "ارسال دوباره "}
         {!canSendOTPAgain && (
