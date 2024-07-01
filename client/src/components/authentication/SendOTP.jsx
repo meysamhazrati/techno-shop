@@ -1,28 +1,18 @@
-import { useContext } from "react";
-import { ToastContext } from "../../contexts/Toast";
-import useSendOTP from "../../hooks/authentication/useSendOTP";
+import useSendOTP from "../../hooks/otp/useSendOTP";
 import Loader from "../Loader";
 
 const SendOTP = ({ email, setEmail, type, setSentAt, setCurrentComponent }) => {
-  const { openToast } = useContext(ToastContext);
-
   const { isPendingSendOTP, sendOTP } = useSendOTP(type);
 
-  const submit = (event) => {
-    event.preventDefault();
+  return (
+    <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
+      event.preventDefault();
 
-    if (email.trim().length >= 10 && email.trim().length <= 100 && /^\w+([.-]?\w)*@\w+([.-]?\w)*\.[a-zA-Z]{2,4}$/.test(email.trim())) {
       sendOTP({ email: email.trim() }, { onSuccess: () => {
         setSentAt(Date.now());
         setCurrentComponent("verify-otp");
       } });
-    } else {
-      openToast("error", null, "ایمیل وارد شده نامعتبر است.");
-    }
-  };
-
-  return (
-    <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={submit}>
+    }}>
       <input
         type="text"
         inputMode="email"
