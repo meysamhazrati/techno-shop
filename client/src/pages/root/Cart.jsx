@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useEffect } from "react";
 import useMe from "../../hooks/authentication/useMe";
 import useEmptyCart from "../../hooks/user/useEmptyCart";
 import useUseDiscountCode from "../../hooks/discountCode/useUseDiscountCode";
@@ -21,10 +20,7 @@ const Cart = () => {
   const [categories, setCategories] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [destination, setDestination] = useState(null);
-  const [addresses, setAddresses] = useState([]);
   const [isEmptyModalOpen, setIsEmptyModalOpen] = useState(false);
-
-  const { openToast } = useContext(ToastContext);
 
   const { me } = useMe();
   const { isPendingEmptyCart, emptyCart } = useEmptyCart();
@@ -43,27 +39,8 @@ const Cart = () => {
       setAmazingOfferPrice(me.cart.filter(({ product, color }) => color.inventory !== 0 && Date.parse(product.offer?.expiresAt) > Date.now()).reduce((previous, { quantity, product, color }) => previous + (quantity * color.price * product.offer.percent) / 100, 0));
       setTotalPrice(productsPriceWithDiscount - productsPriceWithDiscount * ((discountCode?.percent || 0) / 100));
       setCategories(me.cart.filter(({ color }) => color.inventory !== 0).map(({ product }) => product.category._id));
-      setAddresses(me.addresses.map(({ _id, body }) => ({ title: body, value: _id })));
     }
   }, [me, productsPriceWithDiscount, discountCode]);
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (/^[a-zA-Z\d]{7}$/.test(code.trim())) {
-      if (totalPrice > 1000) {
-        if (categories.length >= 1 && categories.length <= 7) {
-          useDiscountCode({ price: totalPrice, categories });
-        } else {
-          openToast("error", null, "تعداد دسته‌بندی‌ محصولات باید بین 1 تا 7 باشد.");
-        }
-      } else {
-        openToast("error", null, "مبلغ کل محصول(ها) باید بالای 1000 تومان باشد.");
-      }
-    } else {
-      openToast("error", null, "کد تخفیف باید 7 کاراکتر باشد.");
-    }
-  };
 
   return !me?.cart.filter(({ color }) => color.inventory !== 0).length ? (
     <div className="flex flex-col items-center justify-center gap-y-3">
@@ -114,7 +91,7 @@ const Cart = () => {
       </section>
       <aside className="w-full shrink-0 text-lg lg:sticky lg:top-28 lg:w-96">
         <div className="rounded-3xl bg-white p-6">
-          {me.addresses.length !== 0 ? <SelectBox title="آدرس" options={addresses} currentValue={destination} setValue={setDestination} /> : <NoResultFound title="آدرسی پیدا نشد!" />}
+          {me.addresses.length !== 0 ? <SelectBox title="آدرس" options={me.addresses.map(({ _id, body }) => ({ title: body, value: _id }))} currentValue={destination} setValue={setDestination} /> : <NoResultFound title="آدرسی پیدا نشد!" />}
         </div>
         <div className="mt-4 rounded-3xl bg-white p-6 lg:mt-8">
           <div className="overflow-auto text-nowrap">
@@ -152,7 +129,11 @@ const Cart = () => {
             </div>
           </div>
           {!discountCode && (
-            <form className="mt-6 flex items-center gap-x-2 text-lg" onSubmit={submit}>
+            <form className="mt-6 flex items-center gap-x-2 text-lg" onSubmit={(event) => {
+              event.preventDefault();
+
+              useDiscountCode({ price: totalPrice, categories });
+            }}>
               <input
                 type="text"
                 value={code}
@@ -161,7 +142,7 @@ const Cart = () => {
                 onInput={({ target }) => /^[a-zA-Z\d]{0,7}$/.test(target.value) && setCode(target.value)}
               />
               <button type="submit" disabled={isPendingUseDiscountCode} className="flex h-14 w-48 items-center justify-center rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
-                {isPendingCreateOrder ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "اعمال"}
+                {isPendingUseDiscountCode ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "اعمال"}
               </button>
             </form>
           )}
