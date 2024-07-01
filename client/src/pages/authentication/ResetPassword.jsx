@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useEffect } from "react";
 import useResetPassword from "../../hooks/authentication/useResetPassword";
 import SendOTP from "../../components/authentication/SendOTP";
 import VerifyOTP from "../../components/authentication/VerifyOTP";
@@ -12,19 +11,7 @@ const ResetPassword = () => {
   const [sentAt, setSentAt] = useState(null);
   const [currentComponent, setCurrentComponent] = useState(null);
 
-  const { openToast } = useContext(ToastContext);
-
   const { isPendingResetPassword, resetPassword } = useResetPassword();
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (/^[\w?!$._-]{8,20}$/.test(password.trim())) {
-      resetPassword({ email: email.trim(), password: password.trim() });
-    } else {
-      openToast("error", null, "رمز عبور باید بین 8 تا 20 کاراکتر باشد.");
-    }
-  };
 
   useEffect(() => {
     document.title = "تکنوشاپ - بازنشانی رمز عبور";
@@ -58,7 +45,11 @@ const ResetPassword = () => {
       ) : currentComponent === "verify-otp" ? (
         <VerifyOTP email={email} type="reset-password" sentAt={sentAt} setSentAt={setSentAt} setCurrentComponent={setCurrentComponent} />
       ) : (
-        <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={submit}>
+        <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
+          event.preventDefault();
+
+          resetPassword({ email: email.trim(), password: password.trim() });
+        }}>
           <input
             type="password"
             value={password}
