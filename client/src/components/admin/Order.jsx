@@ -23,7 +23,7 @@ const Order = ({ _id, totalPrice, status, products, buyer, createdAt }) => {
       <tr className="border-t border-zinc-200 [&>*]:h-[72px] [&>*]:px-5">
         <td>{totalPrice.toLocaleString()} تومان</td>
         <td>{products.reduce((previous, { quantity }) => previous + quantity, 0).toLocaleString()} محصول</td>
-        <td>{status === "Delivered" ? "تحویل شده" : status === "Canceled" ? "لغو شده" : status === "Returned" ? "مرجوع شده" : "جاری"}</td>
+        <td>{status}</td>
         {buyer.firstName && buyer.lastName && (
           <td>
             <Link to={`/admin/users/${buyer._id}`} className="text-primary-900">{buyer.firstName} {buyer.lastName}</Link>
@@ -32,18 +32,18 @@ const Order = ({ _id, totalPrice, status, products, buyer, createdAt }) => {
         <td>{new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(createdAt))}</td>
         <td>
           <div className="flex items-center justify-center gap-x-2 text-base">
-            {status === "In progress" && (
+            {status === "جاری" && (
               <>
                 <button className="flex h-9 w-24 items-center justify-center rounded-full bg-green-500 text-white transition-colors hover:bg-green-400" onClick={() => setIsDeliverModalOpen(true)}>تحویل</button>
                 <button className="flex h-9 w-24 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-400" onClick={() => setIsCancelModalOpen(true)}>لغو</button>
               </>
             )}
-            {status === "Delivered" && <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsReturnModalOpen(true)}>مرجوع</button>}
+            {status === "تحویل شده" && <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsReturnModalOpen(true)}>مرجوع</button>}
             <Link to={`/admin/orders/${_id}`} className="flex h-9 w-24 items-center justify-center rounded-full bg-primary-900 text-white transition-colors hover:bg-primary-800">مشاهده</Link>
           </div>
         </td>
       </tr>
-      {status === "In progress" && (
+      {status === "جاری" && (
         <>
           <Modal isOpen={isDeliverModalOpen} onClose={() => setIsDeliverModalOpen(false)}>
             <Confirm title="این سفارش را تحویل می‌دهید؟" isPending={isPendingDeliverOrder} onCancel={() => setIsDeliverModalOpen(false)} onConfirm={() => deliverOrder(null, { onSuccess: () => {
@@ -59,7 +59,7 @@ const Order = ({ _id, totalPrice, status, products, buyer, createdAt }) => {
           </Modal>
         </>
       )}
-      {status === "Delivered" && (
+      {status === "تحویل شده" && (
         <Modal isOpen={isReturnModalOpen} onClose={() => setIsReturnModalOpen(false)}>
           <Confirm title="این سفارش را مرجوع می‌کنید؟" isPending={isPendingReturnOrder} onCancel={() => setIsReturnModalOpen(false)} onConfirm={() => returnOrder(null, { onSuccess: () => {
             client.invalidateQueries([{ queryKey: ["orders"] }, { queryKey: ["users", { id: buyer._id }] }]);
