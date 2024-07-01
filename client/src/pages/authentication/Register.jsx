@@ -1,6 +1,5 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ToastContext } from "../../contexts/Toast";
 import useRegister from "../../hooks/authentication/useRegister";
 import SendOTP from "../../components/authentication/SendOTP";
 import VerifyOTP from "../../components/authentication/VerifyOTP";
@@ -15,27 +14,7 @@ const Register = () => {
   const [sentAt, setSentAt] = useState(null);
   const [currentComponent, setCurrentComponent] = useState(null);
 
-  const { openToast } = useContext(ToastContext);
-
   const { isPendingRegister, register } = useRegister();
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (firstName.trim().length >= 3 && firstName.trim().length <= 70) {
-      if (lastName.trim().length >= 4 && lastName.trim().length <= 70) {
-        if (/^[\w?!$._-]{8,20}$/.test(password.trim())) {
-          register({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), password: password.trim() });
-        } else {
-          openToast("error", null, "رمز عبور باید بین 8 تا 20 کاراکتر باشد.");
-        }
-      } else {
-        openToast("error", null, "نام خانوادگی باید بین 4 تا 70 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "نام باید بین 3 تا 70 حروف باشد.");
-    }
-  };
 
   useEffect(() => {
     document.title = "تکنوشاپ - ثبت نام";
@@ -69,7 +48,11 @@ const Register = () => {
       ) : currentComponent === "verify-otp" ? (
         <VerifyOTP email={email} type="register" sentAt={sentAt} setSentAt={setSentAt} setCurrentComponent={setCurrentComponent} />
       ) : (
-        <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={submit}>
+        <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
+          event.preventDefault();
+
+          register({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), password: password.trim() });
+        }}>
           <input
             type="text"
             value={firstName}
