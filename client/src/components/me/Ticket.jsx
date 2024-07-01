@@ -12,7 +12,7 @@ const Ticket = ({ _id, title, department, body, isOpen, createdAt }) => {
           </div>
           <div className="flex items-center gap-x-2">
             <span className="text-zinc-400">دپارتمان:</span>
-            <span>{department === "Management" ? "مدیریت" : department === "Finance" ? "مالی" : department === "Order Tracking" ? "پیگیری سفارش" : department === "Support" ? "پشتیبانی" : department === "Feedback" ? "بازخورد" : "سایر"}</span>
+            <span>{department}</span>
           </div>
           <div className="flex items-center gap-x-2">
             <span className="text-zinc-400">وضعیت:</span>
