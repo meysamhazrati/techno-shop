@@ -1,7 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { ToastContext } from "../../contexts/Toast";
 import useTicket from "../../hooks/ticket/useTicket";
 import useReplyTicket from "../../hooks/ticket/useReplyTicket";
 import Loader from "../../components/Loader";
@@ -12,8 +11,6 @@ const Ticket = () => {
   const [body, setBody] = useState("");
 
   const client = useQueryClient();
-
-  const { openToast } = useContext(ToastContext);
 
   const { isFetchingTicket, isTicketError, ticket } = useTicket(id);
   const { isPendingReplyTicket, replyTicket } = useReplyTicket(id);
@@ -28,19 +25,6 @@ const Ticket = () => {
     }
   }, [isTicketError]);
 
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (body.trim().length >= 5 && body.trim().length <= 300) {
-      replyTicket({ body: body.trim() }, { onSuccess: () => {
-        client.invalidateQueries({ queryKey: ["ticket", { id }] });
-        setBody("");
-      } });
-    } else {
-      openToast("error", null, "متن باید بین 5 تا 300 حروف باشد.");
-    }
-  };
-
   return !isTicketError && (
     <>
       <div className="mb-6 flex flex-col gap-3 overflow-auto text-nowrap border-b border-zinc-200 pb-6 text-lg sm:flex-row sm:items-center">
@@ -51,7 +35,7 @@ const Ticket = () => {
         <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
         <div className="flex items-center gap-x-2">
           <span className="text-zinc-400">دپارتمان:</span>
-          <span>{isFetchingTicket ? "در حال بارگذاری" : ticket.department === "Management" ? "مدیریت" : ticket?.department === "Finance" ? "مالی" : ticket?.department === "Order Tracking" ? "پیگیری سفارش" : ticket?.department === "Support" ? "پشتیبانی" : ticket?.department === "Feedback" ? "بازخورد" : "سایر"}</span>
+          <span>{isFetchingTicket ? "در حال بارگذاری" : ticket.department}</span>
         </div>
         <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
         <div className="flex items-center gap-x-2">
@@ -83,9 +67,15 @@ const Ticket = () => {
         </div>
       ))}
       {ticket?.isOpen && (
-        <form className="mt-12 text-lg" onSubmit={submit}>
+        <form className="mt-12 text-lg" onSubmit={(event) => {
+          event.preventDefault();
+
+          replyTicket({ body: body.trim() }, { onSuccess: () => {
+            client.invalidateQueries({ queryKey: ["ticket", { id }] });
+            setBody("");
+          } });
+        }}>
           <textarea
-            type="text"
             value={body}
             placeholder="متن"
             className="mt-3 max-h-48 min-h-32 w-full rounded-3xl border border-zinc-200 p-4 text-lg outline-none placeholder:text-zinc-400"
