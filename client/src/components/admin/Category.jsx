@@ -1,5 +1,4 @@
-import { useState, useRef, useContext } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useRef } from "react";
 import useUpdateCategory from "../../hooks/category/useUpdateCategory";
 import useRemoveCategory from "../../hooks/category/useRemoveCategory";
 import Modal from "../Modal";
@@ -16,28 +15,8 @@ const Category = ({ _id, title, englishTitle, logo }) => {
   const image = useRef();
   const file = useRef();
 
-  const { openToast } = useContext(ToastContext);
-
   const { isPendingUpdateCategory, updateCategory } = useUpdateCategory(_id);
   const { isPendingRemoveCategory, removeCategory } = useRemoveCategory(_id);
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (newTitle.trim().length >= 3 && newTitle.trim().length <= 50) {
-      if (newEnglishTitle.trim().length >= 3 && newEnglishTitle.trim().length <= 50) {
-        if (newLogo ? newLogo.type === "image/png" || newLogo.type === "image/jpg" || newLogo.type === "image/jpeg" : true) {
-          updateCategory({ title: newTitle.trim(), englishTitle: newEnglishTitle.trim(), logo: newLogo }, { onSuccess: () => setIsEditModalOpen(false) });
-        } else {
-          openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
-        }
-      } else {
-        openToast("error", null, "عنوان انگلیسی باید بین 3 تا 50 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "عنوان باید بین 3 تا 50 حروف باشد.");
-    }
-  };
 
   return (
     <>
@@ -56,7 +35,11 @@ const Category = ({ _id, title, englishTitle, logo }) => {
       </tr>
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش دسته‌بندی‌</h6>
-        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={submit}>
+        <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
+          event.preventDefault();
+          
+          updateCategory({ title: newTitle.trim(), englishTitle: newEnglishTitle.trim(), logo: newLogo }, { onSuccess: () => setIsEditModalOpen(false) });
+        }}>
           <div className="mx-auto !size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
             <img ref={image} src={`${process.env.SERVER_URI}/images/categories/${logo}`} alt="Category Logo" loading="lazy" className="size-full rounded-full object-cover" />
             <input
