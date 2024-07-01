@@ -25,7 +25,7 @@ const Order = ({ _id, totalPrice, status, products, createdAt }) => {
           </div>
           <div className="flex items-center gap-x-2">
             <span className="text-zinc-400">وضعیت:</span>
-            <span>{status === "Delivered" ? "تحویل شده" : status === "Canceled" ? "لغو شده" : status === "Returned" ? "مرجوع شده" : "جاری"}</span>
+            <span>{status}</span>
           </div>
           <div className="flex items-center gap-x-2">
             <span className="text-zinc-400">تاریخ ثبت:</span>
