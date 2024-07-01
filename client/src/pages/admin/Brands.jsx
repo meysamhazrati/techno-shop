@@ -1,5 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useRef, useEffect } from "react";
 import useBrands from "../../hooks/brand/useBrands";
 import useCreateBrand from "../../hooks/brand/useCreateBrand";
 import InfiniteScroll from "../../components/InfiniteScroll";
@@ -16,8 +15,6 @@ const Brands = () => {
   const image = useRef();
   const file = useRef();
 
-  const { openToast } = useContext(ToastContext);
-
   const { isFetchingBrands, isBrandsError, brands, total, hasBrandsNextPage, fetchBrandsNextPage } = useBrands(20);
   const { isPendingCreateBrand, createBrand } = useCreateBrand();
 
@@ -25,34 +22,20 @@ const Brands = () => {
     document.title = "تکنوشاپ - مدیریت - برند ها";
   }, []);
 
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (name.trim().length >= 3 && name.trim().length <= 50) {
-      if (englishName.trim().length >= 3 && englishName.trim().length <= 50) {
-        if (logo ? logo.type === "image/png" || logo.type === "image/jpg" || logo.type === "image/jpeg" : true) {
-          createBrand({ name: name.trim(), englishName: englishName.trim(), logo }, { onSuccess: () => {
-            setName("");
-            setEnglishName("");
-            setLogo(null);
-            image.current.src = "";
-            file.current.value = null;
-          } });
-        } else {
-          openToast("error", null, "فرمت عکس باید PNG یا JPG یا JPEG باشد.");
-        }
-      } else {
-        openToast("error", null, "نام انگلیسی باید بین 3 تا 50 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "نام باید بین 3 تا 50 حروف باشد.");
-    }
-  };
-
   return (
     <>
       <h6 className="font-vazirmatn-bold text-xl">ثبت برند جدید</h6>
-      <form className="mt-4 text-lg" onSubmit={submit}>
+      <form className="mt-4 text-lg" onSubmit={(event) => {
+        event.preventDefault();
+
+        createBrand({ name: name.trim(), englishName: englishName.trim(), logo }, { onSuccess: () => {
+          setName("");
+          setEnglishName("");
+          setLogo(null);
+          image.current.src = "";
+          file.current.value = null;
+        } });
+      }}>
         <div className="flex items-center gap-x-4">
           <div className="size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
             {file.current?.files.length ? <img ref={image} alt="Brand Logo" loading="lazy" className="size-full rounded-full object-cover" /> : <div className="flex size-full items-center justify-center rounded-full border border-zinc-200 text-zinc-400">لوگو</div>}
@@ -115,7 +98,7 @@ const Brands = () => {
             <InfiniteScroll hasNextPage={hasBrandsNextPage} fetchNextPage={fetchBrandsNextPage}>
               <tbody>
                 {brands?.map((brand) => <Brand key={brand._id} {...brand} />)}
-                {isFetchingBrands && Array(20).fill(0).map((brand, index) => <BrandSkeleton key={index} />)}
+                {isFetchingBrands && Array(20).fill().map((brand, index) => <BrandSkeleton key={index} />)}
               </tbody>
             </InfiniteScroll>
           </table>
