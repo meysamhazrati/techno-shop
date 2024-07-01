@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import { ToastContext } from "../../contexts/Toast";
+import { useState, useEffect } from "react";
 import useMe from "../../hooks/authentication/useMe";
 import useCreateTicket from "../../hooks/ticket/useCreateTicket";
 import Ticket from "../../components/me/Ticket";
@@ -11,54 +10,40 @@ const Tickets = () => {
   const [department, setDepartment] = useState(null);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [departments, setDepartments] = useState([]);
-
-  const { openToast } = useContext(ToastContext);
 
   const { me } = useMe();
   const { isPendingCreateTicket, createTicket } = useCreateTicket();
 
   useEffect(() => {
     document.title = "تکنوشاپ - من - تیکت ها";
-
-    setDepartments([
-      { title: "مدیریت", value: "Management" },
-      { title: "مالی", value: "Finance" },
-      { title: "پیگیری سفارش", value: "Order Tracking" },
-      { title: "پشتیبانی", value: "Support" },
-      { title: "بازخورد", value: "Feedback" },
-      { title: "سایر", value: "Other" },
-    ]);
   }, []);
-
-  const submit = (event) => {
-    event.preventDefault();
-
-    if (departments.map(({ value }) => value).some((department_) => department_ === department?.trim())) {
-      if (title.trim().length >= 2 && title.trim().length <= 20) {
-        if (body.trim().length >= 5 && body.trim().length <= 300) {
-          createTicket({ department: department.trim(), title: title.trim(), body: body.trim() }, { onSuccess: () => {
-            setDepartment(null);
-            setTitle("");
-            setBody("");
-          } });
-        } else {
-          openToast("error", null, "متن باید بین 5 تا 300 حروف باشد.");
-        }
-      } else {
-        openToast("error", null, "عنوان باید بین 2 تا 20 حروف باشد.");
-      }
-    } else {
-      openToast("error", null, "دپارتمان وارد شده معتبر نمی‌باشد.");
-    }
-  };
 
   return (
     <>
       <h6 className="font-vazirmatn-bold text-xl">ثبت تیکت جدید</h6>
-      <form className="mt-4 text-lg" onSubmit={submit}>
+      <form className="mt-4 text-lg" onSubmit={(event) => {
+        event.preventDefault();
+
+        createTicket({ department: department.trim(), title: title.trim(), body: body.trim() }, { onSuccess: () => {
+          setDepartment(null);
+          setTitle("");
+          setBody("");
+        } });
+      }}>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <SelectBox title={"دپارتمان"} options={departments} currentValue={department} setValue={setDepartment} />
+          <SelectBox
+            title={"دپارتمان"}
+            options={[
+              { title: "مدیریت", value: "مدیریت" },
+              { title: "مالی", value: "مالی" },
+              { title: "پیگیری سفارش", value: "پیگیری سفارش" },
+              { title: "پشتیبانی", value: "پشتیبانی" },
+              { title: "بازخورد", value: "بازخورد" },
+              { title: "سایر", value: "سایر" },
+            ]}
+            currentValue={department}
+            setValue={setDepartment}
+          />
           <input
             type="text"
             value={title}
@@ -68,7 +53,6 @@ const Tickets = () => {
           />
         </div>
         <textarea
-          type="text"
           value={body}
           placeholder="متن"
           className="mt-4 max-h-48 min-h-32 w-full rounded-3xl border border-zinc-200 p-4 text-lg outline-none placeholder:text-zinc-400"
