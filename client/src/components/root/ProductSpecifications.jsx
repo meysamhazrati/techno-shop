@@ -1,12 +1,12 @@
 import Section from "./Section";
 import SectionHeader from "./SectionHeader";
 
-const ProductSpecifications = ({ isFetching, isError, length, width, height, thickness, weight, chip, motherboard, CPU, CPUSeries, CPUGeneration, CPUFrequency, CPUCore, GPU, GPUModel, VRAM, operatingSystem, operatingSystemVersion, internalMemory, internalMemoryType, drive, storage, RAM, RAMType, memoryCard, SIMCard, network, battery, batteryCapacity, chargingPort, chargingSpeed, screen, screenSize, resolutionWidth, resolutionHeight, camera, photoResolution, videoResolutionWidth, videoResolutionHeight, videoFPS, headphoneJack, connectionType, interfaces, type, buttons, keys, minimumDPI, maximumDPI, minimumResponseTime, maximumResponseTime, panel, backlight, color, impedance, strapMaterial, hasFingerprintSensor, hasNoiseCancelling, isWaterproof }) => {
+const ProductSpecifications = ({ isFetching, isError, length, width, height, thickness, weight, chip, motherboard, CPU, CPUSeries, CPUGeneration, CPUFrequency, CPUCore, GPU, GPUModel, GPURAM, operatingSystem, operatingSystemVersion, internalMemory, internalMemoryType, drive, storage, RAM, RAMType, memoryCard, SIMCard, network, battery, batteryCapacity, chargingPort, chargingSpeed, screen, screenSize, resolutionWidth, resolutionHeight, camera, photoResolution, videoResolutionWidth, videoResolutionHeight, videoFPS, headphoneJack, connectionType, interfaces, buttons, keys, minimumDPI, maximumDPI, minimumResponseTime, maximumResponseTime, panel, backlight, color, impedance, strapMaterial, hasFingerprintSensor, hasNoiseCancelling, isWaterproof }) => {
   return !isError && (
     <Section>
       <SectionHeader title="مشخصات" />
       <div className="mt-8 divide-y divide-zinc-200 rounded-3xl bg-white p-6 text-xl [&>*>span]:text-zinc-400 [&>*]:grid [&>*]:grid-cols-2 [&>*]:items-center [&>*]:py-4 first:[&>*]:pt-0 last:[&>*]:pb-0 sm:[&>*]:grid-cols-[250px_1fr]">
-        {isFetching ? Array(5).fill(0).map((specification, index) => (
+        {isFetching ? Array(5).fill().map((specification, index) => (
           <div key={index}>
             <span>در حال بارگذاری</span>
             <p>در حال بارگذاری</p>
@@ -43,16 +43,16 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
                 <p>{CPU} {CPUSeries} {CPUGeneration} / فرکانس {CPUFrequency.toLocaleString()} گیگاهرتز / {CPUCore.toLocaleString()} هسته</p>
               </div>
             )}
-            {GPU && GPUModel && VRAM && (
+            {GPU && GPUModel && GPURAM && (
               <div>
                 <span>پردازنده گرافیکی</span>
-                <p>{GPU} {GPUModel} / حافظه {VRAM.toLocaleString()} گیگابایت</p>
+                <p>{GPU} {GPUModel} / رم {GPURAM.toLocaleString()} گیگابایت</p>
               </div>
             )}
             {operatingSystem && operatingSystemVersion && (
               <div>
                 <span>سیستم عامل</span>
-                <p>{operatingSystem === "No operating system" ? "فاقد سیستم عامل" : `${operatingSystemVersion.toLocaleString()} ${operatingSystem}`}</p>
+                <p>{operatingSystem === "فاقد سیستم عامل" ? operatingSystem : `${operatingSystemVersion.toLocaleString()} ${operatingSystem}`}</p>
               </div>
             )}
             {internalMemory && (
@@ -64,7 +64,7 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             {drive && (
               <div>
                 <span>نوع درایو</span>
-                <p>{drive === "No drive" ? "فاقد درایو" : drive}</p>
+                <p>{drive}</p>
               </div>
             )}
             {storage && (
@@ -75,14 +75,14 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             )}
             {RAM && (
               <div>
-                <span>مقدار RAM</span>
+                <span>رم</span>
                 <p>{RAM.toLocaleString()} گیگابایت {RAMType ? `/ ${RAMType}` : ""}</p>
               </div>
             )}
             {memoryCard && (
               <div>
                 <span>کارت حافظه</span>
-                <p>{memoryCard === "Separate" ? "مجزا" : memoryCard === "Shared" ? "مشترک با سیم‌کارت" : "فاقد پشتیبانی"}</p>
+                <p>{memoryCard}</p>
               </div>
             )}
             {SIMCard && (
@@ -123,14 +123,14 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             )}
             {headphoneJack && (
               <div>
-                <span>جک صدا</span>
+                <span>جک هدفون</span>
                 <p>{headphoneJack}</p>
               </div>
             )}
             {connectionType && (
               <div>
                 <span>نوع اتصال</span>
-                <p>{connectionType === "Wired" ? "با‌سیم" : connectionType === "Wireless" ? "بی‌سیم" : "با‌سیم و بی‌سیم"}</p>
+                <p>{connectionType}</p>
               </div>
             )}
             {interfaces && (
@@ -138,12 +138,6 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
                 <span>رابط ها</span>
                 <p>{interfaces.join(", ")}</p>
               </div>
-            )}
-            {type && (
-                <div>
-                <span>نوع گوشی</span>
-                <p>{type === 1 ? "یک گوشی" : "دو گوشی"}</p>
-                </div>
             )}
             {(buttons || keys) && (
               <div>
@@ -153,7 +147,7 @@ const ProductSpecifications = ({ isFetching, isError, length, width, height, thi
             )}
             {minimumDPI && maximumDPI && (
               <div>
-                <span>محدوده DPI</span>
+                <span>محدوده دقت</span>
                 <p>{minimumDPI.toLocaleString()} تا {maximumDPI.toLocaleString()}</p>
               </div>
             )}
