@@ -120,7 +120,7 @@ const update = async (request, response, next) => {
     const logo = request.file;
     const body = request.body;
     
-    await validator.update.validate(body);
+    await validator.update.validate({ ...body, logo });
 
     const result = await model.findByIdAndUpdate(id, { ...body, logo: logo?.filename });
 
