@@ -1,4 +1,4 @@
-import { object, string, number, array } from "yup";
+import { object, string, number, array, mixed, ValidationError } from "yup";
 
 const create = object({
   title: string().required("عنوان الزامی است.").min(5, "عنوان باید حداقل 5 کاراکتر باشد.").max(100, "عنوان باید حداکثر 100 کاراکتر باشد."),
@@ -9,7 +9,17 @@ const create = object({
     name: string().required("نام رنگ الزامی است.").min(3, "نام رنگ باید حداقل 3 کاراکتر باشد.").max(15, "نام رنگ باید حداکثر 15 کاراکتر باشد."),
     code: string().required("کد رنگ الزامی است."),
   })),
-  covers: array().required("کاور ها الزامی هستند.").length(4, "کاور ها باید 4 عدد باشند.").of(object()),
+  covers: array().required("کاور ها الزامی هستند.").length(4, "کاور ها باید 4 عدد باشند.").of(mixed().test(({ size, mimetype }) => {
+    if (size <= 2 * 1024 * 1024) {
+      if (["image/png", "image/jpg", "image/jpeg"].includes(mimetype)) {
+        return true;
+      } else {
+        throw new ValidationError("فرمت کاور باید PNG، JPG یا JPEG باشد.");
+      }
+    } else {
+      throw new ValidationError("حجم کاور باید حداکثر 2 مگابایت باشد.");
+    }
+  })),
   brand: string().required("برند الزامی است.").matches(/^[a-fA-F\d]{24}$/, "برند نامعتبر است."),
   category: string().required("دسته‌بندی‌ الزامی است.").matches(/^[a-fA-F\d]{24}$/, "دسته‌بندی‌ نامعتبر است."),
 });
