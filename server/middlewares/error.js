@@ -18,9 +18,9 @@ const middleware = (error, request, response, next) => {
 
     if (error.code === "LIMIT_FILE_SIZE") {
       status = 413;
-      message = "حجم عکس‌های آپلود شده بیشتر از حد مجاز است.";
+      message = "حجم فایل(های) آپلود شده بیشتر از حد مجاز است.";
     } else if (error.code === "LIMIT_FILE_COUNT") {
-      message = "تعداد عکس‌های آپلود شده بیشتر از حد مجاز است.";
+      message = "تعداد فایل(های) آپلود شده بیشتر از حد مجاز است.";
     }
   } else if (error instanceof ValidationError) {
     status = 400;
