@@ -7,7 +7,7 @@ import isAdmin from "../middlewares/isAdmin.js";
 import { getAll, get, edit, update, addToCart, removeFromCart, emptyCart, ban, unBan, remove } from "../controllers/user.js";
 
 const router = Router();
-const uploader = multer("users");
+const uploader = multer("users", 2 * 1024 * 1024, 1, ["image/png", "image/jpg", "image/jpeg"]);
 
 router.route("/").get(authentication, isBanned, isAdmin, getAll).put(authentication, isBanned, uploader.single("avatar"), edit);
 router.route("/:id").get(authentication, isBanned, isAdmin, get).put(authentication, isBanned, isAdmin, uploader.single("avatar"), update).delete(authentication, isBanned, isAdmin, remove);
