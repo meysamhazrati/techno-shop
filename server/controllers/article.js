@@ -105,7 +105,7 @@ const update = async (request, response, next) => {
     const cover = request.file;
     const body = request.body;
     
-    await validator.update.validate(body);
+    await validator.update.validate({ ...body, cover });
 
     const result = await model.findByIdAndUpdate(id, { ...body, cover: cover?.filename });
 
