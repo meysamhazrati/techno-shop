@@ -33,7 +33,7 @@ const create = async (request, response, next) => {
     const { type } = request.query;
     
     if (type) {
-      const covers = request.files;
+      const covers = request.files.covers || request.files["covers[]"];
       const body = request.body;
   
       await validator.create.validate({ ...body, covers });
@@ -123,7 +123,11 @@ const create = async (request, response, next) => {
       throw Object.assign(new Error("نوع محصول الزامی است."), { status: 400 });
     }
   } catch (error) {
-    request.files && request.files.forEach((file) => unlink(file.path, (error) => error && console.error(error)));
+    if (request.files.covers) {
+      request.files.covers.forEach((file) => unlink(file.path, (error) => error && console.error(error)));
+    } else if (request.files["covers[]"]) {
+      request.files["covers[]"].forEach((file) => unlink(file.path, (error) => error && console.error(error)));
+    }
 
     next(error);
   }
@@ -136,7 +140,7 @@ const getAll = async (request, response, next) => {
     const filteredBrands = brands?.trim() ? await Promise.all(brands.trim().split(",").map(async (name) => (await brandModel.findOne({ englishName: { $regex: new RegExp(`^${name.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
     const filteredCategories = categories?.trim() ? await Promise.all(categories.trim().split(",").map(async (title) => (await categoryModel.findOne({ englishTitle: { $regex: new RegExp(`^${title.split("-").join(" ")}$`, "i") } }))?._id)) : undefined;
 
-    const products = await model.find({ title: search?.trim() ? { $regex: new RegExp(`${search.trim().split("-").join(" ")}`, "i") } : undefined, brand: filteredBrands, category: filteredCategories }, "title covers").populate([
+    const products = await model.find({ title: search?.trim() ? { $regex: new RegExp(`${search.trim().split("-").join(" ")}`, "i") } : undefined, brand: filteredBrands, category: filteredCategories }, "title covers createdAt").populate([
       { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
       { path: "brand", select: "-__v" },
       { path: "category", select: "-__v" },
