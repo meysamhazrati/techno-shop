@@ -33,6 +33,7 @@ import User from "./pages/admin/User";
 import Addresses_ from "./pages/admin/Addresses";
 import Brands_ from "./pages/admin/Brands";
 import Categories_ from "./pages/admin/Categories";
+import Products_ from "./pages/admin/Products";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -95,6 +96,7 @@ export default [
           { path: "addresses", element: <Addresses_ /> },
           { path: "brands", element: <Brands_ /> },
           { path: "categories", element: <Categories_ /> },
+          { path: "products", element: <Products_ /> },
         ],
       },
       {
