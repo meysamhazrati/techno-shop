@@ -9,7 +9,7 @@ import { create, getAll, get, update, remove } from "../controllers/product.js";
 const router = Router();
 const uploader = multer("products", 2 * 1024 * 1024, 4, ["image/png", "image/jpg", "image/jpeg"]);
 
-router.route("/").post(authentication, isBanned, isAdmin, uploader.array("covers"), create).get(getAll);
+router.route("/").post(authentication, isBanned, isAdmin, uploader.fields([{ name: "covers" }, { name: "covers[]" }]), create).get(getAll);
 router.route("/:id").get(get).put(authentication, isBanned, isAdmin, update).delete(authentication, isBanned, isAdmin, remove);
 
 export default router;
