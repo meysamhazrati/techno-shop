@@ -6,7 +6,7 @@ const getAll = async (search, brands, categories, price, onlyAvailable, onlyAmaz
 
 const get = async (id, commentsPage, commentsLength) => await axios.get(`/products/${id}`, { params: { "comments-page": commentsPage, "comments-length": commentsLength } });
 
-const update = async (id, type, body) => await axios.putForm(`/products/${id}`, body, { params: { type } });
+const update = async (id, type, body) => await axios.put(`/products/${id}`, body, { params: { type } });
 
 const remove = async (id) => await axios.delete(`/products/${id}`);
 
