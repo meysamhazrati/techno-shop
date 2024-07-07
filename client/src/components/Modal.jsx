@@ -42,8 +42,8 @@ const Modal = ({ isOpen, onClose, children }) => {
   }, [isOpen, shouldRender, onClose]);
 
   return shouldRender && createPortal(
-    <div ref={modal} className="invisible fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/50 px-4 opacity-0 transition-all duration-300 lg:px-8" onClick={({ target }) => target === modal.current && onClose()}>
-      <div className="rounded-3xl bg-white p-6">{children}</div>
+    <div ref={modal} className="invisible fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/50 p-4 opacity-0 transition-all duration-300 lg:p-8" onClick={({ target }) => target === modal.current && onClose()}>
+      <div className="max-h-full max-w-full overflow-auto rounded-3xl bg-white p-6">{children}</div>
     </div>,
     document.getElementById("modal")
   );
