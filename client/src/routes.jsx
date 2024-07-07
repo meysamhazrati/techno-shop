@@ -35,6 +35,7 @@ import Brands_ from "./pages/admin/Brands";
 import Categories_ from "./pages/admin/Categories";
 import Products_ from "./pages/admin/Products";
 import Product_ from "./pages/admin/Product";
+import Orders_ from "./pages/admin/Orders";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -99,6 +100,7 @@ export default [
           { path: "categories", element: <Categories_ /> },
           { path: "products", element: <Products_ /> },
           { path: "products/:id", element: <Product_ /> },
+          { path: "orders", element: <Orders_ /> },
         ],
       },
       {
