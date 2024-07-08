@@ -16,7 +16,6 @@ createRoot(document.getElementById("root")).render(
         },
         mutations: {
           gcTime: 1000 * 60,
-          retry: 2
         },
       },
     })}>
