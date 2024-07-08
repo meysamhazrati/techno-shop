@@ -181,8 +181,8 @@ const Dashboard = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={year[1]} style={{ cursor: "crosshair" }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <YAxis yAxisId="1" orientation="right" tickMargin="15" />
-                      <YAxis yAxisId="2" orientation="left" tickMargin="15" />
+                      <YAxis yAxisId="1" orientation="right" tickMargin="15" allowDecimals={false} />
+                      <YAxis yAxisId="2" orientation="left" tickMargin="15" allowDecimals={false} />
                       <XAxis dataKey="month" tickMargin="10" />
                       <Tooltip
                         formatter={(value, name) => name === "totalSales" ? [`${value.toLocaleString()} عدد`, "فروش"] : [`${value.toLocaleString()} تومان`, "درآمد"]}
