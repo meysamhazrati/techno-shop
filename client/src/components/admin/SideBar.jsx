@@ -51,7 +51,7 @@ const SideBar = () => {
             <span>پیشخوان</span>
           </NavLink>
           <NavLink to="/admin/users" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
-            <UserIcon solid={pathname === "/admin/users"} className="size-7" />
+            <UserIcon solid={pathname.startsWith("/admin/users")} className="size-7" />
             <span>کاربر ها</span>
           </NavLink>
           <NavLink to="/admin/addresses" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
@@ -67,15 +67,15 @@ const SideBar = () => {
             <span>دسته‌بندی‌ ها</span>
           </NavLink>
           <NavLink to="/admin/products" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
-            <BoxIcon solid={pathname === "/admin/products"} className="size-7" />
+            <BoxIcon solid={pathname.startsWith("/admin/products")} className="size-7" />
             <span>محصول ها</span>
           </NavLink>
           <NavLink to="/admin/orders" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
-            <BagIcon solid={pathname === "/admin/orders"} className="size-7" />
+            <BagIcon solid={pathname.startsWith("/admin/orders")} className="size-7" />
             <span>سفارش ها</span>
           </NavLink>
           <NavLink to="/admin/articles" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
-            <BookIcon solid={pathname === "/admin/articles"} className="size-7" />
+            <BookIcon solid={pathname.startsWith("/admin/articles")} className="size-7" />
             <span>مقاله ها</span>
           </NavLink>
           <NavLink to="/admin/comments" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
@@ -83,7 +83,7 @@ const SideBar = () => {
             <span>دیدگاه ها</span>
           </NavLink>
           <NavLink to="/admin/tickets" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
-            <TicketIcon solid={pathname === "/admin/tickets"} className="size-7" />
+            <TicketIcon solid={pathname.startsWith("/admin/tickets")} className="size-7" />
             <span>تیکت ها</span>
           </NavLink>
           <NavLink to="/admin/offers" className={({ isActive }) => isActive ? "bg-primary-900 font-vazirmatn-medium text-white" : "hover:bg-zinc-200 hover:text-zinc-700 [&>*]:transition-colors"}>
