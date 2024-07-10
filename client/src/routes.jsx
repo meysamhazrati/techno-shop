@@ -40,6 +40,7 @@ import Order_ from "./pages/admin/Order";
 import Articles_ from "./pages/admin/Articles";
 import Article_ from "./pages/admin/Article";
 import Comments_ from "./pages/admin/Comments";
+import Tickets_ from "./pages/admin/Tickets";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -109,6 +110,7 @@ export default [
           { path: "articles", element: <Articles_ /> },
           { path: "articles/:id", element: <Article_ /> },
           { path: "comments", element: <Comments_ /> },
+          { path: "tickets", element: <Tickets_ /> },
         ],
       },
       {
