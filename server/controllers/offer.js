@@ -121,7 +121,7 @@ const update = async (request, response, next) => {
     
     await validator.update.validate(body);
 
-    const result = await model.findByIdAndUpdate(id, { ...body, expiresAt: Date.now() + 1000 * 60 * 60 * body.expiresAt });
+    const result = await model.findByIdAndUpdate(id, { ...body, expiresAt: body.expiresAt ? Date.now() + 1000 * 60 * 60 * body.expiresAt : undefined });
 
     if (result) {
       response.json({ message: "پیشنهاد مورد نظر با موفقیت ویرایش شد." });
