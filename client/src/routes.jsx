@@ -43,6 +43,7 @@ import Comments_ from "./pages/admin/Comments";
 import Tickets_ from "./pages/admin/Tickets";
 import Ticket_ from "./pages/admin/Ticket";
 import Offers_ from "./pages/admin/Offers";
+import DiscountCodes from "./pages/admin/DiscountCodes";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 
@@ -115,6 +116,7 @@ export default [
           { path: "tickets", element: <Tickets_ /> },
           { path: "tickets/:id", element: <Ticket_ /> },
           { path: "offers", element: <Offers_ /> },
+          { path: "discount-codes", element: <DiscountCodes /> },
         ],
       },
       {
