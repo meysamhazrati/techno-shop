@@ -10,7 +10,7 @@ const useBrands = (length) => {
     select: ({ pages }) => ({ brands: pages.flatMap(({ data }) => data.brands), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingBrands: isFetching, isBrandsError: isError, brands: data?.brands, total: data?.total, hasBrandsNextPage: hasNextPage, fetchBrandsNextPage: fetchNextPage };
+  return { isFetchingBrands: isFetching, isBrandsError: isError, brands: data?.brands, totalBrands: data?.total, hasBrandsNextPage: hasNextPage, fetchBrandsNextPage: fetchNextPage };
 };
 
 export default useBrands;

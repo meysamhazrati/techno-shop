@@ -10,7 +10,7 @@ const useCategories = (length) => {
     select: ({ pages }) => ({ categories: pages.flatMap(({ data }) => data.categories), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingCategories: isFetching, isCategoriesError: isError, categories: data?.categories, total: data?.total, hasCategoriesNextPage: hasNextPage, fetchCategoriesNextPage: fetchNextPage };
+  return { isFetchingCategories: isFetching, isCategoriesError: isError, categories: data?.categories, totalCategories: data?.total, hasCategoriesNextPage: hasNextPage, fetchCategoriesNextPage: fetchNextPage };
 };
 
 export default useCategories;

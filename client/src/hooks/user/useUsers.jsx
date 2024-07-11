@@ -10,7 +10,7 @@ const useUsers = (length) => {
     select: ({ pages }) => ({ users: pages.flatMap(({ data }) => data.users), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingUsers: isFetching, isUsersError: isError, users: data?.users, total: data?.total, hasUsersNextPage: hasNextPage, fetchUsersNextPage: fetchNextPage };
+  return { isFetchingUsers: isFetching, isUsersError: isError, users: data?.users, totalUsers: data?.total, hasUsersNextPage: hasNextPage, fetchUsersNextPage: fetchNextPage };
 };
 
 export default useUsers;

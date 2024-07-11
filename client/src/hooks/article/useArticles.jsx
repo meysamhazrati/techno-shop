@@ -10,7 +10,7 @@ const useArticles = (categories, onlyPublished, sort, length) => {
     select: ({ pages }) => ({ articles: pages.flatMap(({ data }) => data.articles), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingArticles: isFetching, isArticlesError: isError, articles: data?.articles, total: data?.total, hasArticlesNextPage: hasNextPage, fetchArticlesNextPage: fetchNextPage };
+  return { isFetchingArticles: isFetching, isArticlesError: isError, articles: data?.articles, totalArticles: data?.total, hasArticlesNextPage: hasNextPage, fetchArticlesNextPage: fetchNextPage };
 };
 
 export default useArticles;

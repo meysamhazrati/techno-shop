@@ -10,7 +10,7 @@ const useProducts = (search, brands, categories, price, onlyAvailable, onlyAmazi
     select: ({ pages }) => ({ products: pages.flatMap(({ data }) => data.products), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingProducts: isFetching, isProductsError: isError, products: data?.products, total: data?.total, hasProductsNextPage: hasNextPage, fetchProductsNextPage: fetchNextPage };
+  return { isFetchingProducts: isFetching, isProductsError: isError, products: data?.products, totalProducts: data?.total, hasProductsNextPage: hasNextPage, fetchProductsNextPage: fetchNextPage };
 };
 
 export default useProducts;

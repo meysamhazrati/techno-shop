@@ -10,7 +10,7 @@ const useAddresses = (length) => {
     select: ({ pages }) => ({ addresses: pages.flatMap(({ data }) => data.addresses), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingAddresses: isFetching, isAddressesError: isError, addresses: data?.addresses, total: data?.total, hasAddressesNextPage: hasNextPage, fetchAddressesNextPage: fetchNextPage };
+  return { isFetchingAddresses: isFetching, isAddressesError: isError, addresses: data?.addresses, totalAddresses: data?.total, hasAddressesNextPage: hasNextPage, fetchAddressesNextPage: fetchNextPage };
 };
 
 export default useAddresses;

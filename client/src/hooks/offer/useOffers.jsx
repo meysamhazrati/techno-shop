@@ -10,7 +10,7 @@ const useOffers = (length) => {
     select: ({ pages }) => ({ offers: pages.flatMap(({ data }) => data.offers), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingOffers: isFetching, isOffersError: isError, offers: data?.offers, total: data?.total, hasOffersNextPage: hasNextPage, fetchOffersNextPage: fetchNextPage };
+  return { isFetchingOffers: isFetching, isOffersError: isError, offers: data?.offers, totalOffers: data?.total, hasOffersNextPage: hasNextPage, fetchOffersNextPage: fetchNextPage };
 };
 
 export default useOffers;

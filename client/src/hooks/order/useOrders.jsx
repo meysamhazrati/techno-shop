@@ -10,7 +10,7 @@ const useOrders = (length) => {
     select: ({ pages }) => ({ orders: pages.flatMap(({ data }) => data.orders), total: pages[pages.length - 1].data.total }),
   });
 
-  return { isFetchingOrders: isFetching, isOrdersError: isError, orders: data?.orders, total: data?.total, hasOrdersNextPage: hasNextPage, fetchOrdersNextPage: fetchNextPage };
+  return { isFetchingOrders: isFetching, isOrdersError: isError, orders: data?.orders, totalOrders: data?.total, hasOrdersNextPage: hasNextPage, fetchOrdersNextPage: fetchNextPage };
 };
 
 export default useOrders;
