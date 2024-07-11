@@ -4,7 +4,7 @@ const create = async (body) => await axios.postForm("/articles", body);
 
 const getAll = async (categories, onlyPublished, sort, page, length) => await axios.get("/articles", { params: { categories, "only-published": onlyPublished, sort, page, length } });
 
-const get = async (id, commentsPage, commentsLength) => await axios.get(`/articles/${id}`, { params: { "comments-page": commentsPage, "comments-length": commentsLength } });
+const get = async (id, onlyConfirmedComments, commentsPage, commentsLength) => await axios.get(`/articles/${id}`, { params: { "only-confirmed-comments": onlyConfirmedComments, "comments-page": commentsPage, "comments-length": commentsLength } });
 
 const update = async (id, body) => await axios.putForm(`/articles/${id}`, body);
 
