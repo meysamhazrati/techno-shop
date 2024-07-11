@@ -6,7 +6,7 @@ import validator from "../validators/offer.js";
 
 const create = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.create.validate(body);
 
@@ -117,7 +117,7 @@ const update = async (request, response, next) => {
   try {
     const { id } = request.params;
     
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.update.validate(body);
 
