@@ -18,12 +18,12 @@ const User = () => {
   const { isFetchingUser, isUserError, user } = useUser(id);
 
   useEffect(() => {
-    document.title = isFetchingUser || isUserError ? "تکنوشاپ - مدیریت" : `تکنوشاپ - مدیریت - ${user.firstName} ${user.lastName}`;
+    document.title = isFetchingUser || isUserError ? "تکنوشاپ - مدیریت" : `تکنوشاپ - مدیریت - کاربر ها - ${user.firstName} ${user.lastName}`;
   }, [isFetchingUser, isUserError, user]);
 
   useEffect(() => {
     if (isUserError) {
-      throw Object.assign(new Error("The user was not found."), { status: 404 });
+      throw Object.assign(new Error("کاربر مورد نظر پیدا نشد."), { status: 404 });
     }
   }, [isUserError]);
 
@@ -79,7 +79,7 @@ const User = () => {
               </tr>
             </thead>
             <tbody>
-              {isFetchingUser ? Array(5).fill(0).map((address, index) => <AddressSkeleton key={index} />) : user.addresses.map((address) => <Address key={address._id} {...address} />)}
+              {isFetchingUser ? Array(5).fill().map((address, index) => <AddressSkeleton key={index} />) : user.addresses.map((address) => <Address key={address._id} {...address} />)}
             </tbody>
           </table>
         </div>
@@ -103,7 +103,7 @@ const User = () => {
               </tr>
             </thead>
             <tbody>
-              {isFetchingUser ? Array(5).fill(0).map((order, index) => <OrderSkeleton key={index} />) : user.orders.map((order) => <Order key={order._id} {...order} />)}
+              {isFetchingUser ? Array(5).fill().map((order, index) => <OrderSkeleton key={index} />) : user.orders.map((order) => <Order key={order._id} {...order} />)}
             </tbody>
           </table>
         </div>
@@ -127,7 +127,7 @@ const User = () => {
               </tr>
             </thead>
             <tbody>
-              {isFetchingUser ? Array(5).fill(0).map((comment, index) => <CommentSkeleton key={index} />) : user.comments.map((comment) => <Comment key={comment._id} {...comment} />)}
+              {isFetchingUser ? Array(5).fill().map((comment, index) => <CommentSkeleton key={index} />) : user.comments.map((comment) => <Comment key={comment._id} {...comment} />)}
             </tbody>
           </table>
         </div>
@@ -151,7 +151,7 @@ const User = () => {
               </tr>
             </thead>
             <tbody>
-              {isFetchingUser ? Array(5).fill(0).map((ticket, index) => <TicketSkeleton key={index} />) : user.tickets.map((ticket) => <Ticket key={ticket._id} {...ticket} />)}
+              {isFetchingUser ? Array(5).fill().map((ticket, index) => <TicketSkeleton key={index} />) : user.tickets.map((ticket) => <Ticket key={ticket._id} {...ticket} />)}
             </tbody>
           </table>
         </div>
