@@ -15,7 +15,7 @@ const Brands = () => {
   const image = useRef();
   const file = useRef();
 
-  const { isFetchingBrands, isBrandsError, brands, total, hasBrandsNextPage, fetchBrandsNextPage } = useBrands(20);
+  const { isFetchingBrands, isBrandsError, brands, totalBrands, hasBrandsNextPage, fetchBrandsNextPage } = useBrands(20);
   const { isPendingCreateBrand, createBrand } = useCreateBrand();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Brands = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createBrand({ name: name.trim(), englishName: englishName.trim(), logo }, { onSuccess: () => {
+        createBrand({ name, englishName, logo }, { onSuccess: () => {
           setName("");
           setEnglishName("");
           setLogo(null);
@@ -36,9 +36,9 @@ const Brands = () => {
           file.current.value = null;
         } });
       }}>
-        <div className="flex items-center gap-x-4">
+        <div className="flex flex-col items-center gap-4 xs:flex-row">
           <div className="size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
-            {file.current?.files.length ? <img ref={image} alt="Brand Logo" loading="lazy" className="size-full rounded-full object-cover" /> : <div className="flex size-full items-center justify-center rounded-full border border-zinc-200 text-zinc-400">لوگو</div>}
+            {file.current?.files.length ? <img ref={image} alt={name} loading="lazy" className="size-full rounded-full object-cover" /> : <div className="flex size-full items-center justify-center rounded-full border border-zinc-200 text-zinc-400">لوگو</div>}
             <input
               ref={file}
               type="file"
@@ -80,7 +80,7 @@ const Brands = () => {
       </form>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">برند ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingBrands || isBrandsError ? 0 : total.toLocaleString()} برند</span>
+        <span className="mr-auto text-zinc-500">{isFetchingBrands || isBrandsError ? 0 : totalBrands.toLocaleString()} برند</span>
       </div>
       {isBrandsError ? (
         <NoResultFound title="برندی پیدا نشد!" className="mt-4" />
