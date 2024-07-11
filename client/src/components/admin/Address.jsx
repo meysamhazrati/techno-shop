@@ -12,7 +12,7 @@ const Address = ({ _id, province, city, postalCode, body, recipient }) => {
   const [newCity, setNewCity] = useState(city);
   const [newPostalCode, setNewPostalCode] = useState(postalCode);
   const [newBody, setNewBody] = useState(body);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
@@ -34,20 +34,20 @@ const Address = ({ _id, province, city, postalCode, body, recipient }) => {
         )}
         <td>
           <div className="flex items-center justify-center gap-x-2 text-base">
-            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsEditModalOpen(true)}>ویرایش</button>
+            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsUpdateModalOpen(true)}>ویرایش</button>
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-400" onClick={() => setIsRemoveModalOpen(true)}>حذف</button>
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-primary-900 text-white transition-colors hover:bg-primary-800" onClick={() => setIsAddressModalOpen(true)}>مشاهده</button>
           </div>
         </td>
       </tr>
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش آدرس</h6>
         <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
           event.preventDefault();
 
-          updateAddress({ province: newProvince.trim(), city: newCity.trim(), postalCode: newPostalCode.trim(), body: newBody.trim() }, { onSuccess: () => {
+          updateAddress({ province: newProvince, city: newCity, postalCode: newPostalCode, body: newBody }, { onSuccess: () => {
             client.invalidateQueries([{ queryKey: ["addresses"] }, { queryKey: ["users", { id: recipient._id || recipient }] }]);
-            setIsEditModalOpen(false);
+            setIsUpdateModalOpen(false);
           } });
         }}>
           <input
