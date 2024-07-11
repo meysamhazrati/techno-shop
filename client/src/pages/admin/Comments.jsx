@@ -6,7 +6,7 @@ import CommentSkeleton from "../../components/admin/CommentSkeleton";
 import NoResultFound from "../../components/NoResultFound";
 
 const Comments = () => {
-  const { isFetchingComments, isCommentsError, comments, total, hasCommentsNextPage, fetchCommentsNextPage } = useComments(20);
+  const { isFetchingComments, isCommentsError, comments, totalComments, hasCommentsNextPage, fetchCommentsNextPage } = useComments(20);
 
   useEffect(() => {
     document.title = "تکنوشاپ - مدیریت - دیدگاه ها";
@@ -16,7 +16,7 @@ const Comments = () => {
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">دیدگاه ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingComments || isCommentsError ? 0 : total.toLocaleString()} دیدگاه</span>
+        <span className="mr-auto text-zinc-500">{isFetchingComments || isCommentsError ? 0 : totalComments.toLocaleString()} دیدگاه</span>
       </div>
       {isCommentsError ? (
         <NoResultFound title="دیدگاهی پیدا نشد!" className="mt-6" />
@@ -36,7 +36,7 @@ const Comments = () => {
             <InfiniteScroll hasNextPage={hasCommentsNextPage} fetchNextPage={fetchCommentsNextPage}>
               <tbody>
                 {comments?.map((comment) => <Comment key={comment._id} {...comment} />)}
-                {isFetchingComments && Array(20).fill().map((comment, index) => <CommentSkeleton key={index} senderField={true} />)}
+                {isFetchingComments && Array(20).fill().map((comment, index) => <CommentSkeleton key={index} productOrArticleField={true} senderField={true} />)}
               </tbody>
             </InfiniteScroll>
           </table>
