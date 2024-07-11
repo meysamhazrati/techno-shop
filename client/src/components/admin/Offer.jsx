@@ -10,9 +10,9 @@ const Offer = ({ _id, title, englishTitle, description, percent, organizer, expi
   const [newTitle, setNewTitle] = useState(title);
   const [newEnglishTitle, setNewEnglishTitle] = useState(englishTitle);
   const [newDescription, setNewDescription] = useState(description);
-  const [newPercent, setNewPercent] = useState(percent.toString());
+  const [newPercent, setNewPercent] = useState(percent);
   const [newExpiresAt, setNewExpiresAt] = useState("");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const { isPendingUpdateOffer, updateOffer } = useUpdateOffer(_id);
@@ -32,17 +32,17 @@ const Offer = ({ _id, title, englishTitle, description, percent, organizer, expi
         <td>{new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(expiresAt))}</td>
         <td>
           <div className="flex items-center justify-center gap-x-2 text-base">
-            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsEditModalOpen(true)}>ویرایش</button>
+            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsUpdateModalOpen(true)}>ویرایش</button>
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-400" onClick={() => setIsRemoveModalOpen(true)}>حذف</button>
           </div>
         </td>
       </tr>
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش پیشنهاد</h6>
         <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
           event.preventDefault();
 
-          updateOffer(Object.fromEntries(Object.entries({ title: newTitle?.trim(), englishTitle: newEnglishTitle?.trim(), description: newDescription?.trim(), percent: newPercent?.trim(), expiresAt: newExpiresAt?.trim() }).filter(([key, value]) => value !== "")), { onSuccess: () => setIsEditModalOpen(false) });
+          updateOffer(Object.fromEntries(Object.entries({ title: newTitle, englishTitle: newEnglishTitle, description: newDescription, percent: newPercent, expiresAt: newExpiresAt }).filter(([key, value]) => value !== "")), { onSuccess: () => setIsUpdateModalOpen(false) });
         }}>
           <input
             type="text"
