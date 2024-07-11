@@ -19,7 +19,7 @@ const Article = ({ _id, title, cover, isPublished, author, score, category }) =>
     <>
       <tr className="border-t border-zinc-200 [&>*]:h-[120px] [&>*]:px-5">
         <td>
-          <img src={`${process.env.SERVER_URI}/images/articles/${cover}`} alt="Article Cover" loading="lazy" className="h-24 w-40 rounded-3xl object-cover" />
+          <img src={`${process.env.SERVER_URI}/images/articles/${cover}`} alt={title} loading="lazy" className="mx-auto h-24 w-40 rounded-3xl object-cover" />
         </td>
         <td>{title}</td>
         <td>{score} ستاره</td>
