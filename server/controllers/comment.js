@@ -6,7 +6,7 @@ const create = async (request, response, next) => {
   try {
     const { _id } = request.user;
     
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.create.validate(body);
 
@@ -57,7 +57,7 @@ const update = async (request, response, next) => {
 
     if (comment) {
       if (role === "ADMIN" || _id.equals(comment.sender)) {
-        const body = request.body;
+        const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
 
         await validator.update.validate(body);
 
