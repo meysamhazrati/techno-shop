@@ -17,7 +17,7 @@ const Offers = () => {
   const [expiresAt, setExpiresAt] = useState("");
   const [categories_, setCategories_] = useState([]);
 
-  const { isFetchingOffers, isOffersError, offers, total, hasOffersNextPage, fetchOffersNextPage } = useOffers(20);
+  const { isFetchingOffers, isOffersError, offers, totalOffers, hasOffersNextPage, fetchOffersNextPage } = useOffers(20);
   const { isPendingCreateOffer, createOffer } = useCreateOffer();
   const { categories } = useCategories();
 
@@ -31,7 +31,7 @@ const Offers = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createOffer(Object.fromEntries(Object.entries({ title: title?.trim(), englishTitle: englishTitle?.trim(), description: description?.trim(), percent: percent?.trim(), expiresAt: expiresAt?.trim(), categories: categories_ }).filter(([key, value]) => value !== "" && (Array.isArray(value) ? value.length : true))), { onSuccess: () => {
+        createOffer(Object.fromEntries(Object.entries({ title, englishTitle, description, percent, expiresAt, categories: categories_ }).filter(([key, value]) => value !== "" && (Array.isArray(value) ? value.length : true))), { onSuccess: () => {
           setTitle("");
           setEnglishTitle("");
           setDescription("");
@@ -91,7 +91,7 @@ const Offers = () => {
       </form>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">پیشنهاد ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingOffers || isOffersError ? 0 : total.toLocaleString()} پیشنهاد</span>
+        <span className="mr-auto text-zinc-500">{isFetchingOffers || isOffersError ? 0 : totalOffers.toLocaleString()} پیشنهاد</span>
       </div>
       {isOffersError ? (
         <NoResultFound title="پیشنهادی پیدا نشد!" className="mt-6" />
