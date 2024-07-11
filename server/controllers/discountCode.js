@@ -3,7 +3,7 @@ import validator from "../validators/discountCode.js"
 
 const create = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.create.validate(body);
 
@@ -45,7 +45,7 @@ const use = async (request, response, next) => {
   try {
     const { code } = request.params;
     
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.use.validate(body);
 
