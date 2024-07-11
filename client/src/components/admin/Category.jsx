@@ -9,7 +9,7 @@ const Category = ({ _id, title, englishTitle, logo }) => {
   const [newTitle, setNewTitle] = useState(title);
   const [newEnglishTitle, setNewEnglishTitle] = useState(englishTitle);
   const [newLogo, setNewLogo] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const image = useRef();
@@ -22,26 +22,26 @@ const Category = ({ _id, title, englishTitle, logo }) => {
     <>
       <tr className="border-t border-zinc-200 [&>*]:h-[72px] [&>*]:px-5">
         <td>
-          <img src={`${process.env.SERVER_URI}/images/categories/${logo}`} alt="Category Logo" loading="lazy" className="size-12 rounded-full object-cover" />
+          <img src={`${process.env.SERVER_URI}/images/categories/${logo}`} alt={title} loading="lazy" className="mx-auto size-12 rounded-full object-cover" />
         </td>
         <td>{title}</td>
         <td>{englishTitle}</td>
         <td>
           <div className="flex items-center justify-center gap-x-2 text-base">
-            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsEditModalOpen(true)}>ویرایش</button>
+            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsUpdateModalOpen(true)}>ویرایش</button>
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-400" onClick={() => setIsRemoveModalOpen(true)}>حذف</button>
           </div>
         </td>
       </tr>
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش دسته‌بندی‌</h6>
         <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
           event.preventDefault();
           
-          updateCategory({ title: newTitle.trim(), englishTitle: newEnglishTitle.trim(), logo: newLogo }, { onSuccess: () => setIsEditModalOpen(false) });
+          updateCategory({ title: newTitle, englishTitle: newEnglishTitle, logo: newLogo }, { onSuccess: () => setIsUpdateModalOpen(false) });
         }}>
           <div className="mx-auto !size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
-            <img ref={image} src={`${process.env.SERVER_URI}/images/categories/${logo}`} alt="Category Logo" loading="lazy" className="size-full rounded-full object-cover" />
+            <img ref={image} src={`${process.env.SERVER_URI}/images/categories/${logo}`} alt={title} loading="lazy" className="size-full rounded-full object-cover" />
             <input
               ref={file}
               type="file"
