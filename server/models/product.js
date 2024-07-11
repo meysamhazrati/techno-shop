@@ -9,9 +9,9 @@ const schema = new Schema({
   },
   warranty: {
     type: Number,
-    required: true,
-    min: 0,
+    required: false,
     max: 100,
+    default: 0,
   },
   covers: [
     {
