@@ -16,13 +16,13 @@ const Articles = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [cover, setCover] = useState(null);
-  const [isPublished, setIsPublished] = useState(false);
+  const [isPublished, setIsPublished] = useState(null);
   const [category, setCategory] = useState(null);
 
   const image = useRef();
   const file = useRef();
 
-  const { isFetchingArticles, isArticlesError, articles, total, hasArticlesNextPage, fetchArticlesNextPage } = useArticles(null, false, null, 20);
+  const { isFetchingArticles, isArticlesError, articles, totalArticles, hasArticlesNextPage, fetchArticlesNextPage } = useArticles(null, false, null, 20);
   const { isPendingCreateArticle, createArticle } = useCreateArticle();
   const { categories } = useCategories();
 
@@ -36,11 +36,11 @@ const Articles = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createArticle({ title: title?.trim(), body: body?.trim(), cover, isPublished, category: category?.trim() }, { onSuccess: () => {
+        createArticle({ title, body, cover, isPublished, category }, { onSuccess: () => {
           setTitle("");
           setBody("");
           setCover(null);
-          setIsPublished(false);
+          setIsPublished(null);
           setCategory(null);
           image.current.src = "";
           file.current.value = null;
@@ -48,7 +48,7 @@ const Articles = () => {
       }}>
         <div className="flex flex-col items-center gap-4 sm:flex-row">
           <div className="h-56 w-full shrink-0 cursor-pointer sm:w-72 md:w-96 lg:w-80 xl:w-96" onClick={() => file.current.click()}>
-            {file.current?.files.length ? <img ref={image} alt="Article Cover" loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور</div>}
+            {file.current?.files.length ? <img ref={image} alt={title} loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور</div>}
             <input
               ref={file}
               type="file"
@@ -118,7 +118,7 @@ const Articles = () => {
       </form>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">مقاله ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingArticles || isArticlesError ? 0 : total.toLocaleString()} مقاله</span>
+        <span className="mr-auto text-zinc-500">{isFetchingArticles || isArticlesError ? 0 : totalArticles.toLocaleString()} مقاله</span>
       </div>
       {isArticlesError ? (
         <NoResultFound title="مقاله‌ای پیدا نشد!" className="mt-4" />
