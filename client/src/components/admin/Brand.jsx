@@ -9,7 +9,7 @@ const Brand = ({ _id, name, englishName, logo }) => {
   const [newName, setNewName] = useState(name);
   const [newEnglishName, setNewEnglishName] = useState(englishName);
   const [newLogo, setNewLogo] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const image = useRef();
@@ -22,26 +22,26 @@ const Brand = ({ _id, name, englishName, logo }) => {
     <>
       <tr className="border-t border-zinc-200 [&>*]:h-[72px] [&>*]:px-5">
         <td>
-          <img src={`${process.env.SERVER_URI}/images/brands/${logo}`} alt="Brand Logo" loading="lazy" className="size-12 rounded-full object-cover" />
+          <img src={`${process.env.SERVER_URI}/images/brands/${logo}`} alt={name} loading="lazy" className="mx-auto size-12 rounded-full object-cover" />
         </td>
         <td>{name}</td>
         <td>{englishName}</td>
         <td>
           <div className="flex items-center justify-center gap-x-2 text-base">
-            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsEditModalOpen(true)}>ویرایش</button>
+            <button className="flex h-9 w-24 items-center justify-center rounded-full bg-zinc-500 text-white transition-colors hover:bg-zinc-400" onClick={() => setIsUpdateModalOpen(true)}>ویرایش</button>
             <button className="flex h-9 w-24 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-400" onClick={() => setIsRemoveModalOpen(true)}>حذف</button>
           </div>
         </td>
       </tr>
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش برند</h6>
         <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
           event.preventDefault();
 
-          updateBrand({ name: newName.trim(), englishName: newEnglishName.trim(), logo: newLogo }, { onSuccess: () => setIsEditModalOpen(false) })
+          updateBrand({ name: newName, englishName: newEnglishName, logo: newLogo }, { onSuccess: () => setIsUpdateModalOpen(false) })
         }}>
           <div className="mx-auto !size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
-            <img ref={image} src={`${process.env.SERVER_URI}/images/brands/${logo}`} alt="Brand Logo" loading="lazy" className="size-full rounded-full object-cover" />
+            <img ref={image} src={`${process.env.SERVER_URI}/images/brands/${logo}`} alt={name} loading="lazy" className="size-full rounded-full object-cover" />
             <input
               ref={file}
               type="file"
