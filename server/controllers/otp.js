@@ -7,7 +7,7 @@ const send = async (request, response, next) => {
   try {
     const { type = "register" } = request.query;
     
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.send.validate(body);
 
@@ -86,7 +86,7 @@ const send = async (request, response, next) => {
 
 const verify = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.verify.validate(body);
 
