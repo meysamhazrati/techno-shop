@@ -8,7 +8,7 @@ import validator from "../validators/order.js";
 
 const create = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.validate(body);
 
@@ -68,7 +68,7 @@ const get = async (request, response, next) => {
     ]).lean();
 
     if (order) {
-      if (role === "ADMIN" || _id.equals(order.buyer)) {
+      if (role === "ADMIN" || _id.equals(order.buyer._id)) {
         response.json(order);
       } else {
         throw Object.assign(new Error("شما دسترسی لازم به سفارش مورد نظر را ندارید."), { status: 403 });
