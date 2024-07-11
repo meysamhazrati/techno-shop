@@ -34,7 +34,7 @@ const create = async (request, response, next) => {
     
     if (type) {
       const covers = request.files.covers || request.files["covers[]"];
-      const body = request.body;
+      const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() :  value]));
   
       await validator.create.validate({ ...body, covers });
       
@@ -198,14 +198,14 @@ const getAll = async (request, response, next) => {
 const get = async (request, response, next) => {
   try {
     const { id } = request.params;
-    const { "comments-page": commentsPage = 1, "comments-length": commentsLength } = request.query;
+    const { "only-confirmed-comments": onlyConfirmedComments = false, "comments-page": commentsPage = 1, "comments-length": commentsLength } = request.query;
 
     const product = await model.findById(id, "-__v").populate([
       { path: "colors", select: "price sales inventory name code", options: { sort: { price: 1 } } },
       { path: "brand", select: "-__v" },
       { path: "category", select: "-__v" },
       { path: "offer", select: "-organizer -__v" },
-      { path: "comments", select: "-__v", match: { isConfirmed: true }, options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
+      { path: "comments", select: "-__v", match: { isConfirmed: JSON.parse(onlyConfirmedComments) ? true : undefined }, options: { sort: { createdAt: -1 } }, populate: { path: "sender", select: "firstName lastName avatar" } },
     ]).lean();
 
     if (product) {
@@ -230,7 +230,7 @@ const update = async (request, response, next) => {
     const { type } = request.query;
     
     if (type) {
-      const body = request.body;
+      const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
 
       await validator.update.validate(body);
 
