@@ -63,7 +63,7 @@ const edit = async (request, response, next) => {
     const { _id } = request.user;
 
     const avatar = request.file;
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
 
     await validator.edit.validate(body);
     
@@ -98,7 +98,7 @@ const update = async (request, response, next) => {
     const { id } = request.params;
     
     const avatar = request.file;
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.update.validate(body);
 
@@ -132,7 +132,7 @@ const addToCart = async (request, response, next) => {
 
     const { _id, cart } = request.user;
 
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
 
     await validator.cart.validate(body);
 
@@ -171,7 +171,7 @@ const removeFromCart = async (request, response, next) => {
 
     const { _id, cart } = request.user;
 
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.cart.validate(body);
 
