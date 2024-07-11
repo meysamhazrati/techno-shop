@@ -6,7 +6,7 @@ import UserSkeleton from "../../components/admin/UserSkeleton";
 import NoResultFound from "../../components/NoResultFound";
 
 const Users = () => {
-  const { isFetchingUsers, isUsersError, users, total, hasUsersNextPage, fetchUsersNextPage } = useUsers(20);
+  const { isFetchingUsers, isUsersError, users, totalUsers, hasUsersNextPage, fetchUsersNextPage } = useUsers(20);
 
   useEffect(() => {
     document.title = "تکنوشاپ - مدیریت - کاربر ها";
@@ -16,7 +16,7 @@ const Users = () => {
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">کاربر ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingUsers || isUsersError ? 0 : total.toLocaleString()} کاربر</span>
+        <span className="mr-auto text-zinc-500">{isFetchingUsers || isUsersError ? 0 : totalUsers.toLocaleString()} کاربر</span>
       </div>
       {isUsersError ? (
         <NoResultFound title="کاربری پیدا نشد!" className="mt-4" />
@@ -37,7 +37,7 @@ const Users = () => {
             <InfiniteScroll hasNextPage={hasUsersNextPage} fetchNextPage={fetchUsersNextPage}>
               <tbody>
                 {users?.map((user) => <User key={user._id} {...user} />)}
-                {isFetchingUsers && Array(20).fill(0).map((user, index) => <UserSkeleton key={index} />)}
+                {isFetchingUsers && Array(20).fill().map((user, index) => <UserSkeleton key={index} />)}
               </tbody>
             </InfiniteScroll>
           </table>
