@@ -7,7 +7,7 @@ import validator from "../validators/authentication.js"
 
 const register = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.register.validate(body);
 
@@ -39,7 +39,7 @@ const register = async (request, response, next) => {
 
 const login = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.login.validate(body);
 
@@ -71,7 +71,7 @@ const login = async (request, response, next) => {
 
 const resetPassword = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.resetPassword.validate(body);
 
