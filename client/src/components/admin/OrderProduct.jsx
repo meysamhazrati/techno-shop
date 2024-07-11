@@ -8,12 +8,12 @@ const OrderProduct = ({ quantity, product, color }) => {
     <>
       <tr className="border-t border-zinc-200 [&>*]:h-[120px] [&>*]:px-5">
         <td>
-          <img src={`${process.env.SERVER_URI}/images/products/${product.covers[0]}`} alt="Product Cover" loading="lazy" className="h-24 w-40 rounded-3xl object-cover" />
+          <img src={`${process.env.SERVER_URI}/images/products/${product.covers[0]}`} alt={product.title} loading="lazy" className="mx-auto h-24 w-40 rounded-3xl object-cover" />
         </td>
         <td>{product.title}</td>
         <td>{quantity} محصول</td>
         <td>{color.name}</td>
-        <td>{product.warranty} ماه</td>
+        <td>{product.warranty > 0 ? `${product.warranty} ماه` : "ندارد"}</td>
         <td>{product.brand.name}</td>
         <td>{product.category.title}</td>
         <td>{product.offer ? product.offer.title : "ندارد"}</td>
