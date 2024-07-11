@@ -17,7 +17,7 @@ const DiscountCodes = () => {
   const [expiresAt, setExpiresAt] = useState("");
   const [categories_, setCategories_] = useState([]);
 
-  const { isFetchingDiscountCodes, isDiscountCodesError, discountCodes, total, hasDiscountCodesNextPage, fetchDiscountCodesNextPage } = useDiscountCodes(20);
+  const { isFetchingDiscountCodes, isDiscountCodesError, discountCodes, totalDiscountCodes, hasDiscountCodesNextPage, fetchDiscountCodesNextPage } = useDiscountCodes(20);
   const { isPendingCreateDiscountCode, createDiscountCode } = useCreateDiscountCode();
   const { categories } = useCategories();
 
@@ -31,7 +31,7 @@ const DiscountCodes = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createDiscountCode(Object.fromEntries(Object.entries({ code: code?.trim(), percent: percent?.trim(), minimumPrice: minimumPrice?.trim(), maximumUsage: maximumUsage?.trim(), expiresAt: expiresAt?.trim(), categories: categories_ }).filter(([key, value]) => value !== "" && (Array.isArray(value) ? value.length : true))), { onSuccess: () => {
+        createDiscountCode(Object.fromEntries(Object.entries({ code, percent, minimumPrice, maximumUsage, expiresAt, categories: categories_ }).filter(([key, value]) => value !== "" && (Array.isArray(value) ? value.length : true))), { onSuccess: () => {
           setCode("");
           setPercent("");
           setMinimumPrice("");
@@ -94,7 +94,7 @@ const DiscountCodes = () => {
       </form>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">کد‌تخفیف ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingDiscountCodes || isDiscountCodesError ? 0 : total.toLocaleString()} کد‌تخفیف</span>
+        <span className="mr-auto text-zinc-500">{isFetchingDiscountCodes || isDiscountCodesError ? 0 : totalDiscountCodes.toLocaleString()} کد‌تخفیف</span>
       </div>
       {isDiscountCodesError ? (
         <NoResultFound title="کد‌تخفیفی پیدا نشد!" className="mt-6" />
