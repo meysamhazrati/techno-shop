@@ -6,7 +6,7 @@ import AddressSkeleton from "../../components/admin/AddressSkeleton";
 import NoResultFound from "../../components/NoResultFound";
 
 const Addresses = () => {
-  const { isFetchingAddresses, isAddressesError, addresses, total, hasAddressesNextPage, fetchAddressesNextPage } = useAddresses(20);
+  const { isFetchingAddresses, isAddressesError, addresses, totalAddresses, hasAddressesNextPage, fetchAddressesNextPage } = useAddresses(20);
 
   useEffect(() => {
     document.title = "تکنوشاپ - مدیریت - آدرس ها";
@@ -16,7 +16,7 @@ const Addresses = () => {
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">آدرس ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingAddresses || isAddressesError ? 0 : total.toLocaleString()} آدرس</span>
+        <span className="mr-auto text-zinc-500">{isFetchingAddresses || isAddressesError ? 0 : totalAddresses.toLocaleString()} آدرس</span>
       </div>
       {isAddressesError ? (
         <NoResultFound title="آدرسی پیدا نشد!" className="mt-4" />
@@ -35,7 +35,7 @@ const Addresses = () => {
             <InfiniteScroll hasNextPage={hasAddressesNextPage} fetchNextPage={fetchAddressesNextPage}>
               <tbody>
                 {addresses?.map((address) => <Address key={address._id} {...address} />)}
-                {isFetchingAddresses && Array(20).fill(0).map((address, index) => <AddressSkeleton key={index} recipientField={true} />)}
+                {isFetchingAddresses && Array(20).fill().map((address, index) => <AddressSkeleton key={index} recipientField={true} />)}
               </tbody>
             </InfiniteScroll>
           </table>
