@@ -18,12 +18,12 @@ const Ticket = () => {
   const { isPendingReplyTicket, replyTicket } = useReplyTicket(id);
 
   useEffect(() => {
-    document.title = isFetchingTicket || isTicketError ? "تکنوشاپ - مدیریت" : `تکنوشاپ - مدیریت - ${ticket.title}`;
+    document.title = isFetchingTicket || isTicketError ? "تکنوشاپ - مدیریت" : `تکنوشاپ - مدیریت - تیکت ها - ${ticket.title}`;
   }, [isFetchingTicket, isTicketError, ticket]);
 
   useEffect(() => {
     if (isTicketError) {
-      throw Object.assign(new Error("The ticket was not found."), { status: 404 });
+      throw Object.assign(new Error("تیکت مورد نظر پیدا نشد."), { status: 404 });
     }
   }, [isTicketError]);
 
@@ -77,7 +77,7 @@ const Ticket = () => {
         <form className="mt-12 text-lg" onSubmit={(event) => {
           event.preventDefault();
 
-          replyTicket({ body: body?.trim() }, { onSuccess: () => {
+          replyTicket({ body }, { onSuccess: () => {
             client.invalidateQueries({ queryKey: ["tickets", { id }] });
             setBody("");
           } });
