@@ -3,14 +3,14 @@ import { useRouteError } from "react-router-dom";
 import NotFound from "./NotFound";
 
 const Error = () => {
-  const { status } = useRouteError();
+  const { status, message } = useRouteError();
 
   useEffect(() => {
     document.title = `تکنوشاپ - ${status === 404 ? "پیدا نشد" : "خطا"}`;
   }, [status]);
 
   return status === 404 ? (
-    <NotFound />
+    <NotFound message={message} />
   ) : (
     <div className="flex h-svh flex-col items-center justify-center text-center">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4000 3000" className="max-w-[450px] sm:max-w-[600px]">
@@ -45,7 +45,7 @@ const Error = () => {
         <path d="m1604.8 1408.4-10.3 22.3 53.9 5.1 7.5-24.3z" fill="#1f3e76" />
         <path d="M1640.8 2123.1s-21.2-30.3-47.7-72.4c-27.3-45.5-49.3-91.4-54.9-128-17.2-114.1 98.9-350.6 98.9-350.6" fill="none" stroke="#0a1324" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="10" />
       </svg>
-      <h1 className="text-2xl sm:text-4xl">خطای غیر منتظره!</h1>
+      <h1 className="text-2xl sm:text-4xl">مشکلی پیش آمد! لطفا بعدا دوباره تلاش کنید.</h1>
     </div>
   );
 };
