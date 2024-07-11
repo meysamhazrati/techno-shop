@@ -18,20 +18,20 @@ const Article = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newBody, setNewBody] = useState("");
   const [newCover, setNewCover] = useState(null);
-  const [newIsPublished, setNewIsPublished] = useState(false);
+  const [newIsPublished, setNewIsPublished] = useState(null);
   const [newCategory, setNewCategory] = useState(null);
 
   const image = useRef();
   const file = useRef();
 
-  const { isFetchingArticle, isArticleError, article, hasArticleNextPage, fetchArticleNextPage } = useArticle(id, 20);
+  const { isFetchingArticle, isArticleError, article, hasArticleNextPage, fetchArticleNextPage } = useArticle(id, false, 20);
   const { isPendingUpdateArticle, updateArticle } = useUpdateArticle(id);
   const { categories } = useCategories();
 
   useEffect(() => {
-    document.title = isFetchingArticle || isArticleError ? "تکنوشاپ - مدیریت" : `تکنوشاپ - مدیریت - ${article.title}`;
+    document.title = isFetchingArticle || isArticleError ? "تکنوشاپ - مدیریت" : `تکنوشاپ - مدیریت - مقاله ها - ${article.title}`;
 
-    if (!isFetchingArticle) {
+    if (!isFetchingArticle && !isArticleError) {
       setNewTitle(article.title);
       setNewBody(article.body);
       setNewIsPublished(article.isPublished);
@@ -39,10 +39,16 @@ const Article = () => {
     }
   }, [isFetchingArticle, isArticleError, article]);
 
-  return (
+  useEffect(() => {
+    if (isArticleError) {
+      throw Object.assign(new Error("مقاله مورد نظر پیدا نشد."), { status: 404 });
+    }
+  }, [isArticleError]);
+
+  return !isArticleError && (
     <>
       <div className="flex flex-col gap-3 overflow-auto sm:flex-row sm:items-center">
-        {isFetchingArticle ? <div className="h-56 w-full animate-pulse rounded-3xl bg-skeleton sm:w-80 md:w-96 lg:w-80 xl:w-96"></div> : <img src={`${process.env.SERVER_URI}/images/articles/${article.cover}`} alt="Article Cover" loading="lazy" className="h-56 w-full rounded-3xl object-cover sm:w-80 md:w-96 lg:w-80 xl:w-96" />}
+        {isFetchingArticle ? <div className="h-56 w-full animate-pulse rounded-3xl bg-skeleton sm:w-80 md:w-96 lg:w-80 xl:w-96"></div> : <img src={`${process.env.SERVER_URI}/images/articles/${article.cover}`} alt={article.title} loading="lazy" className="h-56 w-full rounded-3xl object-cover sm:w-80 md:w-96 lg:w-80 xl:w-96" />}
         <div className="flex flex-col gap-3 text-nowrap text-lg">
           <div className="flex items-center gap-x-2">
             <span className="text-zinc-400">عنوان:</span>
@@ -71,11 +77,11 @@ const Article = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        updateArticle({ title: newTitle?.trim(), body: newBody?.trim(), cover: newCover, isPublished: newIsPublished, category: newCategory?.trim() });
+        updateArticle({ title: newTitle, body: newBody, cover: newCover, isPublished: newIsPublished, category: newCategory });
       }}>
         <div className="flex flex-col items-center gap-4 sm:flex-row">
           <div className="h-56 w-full shrink-0 cursor-pointer sm:w-72 md:w-96 lg:w-80 xl:w-96" onClick={() => file.current.click()}>
-            <img ref={image} src={`${process.env.SERVER_URI}/images/articles/${article?.cover}`} alt="Article Cover" loading="lazy" className="size-full rounded-3xl object-cover" />
+            <img ref={image} src={`${process.env.SERVER_URI}/images/articles/${article?.cover}`} alt={article?.title} loading="lazy" className="size-full rounded-3xl object-cover" />
             <input
               ref={file}
               type="file"
@@ -156,7 +162,6 @@ const Article = () => {
               <tr className="[&>*]:h-[72px] [&>*]:px-5 [&>*]:font-vazirmatn-medium [&>*]:font-normal">
                 <th>امتیاز</th>
                 <th>وضعیت</th>
-                <th>محصول / مقاله</th>
                 <th>فرستنده</th>
                 <th>تاریخ ثبت</th>
                 <th></th>
@@ -164,7 +169,7 @@ const Article = () => {
             </thead>
             <InfiniteScroll hasNextPage={hasArticleNextPage} fetchNextPage={fetchArticleNextPage}>
               <tbody>
-                {article?.comments.map((comment) => <Comment key={comment._id} {...comment} article={article} />)}
+                {article?.comments.map((comment) => <Comment key={comment._id} {...comment} />)}
                 {isFetchingArticle && Array(20).fill().map((comment, index) => <CommentSkeleton key={index} senderField={true} />)}
               </tbody>
             </InfiniteScroll>
