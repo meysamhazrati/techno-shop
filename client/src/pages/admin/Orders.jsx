@@ -6,7 +6,7 @@ import OrderSkeleton from "../../components/admin/OrderSkeleton";
 import NoResultFound from "../../components/NoResultFound";
 
 const Orders = () => {
-  const { isFetchingOrders, isOrdersError, orders, total, hasOrdersNextPage, fetchOrdersNextPage } = useOrders(20);
+  const { isFetchingOrders, isOrdersError, orders, totalOrders, hasOrdersNextPage, fetchOrdersNextPage } = useOrders(20);
 
   useEffect(() => {
     document.title = "تکنوشاپ - مدیریت - سفارش ها";
@@ -16,7 +16,7 @@ const Orders = () => {
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">سفارش ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingOrders || isOrdersError ? 0 : total.toLocaleString()} سفارش</span>
+        <span className="mr-auto text-zinc-500">{isFetchingOrders || isOrdersError ? 0 : totalOrders.toLocaleString()} سفارش</span>
       </div>
       {isOrdersError ? (
         <NoResultFound title="سفارشی پیدا نشد!" className="mt-6" />
