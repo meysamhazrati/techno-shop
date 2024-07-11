@@ -76,9 +76,9 @@ const Products = () => {
   const [color, setColor] = useState("");
   const [impedance, setImpedance] = useState("");
   const [strapMaterial, setStrapMaterial] = useState("");
-  const [hasFingerprintSensor, setHasFingerprintSensor] = useState(false);
-  const [hasNoiseCancelling, setHasNoiseCancelling] = useState(false);
-  const [isWaterproof, setIsWaterproof] = useState(false);
+  const [hasFingerprintSensor, setHasFingerprintSensor] = useState(null);
+  const [hasNoiseCancelling, setHasNoiseCancelling] = useState(null);
+  const [isWaterproof, setIsWaterproof] = useState(null);
 
   const firstImage = useRef();
   const firstFile = useRef();
@@ -89,7 +89,7 @@ const Products = () => {
   const fourthImage = useRef();
   const fourthFile = useRef();
 
-  const { isFetchingProducts, isProductsError, products, total, hasProductsNextPage, fetchProductsNextPage } = useProducts(null, null, null, null, null, null, null, 20);
+  const { isFetchingProducts, isProductsError, products, totalProducts, hasProductsNextPage, fetchProductsNextPage } = useProducts(null, null, null, null, null, null, null, 20);
   const { isPendingCreateProduct, createProduct } = useCreateProduct(type);
   const { brands } = useBrands();
   const { categories } = useCategories();
@@ -105,68 +105,68 @@ const Products = () => {
           event.preventDefault();
 
           createProduct(Object.fromEntries(Object.entries({
-            title: title?.trim(),
-            warranty: warranty?.trim(),
+            title,
+            warranty,
             covers: [firstCover, secondCover, thirdCover, fourthCover].filter((cover) => cover),
             colors: [...colors].map((color) => Object.fromEntries(Object.entries(color).filter(([key, value]) => value !== undefined && value !== null && value !== ""))),
-            brand: brand?.trim(),
-            category: category?.trim(),
-            length: length?.trim(),
-            width: width?.trim(),
-            height: height?.trim(),
-            thickness: thickness?.trim(),
-            weight: weight?.trim(),
-            chip: chip?.trim(),
-            motherboard: motherboard?.trim(),
-            CPU: CPU?.trim(),
-            CPUSeries: CPUSeries?.trim(),
-            CPUGeneration: CPUGeneration?.trim(),
-            CPUFrequency: CPUFrequency?.trim(),
-            CPUCore: CPUCore?.trim(),
-            GPU: GPU?.trim(),
-            GPUModel: GPUModel?.trim(),
-            GPURAM: GPURAM?.trim(),
-            operatingSystem: operatingSystem?.trim(),
-            operatingSystemVersion: operatingSystemVersion?.trim(),
-            internalMemory: internalMemory?.trim(),
-            internalMemoryType: internalMemoryType?.trim(),
-            drive: drive?.trim(),
-            storage: storage?.trim(),
-            RAM: RAM?.trim(),
-            RAMType: RAMType?.trim(),
-            memoryCard: memoryCard?.trim(),
-            SIMCard: SIMCard?.trim(),
-            network: network?.trim(),
-            battery: battery?.trim(),
-            batteryCapacity: batteryCapacity?.trim(),
-            chargingPort: chargingPort?.trim(),
-            chargingSpeed: chargingSpeed?.trim(),
-            screen: screen?.trim(),
-            screenSize: screenSize?.trim(),
-            resolutionWidth: resolutionWidth?.trim(),
-            resolutionHeight: resolutionHeight?.trim(),
-            camera: camera?.trim(),
-            photoResolution: photoResolution?.trim(),
-            videoResolutionWidth: videoResolutionWidth?.trim(),
-            videoResolutionHeight: videoResolutionHeight?.trim(),
-            videoFPS: videoFPS?.trim(),
-            headphoneJack: headphoneJack?.trim(),
-            connectionType: connectionType?.trim(),
+            brand,
+            category,
+            length,
+            width,
+            height,
+            thickness,
+            weight,
+            chip,
+            motherboard,
+            CPU,
+            CPUSeries,
+            CPUGeneration,
+            CPUFrequency,
+            CPUCore,
+            GPU,
+            GPUModel,
+            GPURAM,
+            operatingSystem,
+            operatingSystemVersion,
+            internalMemory,
+            internalMemoryType,
+            drive,
+            storage,
+            RAM,
+            RAMType,
+            memoryCard,
+            SIMCard,
+            network,
+            battery,
+            batteryCapacity,
+            chargingPort,
+            chargingSpeed,
+            screen,
+            screenSize,
+            resolutionWidth,
+            resolutionHeight,
+            camera,
+            photoResolution,
+            videoResolutionWidth,
+            videoResolutionHeight,
+            videoFPS,
+            headphoneJack,
+            connectionType,
             interfaces,
-            buttons: buttons?.trim(),
-            keys: keys?.trim(),
-            minimumDPI: minimumDPI?.trim(),
-            maximumDPI: maximumDPI?.trim(),
-            minimumResponseTime: minimumResponseTime?.trim(),
-            maximumResponseTime: maximumResponseTime?.trim(),
-            panel: panel?.trim(),
-            backlight: backlight?.trim(),
-            color: color?.trim(),
-            impedance: impedance?.trim(),
-            strapMaterial: strapMaterial?.trim(),
-            hasFingerprintSensor: hasFingerprintSensor,
-            hasNoiseCancelling: hasNoiseCancelling,
-            isWaterproof: isWaterproof,
+            buttons,
+            keys,
+            minimumDPI,
+            maximumDPI,
+            minimumResponseTime,
+            maximumResponseTime,
+            panel,
+            backlight,
+            color,
+            impedance,
+            strapMaterial,
+            hasFingerprintSensor,
+            hasNoiseCancelling,
+            isWaterproof,
           }).filter(([key, value]) => value !== undefined && value !== null && value !== "" && (Array.isArray(value) ? value.length : true))), { onSuccess: () => {
             setType(null);
             setTitle("");
@@ -231,9 +231,9 @@ const Products = () => {
             setColor("");
             setImpedance("");
             setStrapMaterial("");
-            setHasFingerprintSensor(false);
-            setHasNoiseCancelling(false);
-            setIsWaterproof(false);
+            setHasFingerprintSensor(null);
+            setHasNoiseCancelling(null);
+            setIsWaterproof(null);
             firstImage.current.src = "";
             firstFile.current.value = null;
             secondImage.current.src = "";
@@ -246,7 +246,7 @@ const Products = () => {
       }}>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="h-56 w-full shrink-0 cursor-pointer" onClick={() => firstFile.current.click()}>
-            {firstFile.current?.files.length ? <img ref={firstImage} alt="Category Logo" loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور اول</div>}
+            {firstFile.current?.files.length ? <img ref={firstImage} alt={title} loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور اول</div>}
             <input
               ref={firstFile}
               type="file"
@@ -266,7 +266,7 @@ const Products = () => {
             />
           </div>
           <div className="h-56 w-full shrink-0 cursor-pointer" onClick={() => secondFile.current.click()}>
-            {secondFile.current?.files.length ? <img ref={secondImage} alt="Category Logo" loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور دوم</div>}
+            {secondFile.current?.files.length ? <img ref={secondImage} alt={title} loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور دوم</div>}
             <input
               ref={secondFile}
               type="file"
@@ -286,7 +286,7 @@ const Products = () => {
             />
           </div>
           <div className="h-56 w-full shrink-0 cursor-pointer" onClick={() => thirdFile.current.click()}>
-            {thirdFile.current?.files.length ? <img ref={thirdImage} alt="Category Logo" loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور سوم</div>}
+            {thirdFile.current?.files.length ? <img ref={thirdImage} alt={title} loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور سوم</div>}
             <input
               ref={thirdFile}
               type="file"
@@ -306,7 +306,7 @@ const Products = () => {
             />
           </div>
           <div className="h-56 w-full shrink-0 cursor-pointer" onClick={() => fourthFile.current.click()}>
-            {fourthFile.current?.files.length ? <img ref={fourthImage} alt="Category Logo" loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور چهارم</div>}
+            {fourthFile.current?.files.length ? <img ref={fourthImage} alt={title} loading="lazy" className="size-full rounded-3xl object-cover" /> : <div className="flex size-full items-center justify-center rounded-3xl border border-zinc-200 text-zinc-400">کاور چهارم</div>}
             <input
               ref={fourthFile}
               type="file"
@@ -325,52 +325,6 @@ const Products = () => {
               }}
             />
           </div>
-        </div>
-        <div className="mt-4">
-          {colors.map(({ price, inventory, name, code }, index) => (
-            <div key={index} className="mt-4 flex w-full items-center gap-4 first:mt-0">
-              <div className="grid w-full grid-cols-1 items-center gap-4 xs:grid-cols-2 md:grid-cols-4">
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={price}
-                  placeholder="مبلغ رنگ (تومان)"
-                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
-                  onInput={({ target }) => /^\d*$/.test(target.value) && setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, price: target.value } : color))}
-                />
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={inventory}
-                  placeholder="موجودی رنگ"
-                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
-                  onInput={({ target }) => /^\d*$/.test(target.value) && setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, inventory: target.value } : color))}
-                />
-                <input
-                  type="text"
-                  value={name}
-                  placeholder="نام رنگ"
-                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
-                  onInput={({ target }) => setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, name: target.value } : color))}
-                />
-                <input
-                  type="text"
-                  value={code}
-                  placeholder="کد رنگ"
-                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
-                  onInput={({ target }) => setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, code: target.value } : color))}
-                />
-              </div>
-              <button type="button" className="flex size-11 shrink-0 items-center justify-center rounded-full text-red-500 transition-colors enabled:hover:bg-red-100" onClick={() => setColors((colors) => colors.filter((color, index_) => index_ !== index))}>
-                <TrashIcon className="size-6" />
-              </button>
-            </div>
-          ))}
-          {colors.length <= 10 && (
-            <button type="button" className="mx-auto mt-4 flex size-12 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setColors((colors) => [...colors, { price: "", inventory: "", name: "", code: "" }])}>
-              <PlusIcon className="size-7" />
-            </button>
-          )}
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <SelectBox
@@ -1020,13 +974,61 @@ const Products = () => {
             />
           )}
         </div>
+        <div className="mt-4">
+          {colors.map(({ price, inventory, name, code }, index) => (
+            <div key={index} className="mt-4 flex w-full items-center gap-4 first:mt-0">
+              <div className="grid w-full grid-cols-1 items-center gap-4 xs:grid-cols-2 md:grid-cols-4">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={price}
+                  placeholder="مبلغ رنگ (تومان)"
+                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
+                  onInput={({ target }) => /^\d*$/.test(target.value) && setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, price: target.value } : color))}
+                />
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={inventory}
+                  placeholder="موجودی رنگ"
+                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
+                  onInput={({ target }) => /^\d*$/.test(target.value) && setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, inventory: target.value } : color))}
+                />
+                <input
+                  type="text"
+                  value={name}
+                  placeholder="نام رنگ"
+                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
+                  onInput={({ target }) => setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, name: target.value } : color))}
+                />
+                <input
+                  type="text"
+                  value={code}
+                  placeholder="کد رنگ"
+                  className="h-14 rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
+                  onInput={({ target }) => setColors((colors) => colors.map((color, index_) => index_ === index ? { ...color, code: target.value } : color))}
+                />
+              </div>
+              {colors.length > 1 && (
+                <button type="button" className="flex size-11 shrink-0 items-center justify-center rounded-full text-red-500 transition-colors enabled:hover:bg-red-100" onClick={() => setColors((colors) => colors.filter((color, index_) => index_ !== index))}>
+                  <TrashIcon className="size-6" />
+                </button>
+              )}
+            </div>
+          ))}
+          {colors.length <= 10 && (
+            <button type="button" className="mx-auto mt-4 flex size-12 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setColors((colors) => [...colors, { price: "", inventory: "", name: "", code: "" }])}>
+              <PlusIcon className="size-7" />
+            </button>
+          )}
+        </div>
         <button disabled={isPendingCreateProduct} className="mt-4 flex h-14 w-full items-center justify-center text-nowrap rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
           {isPendingCreateProduct ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت"}
         </button>
       </form>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">محصول ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingProducts || isProductsError ? 0 : total.toLocaleString()} محصول</span>
+        <span className="mr-auto text-zinc-500">{isFetchingProducts || isProductsError ? 0 : totalProducts.toLocaleString()} محصول</span>
       </div>
       {isProductsError ? (
         <NoResultFound title="محصولی پیدا نشد!" className="mt-4" />
@@ -1037,9 +1039,11 @@ const Products = () => {
               <tr className="[&>*]:h-[72px] [&>*]:px-5 [&>*]:font-vazirmatn-medium [&>*]:font-normal">
                 <th>کاور</th>
                 <th>عنوان</th>
+                <th>فروش کل</th>
                 <th>امتیاز</th>
                 <th>برند</th>
                 <th>دسته‌بندی‌</th>
+                <th>پیشنهاد</th>
                 <th></th>
               </tr>
             </thead>
