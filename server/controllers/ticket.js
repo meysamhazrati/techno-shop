@@ -3,7 +3,7 @@ import validator from "../validators/ticket.js";
 
 const create = async (request, response, next) => {
   try {
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.create.validate(body);
 
@@ -25,7 +25,7 @@ const reply = async (request, response, next) => {
 
     if (ticket) {
       if (role === "ADMIN" || _id.equals(ticket.sender)) {
-        const body = request.body;
+        const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
         
         await validator.reply.validate(body);
 
@@ -81,7 +81,7 @@ const get = async (request, response, next) => {
     ]).lean();
 
     if (ticket) {
-      if (role === "ADMIN" || _id.equals(ticket.sender)) {
+      if (role === "ADMIN" || _id.equals(ticket.sender._id)) {
         response.json(ticket);
       } else {
         throw Object.assign(new Error("شما دسترسی لازم به تیکت مورد نظر را ندارید."), { status: 403 });
