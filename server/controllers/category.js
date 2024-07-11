@@ -7,7 +7,7 @@ import validator from "../validators/category.js";
 const create = async (request, response, next) => {
   try {
     const logo = request.file;
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.create.validate({ ...body, logo });
 
@@ -118,7 +118,7 @@ const update = async (request, response, next) => {
     const { id } = request.params;
     
     const logo = request.file;
-    const body = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
     
     await validator.update.validate({ ...body, logo });
 
