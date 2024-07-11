@@ -6,7 +6,7 @@ import TicketSkeleton from "../../components/admin/TicketSkeleton";
 import NoResultFound from "../../components/NoResultFound";
 
 const Tickets = () => {
-  const { isFetchingTickets, isTicketsError, tickets, total, hasTicketsNextPage, fetchTicketsNextPage } = useTickets(20);
+  const { isFetchingTickets, isTicketsError, tickets, totalTickets, hasTicketsNextPage, fetchTicketsNextPage } = useTickets(20);
 
   useEffect(() => {
     document.title = "تکنوشاپ - مدیریت - تیکت ها";
@@ -16,7 +16,7 @@ const Tickets = () => {
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">تیکت ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingTickets || isTicketsError ? 0 : total.toLocaleString()} تیکت</span>
+        <span className="mr-auto text-zinc-500">{isFetchingTickets || isTicketsError ? 0 : totalTickets.toLocaleString()} تیکت</span>
       </div>
       {isTicketsError ? (
         <NoResultFound title="تیکتی پیدا نشد!" className="mt-6" />
