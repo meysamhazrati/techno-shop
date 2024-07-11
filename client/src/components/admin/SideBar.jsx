@@ -34,7 +34,7 @@ const SideBar = () => {
         <div className="px-6 pt-6">
           <div className="flex size-full flex-col items-center justify-center gap-y-6 border-b border-zinc-200 pb-6">
             <Link to="/" className="w-44">
-              <img src={technoShop} alt="Techno Shop" className="w-full object-cover" />
+              <img src={technoShop} alt="تکنوشاپ" className="w-full object-cover" />
             </Link>
             <div className="flex flex-col items-center gap-y-3">
               <UserAvatar user={me} className="size-16 text-xl" />
