@@ -3,7 +3,7 @@ import validator from "../validators/address.js";
 
 const create = async (request, response, next) => {
   try {
-    const body  = request.body;
+    const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
 
     await validator.validate(body);
 
@@ -51,7 +51,7 @@ const update = async (request, response, next) => {
 
     if (address) {
       if (role === "ADMIN" || _id.equals(address.recipient)) {
-        const body = request.body;
+        const body = Object.fromEntries(Object.entries(request.body).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]));
         
         await validator.validate(body);
 
