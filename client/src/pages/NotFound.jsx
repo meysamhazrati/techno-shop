@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const NotFound = () => {
+const NotFound = ({ message }) => {
   useEffect(() => {
     document.title = "تکنوشاپ - پیدا نشد";
   }, []);
@@ -43,7 +43,7 @@ const NotFound = () => {
         <path d="M2260 1886.6c133.7 11.8 209 586.5 17.3 613.1-191.7 26.6-176.8-627.2-17.3-613.1z" fill="#0a1324" />
         <path d="M1816.7 2157.1s-60.2 139 36.8 248.2M1904.2 2157.7s-27.8 167.4 76 261" fill="none" stroke="#0a1324" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="10" />
       </svg>
-      <h1 className="mb-5 text-2xl sm:mb-8 sm:text-4xl">صفحه مورد نظر پیدا نشد!</h1>
+      <h1 className="mb-5 text-2xl sm:mb-8 sm:text-4xl">{message || "مسیر مورد نظر پیدا نشد."}</h1>
       <Link to="/" className="rounded-full bg-primary-900 px-8 py-2 text-white transition-colors hover:bg-primary-800 sm:px-12 sm:py-3 sm:text-xl">بازگشت به خانه</Link>
     </div>
   );
