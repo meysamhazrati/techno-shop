@@ -15,7 +15,7 @@ const Categories = () => {
   const image = useRef();
   const file = useRef();
 
-  const { isFetchingCategories, isCategoriesError, categories, total, hasCategoriesNextPage, fetchCategoriesNextPage } = useCategories(20);
+  const { isFetchingCategories, isCategoriesError, categories, totalCategories, hasCategoriesNextPage, fetchCategoriesNextPage } = useCategories(20);
   const { isPendingCreateCategory, createCategory } = useCreateCategory();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Categories = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createCategory({ title: title.trim(), englishTitle: englishTitle.trim(), logo }, { onSuccess: () => {
+        createCategory({ title, englishTitle, logo }, { onSuccess: () => {
           setTitle("");
           setEnglishTitle("");
           setLogo(null);
@@ -36,9 +36,9 @@ const Categories = () => {
           file.current.value = null;
         } });
       }}>
-        <div className="flex items-center gap-x-4">
+        <div className="flex flex-col items-center gap-4 xs:flex-row">
           <div className="size-32 shrink-0 cursor-pointer" onClick={() => file.current.click()}>
-            {file.current?.files.length ? <img ref={image} alt="Category Logo" loading="lazy" className="size-full rounded-full object-cover" /> : <div className="flex size-full items-center justify-center rounded-full border border-zinc-200 text-zinc-400">لوگو</div>}
+            {file.current?.files.length ? <img ref={image} alt={title} loading="lazy" className="size-full rounded-full object-cover" /> : <div className="flex size-full items-center justify-center rounded-full border border-zinc-200 text-zinc-400">لوگو</div>}
             <input
               ref={file}
               type="file"
@@ -80,7 +80,7 @@ const Categories = () => {
       </form>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-vazirmatn-bold text-xl">دسته‌بندی‌ ها</h2>
-        <span className="mr-auto text-zinc-500">{isFetchingCategories || isCategoriesError ? 0 : total.toLocaleString()} دسته‌بندی‌</span>
+        <span className="mr-auto text-zinc-500">{isFetchingCategories || isCategoriesError ? 0 : totalCategories.toLocaleString()} دسته‌بندی‌</span>
       </div>
       {isCategoriesError ? (
         <NoResultFound title="دسته‌بندی‌ای پیدا نشد!" className="mt-4" />
