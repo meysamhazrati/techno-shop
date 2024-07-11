@@ -2,7 +2,7 @@ const BrandSkeleton = () => {
   return (
     <tr className="border-t border-zinc-200 [&>*]:h-[72px] [&>*]:px-5">
       <td>
-        <div className="size-12 animate-pulse rounded-full bg-skeleton"></div>
+        <div className="mx-auto size-12 animate-pulse rounded-full bg-skeleton"></div>
       </td>
       <td>
         <div className="h-6 w-full animate-pulse rounded-full bg-skeleton"></div>
