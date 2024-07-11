@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import ChevronIcon from "../icons/ChevronIcon";
 
 const SelectBox = ({ title, options, currentValue, setValue, currentValues, setValues, multiple }) => {
-  const [currentOption, setCurrentOption] = useState({ title: options?.find(({ value }) => value === currentValue)?.title, value: currentValue });
-  const [currentOptions, setCurrentOptions] = useState(options?.map(({ title, value }) => currentValues?.includes(value) && { title, value }).filter((option) => option));
+  const [currentOption, setCurrentOption] = useState({});
+  const [currentOptions, setCurrentOptions] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (multiple) {
-      !currentValues.length && setCurrentOptions([]);
+      setCurrentOptions(currentValues.length ? options?.map(({ title, value }) => currentValues.includes(value) && { title, value }).filter((option) => option) : []);
     } else {
-      !currentValue && setCurrentOption({});
+      setCurrentOption((currentValue === undefined || currentValue === null) ? {} : { title: options?.find(({ value }) => value === currentValue)?.title, value: currentValue });
     }
-  }, [currentValue, currentValues, multiple]);
+  }, [options, currentValue, currentValues, multiple]);
 
   return (
     <div className="relative h-14 rounded-3xl border border-zinc-200 px-4 text-lg">
