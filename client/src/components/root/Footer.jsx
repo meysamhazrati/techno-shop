@@ -4,13 +4,13 @@ import ChevronIcon from "../../icons/ChevronIcon";
 import technoShop from "/techno-shop.svg";
 
 const Footer = () => {
-  const { categories } = useCategories(7);
+  const { categories } = useCategories();
 
   return (
     <footer className="hidden w-full bg-white px-7 py-5 lg:block">
       <div className="flex items-center justify-between">
         <div>
-          <img src={technoShop} alt="Techno Shop" />
+          <img src={technoShop} alt="تکنوشاپ" />
           <div className="mt-3 flex items-center gap-x-3 [&>a]:transition-colors hover:[&>a]:text-primary-900">
             <Link to="tel:021-70000710">021-70000710</Link>
             <span className="h-3.5 w-px bg-zinc-900"></span>
@@ -52,8 +52,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="mt-5 flex items-center justify-between border-t border-zinc-200 pt-5">
+      <div className="mt-5 flex items-center justify-center border-t border-zinc-200 pt-5">
         <h2 className="flex items-center justify-center gap-x-1">
+          &copy;
           توسعه داده شده با
           <svg xmlns="http://www.w3.org/2000/svg" fill="#ec4130" stroke="none" viewBox="0 0 24 24" className="size-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
@@ -65,7 +66,6 @@ const Footer = () => {
           توسط
           <Link to="https://github.com/meysamhazrati" className="transition-colors hover:text-primary-900">میثم حضرتی</Link>
         </h2>
-        <h2>&copy; این پروژه صرفا جهت نمونه کار است و مخاطب حق استفاده شخصی یا تجاری از آن را ندارد.</h2>
       </div>
     </footer>
   );
