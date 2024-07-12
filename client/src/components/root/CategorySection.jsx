@@ -29,7 +29,7 @@ const CategorySection = ({ title, englishTitle }) => {
           modules={[Autoplay]}
           className="mt-8"
         >
-          {isFetchingCategory ? Array(5).fill(0).map((product, index) => (
+          {isFetchingCategory ? Array(5).fill().map((product, index) => (
             <SwiperSlide key={index}>
               <ProductSkeleton />
             </SwiperSlide>
