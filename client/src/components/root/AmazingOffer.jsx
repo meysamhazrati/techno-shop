@@ -127,7 +127,7 @@ const AmazingOffer = () => {
             </Link>
           </div>
         </SwiperSlide>
-        {isFetchingProducts ? Array(5).fill(0).map((product, index) => (
+        {isFetchingProducts ? Array(5).fill().map((product, index) => (
           <SwiperSlide key={index}>
             <AmazingOfferProductSkeleton />
           </SwiperSlide>
