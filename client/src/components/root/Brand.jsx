@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-const Brand = ({ englishName, logo }) => {
+const Brand = ({ name, englishName, logo }) => {
   return (
     <Link to={`/brands/${englishName.toLowerCase().split(" ").join("-")}`} className="size-32 overflow-hidden rounded-full">
-      <img src={`${process.env.SERVER_URI}/images/brands/${logo}`} alt="Brand Logo" loading="lazy" className="size-full object-cover" />
+      <img src={`${process.env.SERVER_URI}/images/brands/${logo}`} alt={name} loading="lazy" className="size-full object-cover" />
     </Link>
   );
 };
