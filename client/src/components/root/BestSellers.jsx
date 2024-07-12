@@ -31,7 +31,7 @@ const BestSellers = () => {
           modules={[Autoplay, Navigation]}
           className="mt-8"
         >
-          {isFetchingProducts ? Array(5).fill(0).map((product, index) => (
+          {isFetchingProducts ? Array(5).fill().map((product, index) => (
             <SwiperSlide key={index}>
               <ProductSkeleton />
             </SwiperSlide>
