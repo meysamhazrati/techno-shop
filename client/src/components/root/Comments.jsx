@@ -38,7 +38,7 @@ const Comments = ({ isFetching, isError, hasNextPage, fetchNextPage, id, comment
           <form onSubmit={(event) => {
             event.preventDefault();
 
-            createComment({ body: body.trim(), score, [submitFor]: id }, { onSuccess: () => {
+            createComment({ body, score, [submitFor]: id }, { onSuccess: () => {
               setBody("");
               setScore(5);
             } });
