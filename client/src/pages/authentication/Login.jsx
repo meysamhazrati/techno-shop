@@ -22,7 +22,7 @@ const Login = () => {
       <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
         event.preventDefault();
 
-        login({ email: email.trim(), password: password.trim() });
+        login({ email, password });
       }}>
         <input
           type="text"
