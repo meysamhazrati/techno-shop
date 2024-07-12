@@ -16,12 +16,12 @@ const Ticket = () => {
   const { isPendingReplyTicket, replyTicket } = useReplyTicket(id);
 
   useEffect(() => {
-    document.title = isTicketError || isFetchingTicket ? "تکنوشاپ - من" : `تکنوشاپ - من - ${ticket.title}`;
+    document.title = isTicketError || isFetchingTicket ? "تکنوشاپ - من" : `تکنوشاپ - من - تیکت ها - ${ticket.title}`;
   }, [isTicketError, isFetchingTicket, ticket]);
 
   useEffect(() => {
     if (isTicketError) {
-      throw Object.assign(new Error("The ticket was not found."), { status: 404 });
+      throw Object.assign(new Error("تیکت مورد نظر پیدا نشد."), { status: 404 });
     }
   }, [isTicketError]);
 
@@ -59,7 +59,7 @@ const Ticket = () => {
       {ticket?.replies.map(({ _id, body, sender, createdAt }) => (
         <div key={_id} className={`mt-6 w-11/12 rounded-tl-3xl rounded-tr-3xl p-4 ${sender._id === ticket.sender._id ? "ml-auto rounded-bl-3xl bg-primary-900 text-white" : "mr-auto rounded-br-3xl bg-zinc-200 text-zinc-700"}`}>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h6 className="font-vazirmatn-medium text-lg">{ticket.sender.firstName} {ticket.sender.lastName}</h6>
+            <h6 className="font-vazirmatn-medium text-lg">{sender.firstName} {sender.lastName}</h6>
             <span className={sender._id === ticket.sender._id ? "text-zinc-200" : "text-zinc-500"}>{new Intl.DateTimeFormat("fa", { dateStyle: "medium" }).format(Date.parse(createdAt))}</span>
           </div>
           <p className="my-2 text-lg" dangerouslySetInnerHTML={{ __html: body.replaceAll("\n", "<br />") }}></p>
@@ -70,8 +70,8 @@ const Ticket = () => {
         <form className="mt-12 text-lg" onSubmit={(event) => {
           event.preventDefault();
 
-          replyTicket({ body: body.trim() }, { onSuccess: () => {
-            client.invalidateQueries({ queryKey: ["ticket", { id }] });
+          replyTicket({ body }, { onSuccess: () => {
+            client.invalidateQueries({ queryKey: ["tickets", { id }] });
             setBody("");
           } });
         }}>
@@ -82,7 +82,7 @@ const Ticket = () => {
             onInput={({ target }) => setBody(target.value)}
           />
           <button disabled={isPendingReplyTicket} className="mt-3 flex h-14 w-full items-center justify-center text-nowrap rounded-full bg-primary-900 text-white transition-colors enabled:hover:bg-primary-800">
-            {isPendingReplyTicket ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ارسال"}
+            {isPendingReplyTicket ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "ثبت"}
           </button>
         </form>
       )}
