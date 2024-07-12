@@ -127,7 +127,7 @@ const User = () => {
               </tr>
             </thead>
             <tbody>
-              {isFetchingUser ? Array(5).fill().map((comment, index) => <CommentSkeleton key={index} />) : user.comments.map((comment) => <Comment key={comment._id} {...comment} />)}
+              {isFetchingUser ? Array(5).fill().map((comment, index) => <CommentSkeleton key={index} productOrArticleField={true} />) : user.comments.map((comment) => <Comment key={comment._id} {...comment} />)}
             </tbody>
           </table>
         </div>
