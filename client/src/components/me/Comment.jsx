@@ -13,7 +13,7 @@ import TrashIcon from "../../icons/TrashIcon";
 const Comment = ({ _id, body, score, isConfirmed, product, article, createdAt }) => {
   const [newBody, setNewBody] = useState(body);
   const [newScore, setNewScore] = useState(score);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const client = useQueryClient();
@@ -27,7 +27,7 @@ const Comment = ({ _id, body, score, isConfirmed, product, article, createdAt })
         <div className="flex items-center justify-between gap-x-10 overflow-auto">
           <div className="flex shrink-0 items-center gap-x-3 sm:shrink">
             <Link to={product ? `/products/${product._id}` : `/articles/${article._id}`} className="h-28 w-44 shrink-0 overflow-hidden rounded-3xl">
-              <img src={`${process.env.SERVER_URI}/images/${product ? `products/${product.covers[0]}` : `articles/${article.cover}`}`} alt={`${product ? "Product" : "Article"} Cover`} loading="lazy" className="size-full object-cover" />
+              <img src={`${process.env.SERVER_URI}/images/${product ? `products/${product.covers[0]}` : `articles/${article.cover}`}`} alt={product ? product.title : article.title} loading="lazy" className="size-full object-cover" />
             </Link>
             <div>
               <div className="flex items-center gap-x-2">
@@ -49,7 +49,7 @@ const Comment = ({ _id, body, score, isConfirmed, product, article, createdAt })
             </div>
           </div>
           <div className="flex items-center gap-x-2">
-            <button className="flex size-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setIsEditModalOpen(true)}>
+            <button className="flex size-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-zinc-200 hover:text-zinc-700" onClick={() => setIsUpdateModalOpen(true)}>
               <PencilIcon className="size-6" />
             </button>
             <button className="flex size-11 shrink-0 items-center justify-center rounded-full text-red-500 transition-colors enabled:hover:bg-red-100" onClick={() => setIsRemoveModalOpen(true)}>
@@ -59,14 +59,14 @@ const Comment = ({ _id, body, score, isConfirmed, product, article, createdAt })
         </div>
         <p className="mt-3 text-lg" dangerouslySetInnerHTML={{ __html: body.replaceAll("\n", "<br />") }}></p>
       </div>
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+      <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)}>
         <h6 className="text-center font-vazirmatn-medium text-2xl">ویرایش دیدگاه</h6>
         <form className="mt-6 flex flex-col gap-y-3 text-lg xs:w-80 [&>*]:w-full" onSubmit={(event) => {
           event.preventDefault();
 
-          updateComment({ body: newBody.trim(), score: newScore }, { onSuccess: () => {
+          updateComment({ body: newBody, score: newScore }, { onSuccess: () => {
             client.invalidateQueries({ queryKey: ["me"] });
-            setIsEditModalOpen(false);
+            setIsUpdateModalOpen(false);
           } });
         }}>
           <div className="flex items-center justify-center gap-x-2">
