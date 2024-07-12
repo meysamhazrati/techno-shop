@@ -12,7 +12,7 @@ import NoResultFound from "../../components/NoResultFound";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
-  const { isFetchingProducts, isProductsError, products, hasProductsNextPage, fetchProductsNextPage } = useProducts(searchParams.get("search")?.toLowerCase().split(" ").join("-"), searchParams.get("brands"), searchParams.get("categories"), searchParams.get("price"), searchParams.get("only-available"), searchParams.get("only-amazing"), searchParams.get("sort"), 12);
+  const { isFetchingProducts, isProductsError, products, totalProducts, hasProductsNextPage, fetchProductsNextPage } = useProducts(searchParams.get("search")?.toLowerCase().split(" ").join("-"), searchParams.get("brands"), searchParams.get("categories"), searchParams.get("price"), searchParams.get("only-available"), searchParams.get("only-amazing"), searchParams.get("sort"), 12);
 
   useEffect(() => {
     document.title = "تکنوشاپ - محصولات";
@@ -21,7 +21,7 @@ const Products = () => {
   return (
     <>
       <SectionHeader title="محصولات" condition={true}>
-        <span className="mr-auto text-xl text-zinc-500">{isProductsError || isFetchingProducts ? 0 : products.length.toLocaleString()} محصول</span>
+        <span className="mr-auto text-xl text-zinc-500">{isProductsError || isFetchingProducts ? 0 : totalProducts.toLocaleString()} محصول</span>
       </SectionHeader>
       <Section className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <Filters brandsFilter={true} categoriesFilter={true} priceFilter={true} onlyAvailableFilter={true} onlyAmazingFilter={true} />
@@ -33,7 +33,7 @@ const Products = () => {
             <InfiniteScroll hasNextPage={hasProductsNextPage} fetchNextPage={fetchProductsNextPage}>
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {products?.map((product) => <Product key={product._id} {...product} />)}
-                {isFetchingProducts && Array(6).fill(0).map((product, index) => <ProductSkeleton key={index} />)}
+                {isFetchingProducts && Array(6).fill().map((product, index) => <ProductSkeleton key={index} />)}
               </div>
             </InfiniteScroll>
           )}
