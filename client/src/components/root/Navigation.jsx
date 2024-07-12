@@ -7,7 +7,7 @@ import PinIcon from "../../icons/PinIcon";
 
 const Navigation = forwardRef((props, ref) => {
   const { isPendingMe, me } = useMe();
-  const { categories } = useCategories(7);
+  const { categories } = useCategories();
 
   return (
     <nav ref={ref} className="relative -top-10 -z-10 hidden h-12 items-center justify-between px-7 py-3 transition-all duration-300 lg:top-0 lg:flex">
