@@ -17,32 +17,30 @@ const Offers = () => {
 
   return isOffersError || offers?.filter(({ expiresAt }) => Date.parse(expiresAt) > Date.now()).length === 0 ? (
     <NoResultFound title="پیشنهادی پیدا نشد!" className="mt-8" />
-  ) : isFetchingOffers ? (
-    Array(3).fill(0).map((offer, index) => (
-      <Section key={index}>
-        <SectionHeader title="در حال بارگذاری" condition={false} />
-        {<Swiper
-          slidesPerView={1}
-          spaceBetween={16}
-          loop={true}
-          autoplay={{ delay: 2000 }}
-          breakpoints={{
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1280: { slidesPerView: 4 },
-          }}
-          modules={[Autoplay]}
-          className="mt-8"
-        >
-          {Array(5).fill(0).map((product, index) => (
-            <SwiperSlide key={index}>
-              <ProductSkeleton />
-            </SwiperSlide>
-          ))}
-        </Swiper>}
-      </Section>
-      ))
-  ) : (
+  ) : isFetchingOffers ? Array(3).fill().map((offer, index) => (
+    <Section key={index}>
+      <SectionHeader title="در حال بارگذاری" condition={false} />
+      {<Swiper
+        slidesPerView={1}
+        spaceBetween={16}
+        loop={true}
+        autoplay={{ delay: 2000 }}
+        breakpoints={{
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+          1280: { slidesPerView: 4 },
+        }}
+        modules={[Autoplay]}
+        className="mt-8"
+      >
+        {Array(5).fill().map((product, index) => (
+          <SwiperSlide key={index}>
+            <ProductSkeleton />
+          </SwiperSlide>
+        ))}
+      </Swiper>}
+    </Section>
+  )) : (
     offers.filter(({ expiresAt }) => Date.parse(expiresAt) > Date.now()).map((offer) => <OfferSection key={offer._id} {...offer} />)
   );
 };
