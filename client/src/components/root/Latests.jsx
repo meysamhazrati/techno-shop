@@ -15,7 +15,7 @@ const Latests = () => {
         <NoResultFound title="محصولی پیدا نشد!" className="mt-8" />
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {isFetchingProducts ? Array(8).fill(0).map((product, index) => <ProductSkeleton key={index} />) : products.map((product) => <Product key={product._id} {...product} />)}
+          {isFetchingProducts ? Array(8).fill().map((product, index) => <ProductSkeleton key={index} />) : products.map((product) => <Product key={product._id} {...product} />)}
         </div>
       )}
     </Section>
