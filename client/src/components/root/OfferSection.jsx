@@ -29,7 +29,7 @@ const OfferSection = ({ title, englishTitle, percent, expiresAt }) => {
           modules={[Autoplay]}
           className="mt-8"
         >
-          {isFetchingOffer ? Array(5).fill(0).map((product, index) => (
+          {isFetchingOffer ? Array(5).fill().map((product, index) => (
             <SwiperSlide key={index}>
               <ProductSkeleton />
             </SwiperSlide>
