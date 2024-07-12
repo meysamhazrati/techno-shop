@@ -29,7 +29,7 @@ const BrandSection = ({ name, englishName }) => {
           modules={[Autoplay]}
           className="mt-8"
         >
-          {isFetchingBrand ? Array(5).fill(0).map((product, index) => (
+          {isFetchingBrand ? Array(5).fill().map((product, index) => (
             <SwiperSlide key={index}>
               <ProductSkeleton />
             </SwiperSlide>
