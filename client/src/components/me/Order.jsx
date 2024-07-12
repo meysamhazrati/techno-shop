@@ -52,7 +52,7 @@ const Order = ({ _id, totalPrice, status, products, createdAt }) => {
         {products.map(({ _id, quantity, product }) => (
           <SwiperSlide key={_id} className="relative">
             <div className="h-28 w-full overflow-hidden rounded-3xl">
-              <ProductCover id={product._id} covers={product.covers} />
+              <ProductCover {...product} />
               <div className="absolute right-2 top-2 z-50 flex size-8 items-center justify-center rounded-full border border-zinc-900 bg-white">{quantity.toLocaleString()}</div>
             </div>
             <h4 className="mt-2 font-vazirmatn-medium">
