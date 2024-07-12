@@ -16,12 +16,12 @@ const Brand = () => {
   const { isFetchingBrand, isBrandError, brand, hasBrandNextPage, fetchBrandNextPage } = useBrand(name.toLowerCase().split(" ").join("-"), searchParams.get("categories"), searchParams.get("price"), searchParams.get("only-available"), searchParams.get("only-amazing"), searchParams.get("sort"), 12);
 
   useEffect(() => {
-    document.title = isBrandError || isFetchingBrand ? "تکنوشاپ" : `تکنوشاپ - ${brand.name}`;
+    document.title = isBrandError || isFetchingBrand ? "تکنوشاپ" : `تکنوشاپ - برند ها - ${brand.name}`;
   }, [isBrandError, isFetchingBrand, brand]);
 
   useEffect(() => {
     if (isBrandError) {
-      throw Object.assign(new Error("The brand was not found."), { status: 404 });
+      throw Object.assign(new Error("برند مورد نظر پیدا نشد."), { status: 404 });
     }
   }, [isBrandError]);
 
@@ -40,7 +40,7 @@ const Brand = () => {
             <InfiniteScroll hasNextPage={hasBrandNextPage} fetchNextPage={fetchBrandNextPage}>
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {brand?.products.map((product) => <Product key={product._id} {...product} />)}
-                {isFetchingBrand && Array(6).fill(0).map((product, index) => <ProductSkeleton key={index} />)}
+                {isFetchingBrand && Array(6).fill().map((product, index) => <ProductSkeleton key={index} />)}
               </div>
             </InfiniteScroll>
           )}
