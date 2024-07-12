@@ -32,7 +32,7 @@ const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
       <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
         event.preventDefault();
 
-        verifyOTP({ email: email.trim(), code: code.trim() }, { onSuccess: () => setCurrentComponent(type), onError: ({ status }) => status === 429 && setCurrentComponent("send-otp") });
+        verifyOTP({ email, code }, { onSuccess: () => setCurrentComponent(type), onError: ({ status }) => status === 429 && setCurrentComponent("send-otp") });
       }}>
         <input
           type="text"
@@ -40,7 +40,7 @@ const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
           value={code}
           placeholder="کد تایید"
           className="rounded-3xl border border-zinc-200 px-4 text-lg outline-none placeholder:text-zinc-400"
-          onInput={({ target }) => !isNaN(target.value.trim()) && target.value.trim().length <= 7 && setCode(target.value)}
+          onInput={({ target }) => /^\d{0,7}$/.test(target.value) && setCode(target.value)}
         />
         <button type="submit" disabled={isPendingVerifyOTP} className="flex w-full items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-lg text-white transition-colors enabled:hover:bg-primary-800">
           {isPendingVerifyOTP ? <Loader width={"40px"} height={"10px"} color={"#ffffff"} /> : "تایید"}
@@ -49,7 +49,7 @@ const VerifyOTP = ({ email, type, sentAt, setSentAt, setCurrentComponent }) => {
       <button
         disabled={!canSendOTPAgain || isPendingSendOTP}
         className="mx-auto mt-6 block text-zinc-500 transition-colors enabled:hover:text-primary-900"
-        onClick={() => sendOTP({ email: email.trim() }, { onSuccess: () => {
+        onClick={() => sendOTP({ email }, { onSuccess: () => {
           setSentAt(Date.now());
           setCanSendOTPAgain(false);
         }, onError: ({ status }) => status === 403 && setCurrentComponent("send-otp") })}
