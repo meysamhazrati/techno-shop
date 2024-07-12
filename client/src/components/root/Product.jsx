@@ -9,7 +9,7 @@ const Product = ({ _id, covers, title, colors, score, category, offer }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl bg-white">
       <div className="h-48 w-full">
-        <ProductCover id={_id} covers={covers} />
+        <ProductCover id={_id} title={title} covers={covers} />
         {colors[0].inventory > 0 && Date.parse(offer?.expiresAt) > Date.now() && <div className="absolute right-4 top-4 z-10 flex h-7 w-12 items-center justify-center rounded-full bg-primary-900 font-vazirmatn-medium text-white">{offer.percent}%</div>}
       </div>
       <div className="p-4">
@@ -28,7 +28,7 @@ const Product = ({ _id, covers, title, colors, score, category, offer }) => {
         </div>
         <div className="flex items-center justify-between gap-x-5 border-t border-zinc-200 pt-4">
           <ProductButton id={_id} color={colors[0]} disabled={!colors[0].inventory} />
-          <ProductPrice price={colors[0].price} offer={offer} priceFontSize="lg" discountedPriceFontSize="sm" gapX="[2px]" iconSize="5" hasInventory={colors[0].inventory} />
+          <ProductPrice price={colors[0].price} offer={offer} hasInventory={colors[0].inventory} priceFontSize="18px" discountedPriceFontSize="14px" columnGap="2px" iconSize="20px" />
         </div>
       </div>
     </div>
