@@ -35,14 +35,14 @@ const Profile = () => {
       <form onSubmit={(event) => {
         event.preventDefault();
 
-        editUser({ firstName: firstName.trim(), lastName: lastName.trim(), currentPassword: currentPassword ? currentPassword.trim() : undefined, newPassword: newPassword ? newPassword.trim() : undefined, avatar }, { onSuccess: () => {
+        editUser({ firstName, lastName, currentPassword: currentPassword || undefined, newPassword: newPassword || undefined, avatar }, { onSuccess: () => {
           setCurrentPassword("");
           setNewPassword("");
         } });
       }}>
         <div className="flex flex-col items-center gap-6 sm:flex-row">
           <div className="relative size-52 shrink-0">
-            {file.current?.files.length ? <img ref={image} alt="User Avatar" className="size-full rounded-full object-cover" /> : <UserAvatar user={me} className="size-full text-5xl" />}
+            {file.current?.files.length ? <img ref={image} alt={`${me.firstName} ${me.lastName}`} className="size-full rounded-full object-cover" /> : <UserAvatar user={me} className="size-full text-5xl" />}
             <input
               ref={file}
               type="file"
