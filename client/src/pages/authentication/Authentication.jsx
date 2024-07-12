@@ -17,7 +17,7 @@ const Authentication = () => {
     <main className="container flex min-h-svh flex-col items-center justify-center gap-y-10">
       <header>
         <Link to="/" className="max-w-48">
-          <img src={technoShop} alt="Techno Shop" className="w-full object-cover" />
+          <img src={technoShop} alt="تکنوشاپ" className="w-full object-cover" />
         </Link>
       </header>
       <section className="w-full rounded-3xl bg-white p-6 xs:w-96">
