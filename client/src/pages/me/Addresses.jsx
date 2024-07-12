@@ -24,7 +24,7 @@ const Addresses = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createAddress({ province: province.trim(), city: city.trim(), postalCode: postalCode.trim(), body: body.trim() }, { onSuccess: () => {
+        createAddress({ province, city, postalCode, body }, { onSuccess: () => {
           setProvince("");
           setCity("");
           setPostalCode("");
