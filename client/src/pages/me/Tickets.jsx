@@ -24,7 +24,7 @@ const Tickets = () => {
       <form className="mt-4 text-lg" onSubmit={(event) => {
         event.preventDefault();
 
-        createTicket({ department: department.trim(), title: title.trim(), body: body.trim() }, { onSuccess: () => {
+        createTicket({ department, title, body }, { onSuccess: () => {
           setDepartment(null);
           setTitle("");
           setBody("");
