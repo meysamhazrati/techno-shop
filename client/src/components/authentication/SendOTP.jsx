@@ -8,7 +8,7 @@ const SendOTP = ({ email, setEmail, type, setSentAt, setCurrentComponent }) => {
     <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
       event.preventDefault();
 
-      sendOTP({ email: email.trim() }, { onSuccess: () => {
+      sendOTP({ email }, { onSuccess: () => {
         setSentAt(Date.now());
         setCurrentComponent("verify-otp");
       } });
