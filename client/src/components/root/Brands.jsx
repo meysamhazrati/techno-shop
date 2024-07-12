@@ -8,7 +8,7 @@ const Brands = () => {
 
   return !isBrandsError && (
     <Section className="flex flex-wrap items-center justify-center gap-[19.5px] xs:gap-8 md:gap-6 lg:justify-between lg:gap-2">
-      {isFetchingBrands ? Array(7).fill(0).map((brand, index) => <BrandSkeleton key={index} />) : brands.map((brand) => <Brand key={brand._id} {...brand} />)}
+      {isFetchingBrands ? Array(7).fill().map((brand, index) => <BrandSkeleton key={index} />) : brands.map((brand) => <Brand key={brand._id} {...brand} />)}
     </Section>
   );
 };
