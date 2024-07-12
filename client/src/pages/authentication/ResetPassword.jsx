@@ -48,7 +48,7 @@ const ResetPassword = () => {
         <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
           event.preventDefault();
 
-          resetPassword({ email: email.trim(), password: password.trim() });
+          resetPassword({ email, password });
         }}>
           <input
             type="password"
