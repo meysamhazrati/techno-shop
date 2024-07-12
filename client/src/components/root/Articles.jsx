@@ -15,7 +15,7 @@ const Articles = () => {
         <NoResultFound title="مقاله‌ای پیدا نشد!" className="mt-8" />
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {isFetchingArticles ? Array(4).fill(0).map((article, index) => <ArticleSkeleton key={index} />) : articles.map((article) => <Article key={article._id} {...article} />)}
+          {isFetchingArticles ? Array(4).fill().map((article, index) => <ArticleSkeleton key={index} />) : articles.map((article) => <Article key={article._id} {...article} />)}
         </div>
       )}
     </Section>
