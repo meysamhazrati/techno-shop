@@ -26,7 +26,7 @@ const SideBar = () => {
         <div className="px-6 pt-6">
           <div className="flex size-full items-center justify-center border-b border-zinc-200 pb-6">
             <Link to="/" className="w-44">
-              <img src={technoShop} alt="Techno Shop" className="w-full object-cover" />
+              <img src={technoShop} alt="تکنوشاپ" className="w-full object-cover" />
             </Link>
           </div>
         </div>
