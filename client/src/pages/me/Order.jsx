@@ -22,12 +22,12 @@ const Order = () => {
   const { isPendingReturnOrder, returnOrder } = useReturnOrder(id);
 
   useEffect(() => {
-    document.title = isOrderError || isFetchingOrder ? "تکنوشاپ - من" : `تکنوشاپ - من - ${order._id}`;
+    document.title = isOrderError || isFetchingOrder ? "تکنوشاپ - من" : `تکنوشاپ - من - سفارش ها - ${order._id}`;
   }, [isOrderError, isFetchingOrder, order]);
 
   useEffect(() => {
     if (isOrderError) {
-      throw Object.assign(new Error("The order was not found."), { status: 404 });
+      throw Object.assign(new Error("سفارش مورد نظر پیدا نشد."), { status: 404 });
     }
   }, [isOrderError]);
 
@@ -99,7 +99,7 @@ const Order = () => {
         {order?.products.map(({ _id, quantity, product, color }) => (
           <div key={_id} className="grid grid-cols-[150px_1fr] items-center gap-x-3 py-3 first:pt-0 last:pb-0">
             <div className="h-28 w-full">
-              <ProductCover id={product._id} covers={product.covers} />
+              <ProductCover {...product} />
             </div>
             <div>
               <h3 className="font-vazirmatn-medium">
@@ -118,7 +118,7 @@ const Order = () => {
                 <div className="hidden size-1.5 shrink-0 rounded-full bg-zinc-400 sm:block"></div>
                 <div className="flex items-center gap-x-2">
                   <span className="text-zinc-400">گارانتی:</span>
-                  <span>{product.warranty} ماه</span>
+                  <span>{product.warranty > 0 ? `${product.warranty} ماه` : "ندارد"}</span>
                 </div>
               </div>
               <span className="mt-3 flex items-center gap-x-1 font-vazirmatn-bold">
@@ -137,13 +137,13 @@ const Order = () => {
       )}
       <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)}>
         <Confirm title="این سفارش را لغو می‌کنید؟" isPending={isPendingCancelOrder} onCancel={() => setIsCancelModalOpen(false)} onConfirm={() => cancelOrder(null, { onSuccess: () => {
-          client.invalidateQueries({ queryKey: ["order", { id }] });
+          client.invalidateQueries({ queryKey: ["orders", { id }] });
           setIsCancelModalOpen(false);
         } })} />
       </Modal>
       <Modal isOpen={isReturnModalOpen} onClose={() => setIsReturnModalOpen(false)}>
         <Confirm title="این سفارش را مرجوع می‌کنید؟" isPending={isPendingReturnOrder} onCancel={() => setIsReturnModalOpen(false)} onConfirm={() => returnOrder(null, { onSuccess: () => {
-          client.invalidateQueries({ queryKey: ["order", { id }] });
+          client.invalidateQueries({ queryKey: ["orders", { id }] });
           setIsReturnModalOpen(false);
         } })} />
       </Modal>
