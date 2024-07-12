@@ -31,7 +31,7 @@ const RelatedProducts = ({ categoryTitle }) => {
           modules={[Autoplay, Navigation]}
           className="mt-8"
         >
-          {isFetchingCategory ? Array(5).fill(0).map((product, index) => (
+          {isFetchingCategory ? Array(5).fill().map((product, index) => (
             <SwiperSlide key={index}>
               <ProductSkeleton />
             </SwiperSlide>
