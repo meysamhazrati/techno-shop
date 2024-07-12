@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")).render(
         queries: {
           staleTime: 1000 * 60 * 5,
           gcTime: 1000 * 60,
-          retry: 2,
+          retry: false,
         },
         mutations: {
           gcTime: 1000 * 60,
