@@ -16,12 +16,12 @@ const Offer = () => {
   const { isFetchingOffer, isOfferError, offer, hasOfferNextPage, fetchOfferNextPage } = useOffer(title.toLowerCase().split(" ").join("-"), searchParams.get("brands"), searchParams.get("categories"), searchParams.get("price"), searchParams.get("only-available"), searchParams.get("sort"), 12);
 
   useEffect(() => {
-    document.title = isOfferError || isFetchingOffer ? "تکنوشاپ" : `تکنوشاپ - ${offer.title}`;
+    document.title = isOfferError || isFetchingOffer ? "تکنوشاپ" : `تکنوشاپ - پیشنهاد ها - ${offer.title}`;
   }, [isOfferError, isFetchingOffer, offer]);
 
   useEffect(() => {
     if (isOfferError) {
-      throw Object.assign(new Error("The offer was not found."), { status: 404 });
+      throw Object.assign(new Error("پیشنهاد مورد نظر پیدا نشد."), { status: 404 });
     }
   }, [isOfferError]);
 
@@ -40,7 +40,7 @@ const Offer = () => {
             <InfiniteScroll hasNextPage={hasOfferNextPage} fetchNextPage={fetchOfferNextPage}>
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {offer?.products.map((product) => <Product key={product._id} {...product} offer={offer} />)}
-                {isFetchingOffer && Array(6).fill(0).map((product, index) => <ProductSkeleton key={index} />)}
+                {isFetchingOffer && Array(6).fill().map((product, index) => <ProductSkeleton key={index} />)}
               </div>
             </InfiniteScroll>
           )}
