@@ -31,18 +31,18 @@ const Sort = ({ sortFor }) => {
         <span className="text-xl">مرتب‌سازی:</span>
       </div>
       <div className="flex items-center gap-x-4 overflow-auto py-2 [&>*]:text-lg">
-        <button className={`text-${(sort === "oldest" || sort === "popular" || sort === "best-seller" || sort === "cheap" || sort === "expensive") ? "zinc-500" : "primary-900"}`} onClick={() => setSort(null)}>جدیدترین</button>
+        <button className={(sort === "oldest" || sort === "popular" || sort === "best-seller" || sort === "cheap" || sort === "expensive") ? "text-zinc-500" : "text-primary-900"} onClick={() => setSort(null)}>جدیدترین</button>
         {sortFor === "articles" ? (
           <>
-            <button className={`text-${sort === "oldest" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("oldest")}>{"قدیمی‌ترین"}</button>
-            <button className={`text-${sort === "popular" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("popular")}>{"محبوب‌ترین"}</button>
+            <button className={sort === "oldest" ? "text-primary-900" : "text-zinc-500"} onClick={() => setSort("oldest")}>{"قدیمی‌ترین"}</button>
+            <button className={sort === "popular" ? "text-primary-900" : "text-zinc-500"} onClick={() => setSort("popular")}>{"محبوب‌ترین"}</button>
           </>
         ) : (
           <>
-            <button className={`text-${sort === "best-seller" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("best-seller")}>{"پرفروش‌ترین"}</button>
-            <button className={`text-${sort === "popular" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("popular")}>{"محبوب‌ترین"}</button>
-            <button className={`text-${sort === "cheap" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("cheap")}>{"ارزان‌ترین"}</button>
-            <button className={`text-${sort === "expensive" ? "primary-900" : "zinc-500"}`} onClick={() => setSort("expensive")}>{"گران‌ترین"}</button>
+            <button className={sort === "best-seller" ? "text-primary-900" : "text-zinc-500"} onClick={() => setSort("best-seller")}>{"پرفروش‌ترین"}</button>
+            <button className={sort === "popular" ? "text-primary-900" : "text-zinc-500"} onClick={() => setSort("popular")}>{"محبوب‌ترین"}</button>
+            <button className={sort === "cheap" ? "text-primary-900" : "text-zinc-500"} onClick={() => setSort("cheap")}>{"ارزان‌ترین"}</button>
+            <button className={sort === "expensive" ? "text-primary-900" : "text-zinc-500"} onClick={() => setSort("expensive")}>{"گران‌ترین"}</button>
           </>
         )}
       </div>
