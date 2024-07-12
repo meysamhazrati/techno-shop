@@ -51,7 +51,7 @@ const Register = () => {
         <form className="mt-6 flex flex-col gap-y-4 [&>*]:h-14" onSubmit={(event) => {
           event.preventDefault();
 
-          register({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), password: password.trim() });
+          register({ firstName, lastName, email, password });
         }}>
           <input
             type="text"
