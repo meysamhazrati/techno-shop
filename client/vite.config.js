@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => ({
     "process.env.SERVER_URI": JSON.stringify(loadEnv(mode, process.cwd(), "").SERVER_URI),
   },
   server: {
-    port: 8080,
+    port: 8000,
   },
   plugins: [react()],
 }));
