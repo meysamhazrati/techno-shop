@@ -12,7 +12,7 @@
 * [Express](https://www.npmjs.com/package/express)
 * [React](https://www.npmjs.com/package/react)
 * [React Query](https://www.npmjs.com/package/@tanstack/react-query)
-* [React Router Dom](https://www.npmjs.com/package/react-router-dom)
+* [React Router DOM](https://www.npmjs.com/package/react-router-dom)
 * [Mongoose](https://www.npmjs.com/package/mongoose)
 * [Axios](https://www.npmjs.com/package/axios)
 * [Tailwind](https://www.npmjs.com/package/tailwindcss)
@@ -40,6 +40,12 @@
 
 ```bash
 git clone https://github.com/meysamhazrati/techno-shop.git
+```
+
+در قدم بعدی، وابستگی های **سرور** و **کلاینت** پروژه را نصب کنید:
+
+```bash
+npm install
 ```
 
 سپس، **سرور** و **کلاینت** پروژه را در حالت توسعه اجرا کنید:
