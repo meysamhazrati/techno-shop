@@ -1,12 +1,13 @@
 import { createTransport } from "nodemailer";
 
 const utility = () => createTransport({
-    service: "gmail",
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     auth: {
-      user: "technoooshop@gmail.com",
-      pass: "etiv vnoz gaka qjod",
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
     },
   },
-  { from: "technoooshop@gmail.com" });
+  { from: process.env.SMTP_USER });
 
 export default utility;
